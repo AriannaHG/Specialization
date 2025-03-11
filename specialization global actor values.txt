@@ -1,0 +1,1373 @@
+------BLEEDING
+[ActorValue]
+ID=mafe_bleeding1;
+name=Bleeding!;
+icon=Bleeding!;
+bubbleIcon=Bleeding!_Override;
+--minimum=0;
+maximum=100;
+removedByNegativeMagnitude=true;
+description=...;
+AIValue= 0;
+defaultValue = 0; AIValue = 0;
+harmfulMagnitude = 1;
+bonusesMultiplier = 1;
+animationOnHarmful = pain;
+affectsActors = true;
+canAffectIncapped = false;
+showDamageNumbers = true;
+showDamageNumbersMagnitude = false;
+showDamageNumbersSign = false;
+showDamageNumbersIcon = true;
+showDamageNumbersElements = false;
+showDamageNumbersIconInTooltips = true;
+damageNumberColor_Positive = White;
+damageNumberColor_Negative = White;
+actorPaletteOverride =;
+actorPaletteOverrideDuration = 0.27;
+elementReactionModifiesDuration = false;
+canBeRemovedByNonspecificAVEffectRemoval = true;
+recordInActorData = true;
+showEvaluationInfo = true;
+allowDecimalValues = false;
+percentage = false;
+XPCostBase = 0;
+XPCostIncrement = 0;
+XPCostMultiplier = 1;
+XPCostFloorToNearest = 0;
+[ActorValueReaction]
+ID=mafe_bleeding1; actorValues=cure; actorValues=cure_exceptBurn; newID=X; action=mafe_sangra_gone;
+[ActorValueReaction]
+ID=mafe_bleeding1; element=noActionTaken; element=dispel; newID=X; action=mafe_sangra_gone;
+[ActorValueReaction]
+ID=mafe_bleeding1; actorValues=mafe_bleeding1; newID=mafe_bleeding1;
+[ActorValueReaction]
+ID=mafe_bleeding1; element=weaponBuff; action=mafe_sangra_daño;
+[ActorValueReaction]
+ID=mafe_bleeding1; element=moveAbilUsed; action=mafe_sangra_daño2;
+[ActorValueReaction]
+ID=mafe_bleeding1; actorValues=pull; actorValues=push; actorValues=rotate; actorValues=pushAt; actorValues=push_safe; actorValues=mafe_pets_gotGate_d; action=mafe_sangra_daño2;
+[ActorValueReaction]
+ID=mafe_bleeding1; element=ruinTouch; damageMultiplier=1.34;
+
+[Action] ID=mafe_sangra_gone;
+	special=usableEvenWhenCantAct;
+	special=usableEvenWhenReacting;
+	special=usableEvenWhenYourTurn;
+	special=dontDelayOtherActions;
+[ActionAoE] 
+	ID=mafe_sangra_gone;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=mafe_sangra_gone; 
+	harmful=false; visibleMiss=false; affectIntangible=true; visibleEvaluations=false;
+	actorValue=mafe_bleeding1;
+	magnitude=-t:mafe_bleeding1;
+	chance=100*t:mafe_bleeding1;
+	duration=-2;
+[AvAffecterAoE]
+	ID=mafe_sangra_gone;
+	cloneFrom=oneTile;
+	aoeCasterAsOrigin=true;
+
+[Action] ID=mafe_sangra_daño2;
+	special=usableEvenWhenCantAct;
+	special=usableEvenWhenReacting;
+	special=usableEvenWhenYourTurn;
+	special=dontDelayOtherActions;
+[ActionAoE] 
+	ID=mafe_sangra_daño2;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=mafe_sangra_daño2; 
+	fReq=1-tsa:bulwark-tsa:multiscale-lessThan:1:AVrxn:push-lessThan:1:AVrxn:pushAt-lessThan:1:AVrxn:pull-lessThan:1:AVrxn:rotate-lessThan:1:AVrxn:relocate-lessThan:1:AVrxn:drowning-lessThan:1:AVrxn:push_safe;
+	harmful=true; visibleMiss=false; affectIntangible=true;
+	actorValue=HP;
+	magnitude=-c:mafe_bleeding1;
+	chance=100*t:mafe_bleeding1;
+	duration=-2;
+	element=life;
+	element=slash;
+	FXOnHit=manySplatter;
+	FXOnHitColor=Red;
+	applyElementToTile=false;
+[AvAffecterAoE]
+	ID=mafe_sangra_daño2;
+	cloneFrom=oneTile;
+	aoeCasterAsOrigin=true;
+[AvAffecter]
+	ID=mafe_sangra_daño2; 
+	fReq=1-tsa:bulwark-tsa:multiscale-lessThan:1:AVrxn:push-lessThan:1:AVrxn:pushAt-lessThan:1:AVrxn:pull-lessThan:1:AVrxn:rotate-lessThan:1:AVrxn:relocate-lessThan:1:AVrxn:drowning-lessThan:1:AVrxn:push_safe;
+	harmful=true; visibleMiss=false; affectIntangible=true; visibleEvaluations=false;
+	actorValue=mafe_bleeding1;
+	magnitude=c:mafe_bleeding1*0.5;
+	chance=100*t:mafe_bleeding1;
+	duration=tDur:mafe_bleeding1;
+[AvAffecterAoE]
+	ID=mafe_sangra_daño2;
+	cloneFrom=oneTile;
+	aoeCasterAsOrigin=true;
+
+[Action] ID=mafe_sangra_daño;
+	requiredWeaponElement=weapon;
+	special=usableEvenWhenCantAct;
+	special=usableEvenWhenReacting;
+	special=usableEvenWhenYourTurn;
+	special=dontDelayOtherActions;
+[ActionAoE] 
+	ID=mafe_sangra_daño;
+	cloneFrom=oneTile;
+	maxRange=12;
+[AvAffecter]
+	ID=mafe_sangra_daño; 
+    useMyAoEWhenAddingAsWeaponAvAffecter=true;
+	harmful=true; visibleMiss=false; affectIntangible=true;
+	actorValue=HP;
+	magnitude=-c:mafe_bleeding1;
+	chance=100*t:mafe_bleeding1;
+	duration=-2;
+	element=life;
+	element=slash;
+	FXOnHit=manySplatter;
+	FXOnHitColor=Red;
+	applyElementToTile=false;
+[AvAffecterAoE]
+	ID=mafe_sangra_daño;
+	cloneFrom=oneTile;
+	aoeCasterAsOrigin=true;
+[AvAffecter]
+	ID=mafe_sangra_daño; 
+    useMyAoEWhenAddingAsWeaponAvAffecter=true;
+	harmful=true; visibleMiss=false; affectIntangible=true; visibleEvaluations=false;
+	actorValue=mafe_bleeding1;
+	magnitude=c:mafe_bleeding1*0.5;
+	chance=100*t:mafe_bleeding1;
+	duration=tDur:mafe_bleeding1;
+[AvAffecterAoE]
+	ID=mafe_sangra_daño;
+	cloneFrom=oneTile;
+	aoeCasterAsOrigin=true;
+
+
+
+
+------SUPPRESSION
+[ActorValue]
+ID=mafe_antiheal_buff;
+name=Suppression;
+icon=SUPRESSION;
+bubbleIcon=mafeSuppressionStatus_Override;
+--minimum=0;
+maximum=1;
+removedByNegativeMagnitude=true;
+--description=...;
+AIValue= 0;
+defaultValue = 0; AIValue = 0;
+harmfulMagnitude = 1;
+bonusesMultiplier = 1;
+animationOnHarmful = pain;
+affectsActors = true;
+canAffectIncapped = false;
+showDamageNumbers = true;
+showDamageNumbersMagnitude = false;
+showDamageNumbersSign = false;
+showDamageNumbersIcon = true;
+showDamageNumbersElements = false;
+showDamageNumbersIconInTooltips = true;
+damageNumberColor_Positive = Blue;
+damageNumberColor_Negative = Blue;
+actorPaletteOverride =;
+actorPaletteOverrideDuration = 0.27;
+elementReactionModifiesDuration = false;
+canBeRemovedByNonspecificAVEffectRemoval = true;
+recordInActorData = true;
+showEvaluationInfo = true;
+allowDecimalValues = false;
+percentage = false;
+XPCostBase = 0;
+XPCostIncrement = 0;
+XPCostMultiplier = 1;
+XPCostFloorToNearest = 0;
+[ActorValueReaction]
+ID=mafe_antiheal_buff; actorValues=HP; damageMultiplier=1.0; healMultiplier=0.1;
+[ActorValueReaction]
+ID=mafe_antiheal_buff; actorValues=cure; newID=X;
+[ActorValueReaction]
+ID=mafe_antiheal_buff; element=dispel; newID=X;
+
+
+
+---VULNERABLE
+[ActorValue]
+ID=ari_vulnerable_av;
+name=Vulnerable!;
+icon=Vulnerable!;
+bubbleIcon=Vulnerable!;
+--minimum=0;
+maximum=1;
+removedByNegativeMagnitude=true;
+description=...;
+AIValue= 0;
+defaultValue = 0; AIValue = 0;
+harmfulMagnitude = 1;
+bonusesMultiplier = 1;
+animationOnHarmful = ;
+affectsActors = true;
+canAffectIncapped = false;
+showDamageNumbers = true;
+showDamageNumbersMagnitude = false;
+showDamageNumbersSign = false;
+showDamageNumbersIcon = true;
+showDamageNumbersElements = false;
+showDamageNumbersIconInTooltips = true;
+damageNumberColor_Positive = White;
+damageNumberColor_Negative = White;
+actorPaletteOverride =;
+actorPaletteOverrideDuration = 0.27;
+elementReactionModifiesDuration = false;
+canBeRemovedByNonspecificAVEffectRemoval = true;
+recordInActorData = true;
+showEvaluationInfo = true;
+allowDecimalValues = false;
+percentage = false;
+XPCostBase = 0;
+XPCostIncrement = 0;
+XPCostMultiplier = 1;
+XPCostFloorToNearest = 0;
+[ActorValueReaction]
+ID=ari_vulnerable; element=HPbased; damageMultiplier=1.5;
+[ActorValueReaction]
+ID=ari_vulnerable;
+actorValues=burn; actorValues=poison; actorValues=itchy; 
+actorValues=chilled; actorValues=wet; actorValues=silence; 
+actorValues=blind; actorValues=immob; actorValues=disable; 
+actorValues=frozen; actorValues=oil; actorValues=sleep; 
+actorValues=stun; actorValues=decay; actorValues=transfer; 
+actorValues=glowing; actorValues=morale;  
+damageMultiplier=2.0; healMultiplier=1.0; 
+
+	
+
+
+
+
+
+
+---EXPOSED
+[ActorValue]
+ID=ari_exposed_av;
+name=Exposed!;
+icon=EXPOSED;
+--bubbleIcon=Exposed;
+--minimum=0;
+maximum=100;
+removedByNegativeMagnitude=true;
+description=...;
+AIValue= 0;
+defaultValue = 0; AIValue = 0;
+harmfulMagnitude = 1;
+bonusesMultiplier = 1;
+animationOnHarmful = ;
+affectsActors = true;
+canAffectIncapped = false;
+showDamageNumbers = true;
+showDamageNumbersMagnitude = false;
+showDamageNumbersSign = false;
+showDamageNumbersIcon = true;
+showDamageNumbersElements = false;
+showDamageNumbersIconInTooltips = true;
+damageNumberColor_Positive = White;
+damageNumberColor_Negative = White;
+actorPaletteOverride =;
+actorPaletteOverrideDuration = 0.27;
+elementReactionModifiesDuration = false;
+canBeRemovedByNonspecificAVEffectRemoval = true;
+recordInActorData = true;
+showEvaluationInfo = true;
+allowDecimalValues = false;
+percentage = false;
+XPCostBase = 0;
+XPCostIncrement = 0;
+XPCostMultiplier = 1;
+XPCostFloorToNearest = 0;
+[ActorValueReaction]
+ID=ari_exposed_av; actorValues=ari_exposed_av; newID=ari_exposed_av;
+[ActorValueReaction]
+ID=ari_exposed_av; aiRatingMod=12; actorValues=ari_brave_av; actorValues=glowing; newID=X;
+[ActorValueReaction]
+ID=ari_exposed_av; element=physical; damageMultiplier=1.15;
+
+
+
+
+---SUSCEPTIBLE
+[ActorValue]
+ID=ari_susceptible_av;
+name=Susceptible;
+icon=SUSCEPTIBLE;
+--bubbleIcon=Susceptible;
+--minimum=0;
+maximum=25;
+removedByNegativeMagnitude=true;
+description=...;
+AIValue= 0;
+defaultValue = 0; AIValue = 0;
+harmfulMagnitude = 1;
+bonusesMultiplier = 1;
+animationOnHarmful = ;
+affectsActors = true;
+canAffectIncapped = false;
+showDamageNumbers = true;
+showDamageNumbersMagnitude = false;
+showDamageNumbersSign = false;
+showDamageNumbersIcon = true;
+showDamageNumbersElements = false;
+showDamageNumbersIconInTooltips = true;
+damageNumberColor_Positive = White;
+damageNumberColor_Negative = White;
+actorPaletteOverride =;
+actorPaletteOverrideDuration = 0.27;
+elementReactionModifiesDuration = false;
+canBeRemovedByNonspecificAVEffectRemoval = true;
+recordInActorData = true;
+showEvaluationInfo = true;
+allowDecimalValues = false;
+percentage = false;
+XPCostBase = 0;
+XPCostIncrement = 0;
+XPCostMultiplier = 1;
+XPCostFloorToNearest = 0;
+[ActorValueReaction]
+ID=ari_susceptible_av; actorValues=ari_susceptible_av; newID=ari_susceptible_av;
+[ActorValueReaction]
+ID=ari_susceptible_av; aiRatingMod=12; actorValues=morale; actorValues=cure; newID=X;
+
+[ActorValueReaction]
+ID=ari_susceptible_av; element=physical; action=ari_susceptible_av_act;
+
+[Action] ID=ari_susceptible_av_act; 
+    icon=iconSharp;
+    special=usableEvenWhenCantAct;
+    special=usableEvenWhenReacting;
+    special=usableEvenWhenYourTurn;
+    special=dontDelayOtherActions;
+[ActionAoE]
+	ID=ari_susceptible_av_act;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=ari_susceptible_av_act; 
+	visibleEvaluations=true;
+	visibleMiss=false;
+	actorValue=HP;
+	harmful=true;
+	magnitude=m:tLastDmgTaken * -t:ari_susceptible_av / 20;
+	duration=-2;
+	chance=100;
+	element=physical;
+	element=slash;
+[AvAffecterAoE]
+	ID=ari_susceptible_av_act;
+	aoeCasterAsOrigin=true;
+	cloneFrom=oneTile;
+	canSelectAllies=true;
+
+
+
+
+
+---PUMMELED
+[ActorValue]
+ID=ari_pummeled_av;
+name=Pummeled;
+icon=PUMMELED;
+--bubbleIcon=Susceptible;
+--minimum=0;
+maximum=25;
+removedByNegativeMagnitude=true;
+description=...;
+AIValue= 0;
+defaultValue = 0; AIValue = 0;
+harmfulMagnitude = 1;
+bonusesMultiplier = 1;
+animationOnHarmful = ;
+affectsActors = true;
+canAffectIncapped = false;
+showDamageNumbers = true;
+showDamageNumbersMagnitude = false;
+showDamageNumbersSign = false;
+showDamageNumbersIcon = true;
+showDamageNumbersElements = false;
+showDamageNumbersIconInTooltips = true;
+damageNumberColor_Positive = White;
+damageNumberColor_Negative = White;
+actorPaletteOverride =;
+actorPaletteOverrideDuration = 0.27;
+elementReactionModifiesDuration = false;
+canBeRemovedByNonspecificAVEffectRemoval = true;
+recordInActorData = true;
+showEvaluationInfo = true;
+allowDecimalValues = false;
+percentage = false;
+XPCostBase = 0;
+XPCostIncrement = 0;
+XPCostMultiplier = 1;
+XPCostFloorToNearest = 0;
+[ActorValueReaction]
+ID=ari_pummeled_av; actorValues=ari_pummeled_av; newID=ari_pummeled_av;
+
+
+
+
+---FLINCH
+[ActorValue]
+ID=ari_flinch_av;
+name=Flinch;
+icon=FLINCH;
+--bubbleIcon=Susceptible;
+--minimum=0;
+maximum=25;
+removedByNegativeMagnitude=true;
+description=...;
+AIValue= 0;
+defaultValue = 0; AIValue = 0;
+harmfulMagnitude = 1;
+bonusesMultiplier = 1;
+animationOnHarmful = ;
+affectsActors = true;
+canAffectIncapped = false;
+showDamageNumbers = true;
+showDamageNumbersMagnitude = false;
+showDamageNumbersSign = false;
+showDamageNumbersIcon = true;
+showDamageNumbersElements = false;
+showDamageNumbersIconInTooltips = true;
+damageNumberColor_Positive = White;
+damageNumberColor_Negative = White;
+actorPaletteOverride =;
+actorPaletteOverrideDuration = 0.27;
+elementReactionModifiesDuration = false;
+canBeRemovedByNonspecificAVEffectRemoval = true;
+recordInActorData = true;
+showEvaluationInfo = true;
+allowDecimalValues = false;
+percentage = false;
+XPCostBase = 0;
+XPCostIncrement = 0;
+XPCostMultiplier = 1;
+XPCostFloorToNearest = 0;
+[ActorValueReaction]
+ID=ari_flinch_av; actorValues=ari_flinch_av; newID=ari_flinch_av;
+[ActorValueReaction]
+ID=ari_flinch_av; aiRatingMod=12; actorValues=morale; actorValues=ari_brave_av; actorValues=cure; newID=X;
+
+[ActorValueReaction]
+ID=ari_flinch_av; element=physical; action=ari_flinch_av_act;
+
+[Action] ID=ari_flinch_av_act; 
+    icon=iconSharp;
+    special=usableEvenWhenCantAct;
+    special=usableEvenWhenReacting;
+    special=usableEvenWhenYourTurn;
+    special=dontDelayOtherActions;
+[ActionAoE]
+	ID=ari_flinch_av_act;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=ari_flinch_av_act; 
+	visibleEvaluations=true;
+	visibleMiss=false;
+	actorValue=stun;
+	magnitude=1;
+	duration=t:ari_flinch_av * 1;
+	chance=25;
+	element=physical;
+[AvAffecterAoE]
+	ID=ari_flinch_av_act;
+	aoeCasterAsOrigin=true;
+	cloneFrom=oneTile;
+	canSelectAllies=true;
+
+
+
+------TORPOR	
+[ActorValue]
+ID=ari_torpor_av;
+name=Torpor;
+icon=TORPOR;
+--bubbleIcon=;
+--minimum=0;
+maximum=100;
+removedByNegativeMagnitude=true;
+description=...;
+AIValue= 0;
+defaultValue = 0; AIValue = 0;
+harmfulMagnitude = 1;
+bonusesMultiplier = 1;
+animationOnHarmful = ;
+affectsActors = true;
+canAffectIncapped = false;
+showDamageNumbers = true;
+showDamageNumbersMagnitude = true;
+showDamageNumbersSign = true;
+showDamageNumbersIcon = true;
+showDamageNumbersElements = true;
+showDamageNumbersIconInTooltips = true;
+damageNumberColor_Positive = Aqua;
+damageNumberColor_Negative = Aqua;
+actorPaletteOverride =;
+actorPaletteOverrideDuration = 0.27;
+elementReactionModifiesDuration = false;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+recordInActorData = true;
+showEvaluationInfo = true;
+allowDecimalValues = false;
+percentage = false;
+XPCostBase = 1;
+XPCostIncrement = 1;
+XPCostMultiplier = 1;
+XPCostFloorToNearest = 1;
+[ActorValueReaction]
+ID=ari_torpor_av; actorValues=ari_torpor_av; newID=ari_torpor_av;
+
+[FormulaGlobal] ID=ari_torpor_percentage_formula0;
+formula=-1 * t:ari_torpor_av / 100;
+
+[ActorValueReaction]
+ID=sleep; element=physical; element=magic; action=ari_torpor_av_act;
+
+[Action] ID=ari_torpor_av_act; 
+    icon=iconSharp;
+    special=usableEvenWhenCantAct;
+    special=usableEvenWhenReacting;
+    special=usableEvenWhenYourTurn;
+    special=dontDelayOtherActions;
+[ActionAoE]
+	ID=ari_torpor_av_act;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=ari_torpor_av_act; 
+	visibleEvaluations=true;
+	visibleMiss=false;
+	actorValue=PhysEva;
+	harmful=true;
+	magnitude=t:PhysEva * d:ari_torpor_percentage_formula0;
+	duration=-5;
+	chance=100 * t:ari_torpor_av;
+[AvAffecterAoE]
+	ID=ari_torpor_av_act;
+	aoeCasterAsOrigin=true;
+	cloneFrom=oneTile;
+	canSelectAllies=true;
+[AvAffecter]
+	ID=ari_torpor_av_act; 
+	visibleEvaluations=true;
+	visibleMiss=false;
+	actorValue=MagEva;
+	harmful=true;
+	magnitude=t:MagEva * d:ari_torpor_percentage_formula0;
+	duration=-5;
+	chance=100 * t:ari_torpor_av;
+	FXOnHit=delay_tiny;
+[AvAffecterAoE]
+	ID=ari_torpor_av_act;
+	aoeCasterAsOrigin=true;
+	cloneFrom=oneTile;
+	canSelectAllies=true;
+[AvAffecter]
+	ID=ari_torpor_av_act;
+	visibleEvaluations=false;
+	visibleMiss=false;
+	actorValue=ari_torpor_av;
+	harmful=false;
+	magnitude=-t:ari_torpor_av;
+	duration=-2;
+	chance=100;
+[AvAffecterAoE]
+	ID=ari_torpor_av_act;
+	aoeCasterAsOrigin=true;
+	cloneFrom=oneTile;
+	canSelectAllies=true;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[ActorValueReaction]
+ID=regen; element=40001; action=regening;
+
+------Prom's Combo
+[ActorValue]
+ID=pd_combo;
+name=Combo;
+icon=Combo;
+bubbleIcon=comboStatus;
+minimum=0;
+maximum=1;
+description=You gain +1 <icon=skill_Dagger><icon=skill_Fist> and <icon=PhysAtk>.;
+defaultValue = 0;
+
+harmfulMagnitude = -1;
+
+
+animationOnHarmful = pain;
+
+affectsActors = true;
+
+canAffectIncapped = true;
+
+removedByNegativeMagnitude=true;
+showDamageNumbers = true;
+showDamageNumbersMagnitude = false;
+showDamageNumbersSign = false;
+showDamageNumbersIcon = true;
+showDamageNumbersElements = false;
+showDamageNumbersIconInTooltips = true;
+damageNumberColor_Positive = Orange;
+damageNumberColor_Negative = Red;
+
+
+actorPaletteOverride =;
+actorPaletteOverrideDuration = 0.27;
+
+elementReactionModifiesDuration = false;
+
+canBeRemovedByNonspecificAVEffectRemoval = true;
+
+recordInActorData = true;
+showEvaluationInfo = true;
+
+allowDecimalValues = false;
+percentage = false;
+
+XPCostBase = 0;
+XPCostIncrement = 0;
+XPCostMultiplier = 1;
+XPCostFloorToNearest = 0;
+[ActorValueEffect]
+ID=pd_combo;
+actorValue=skill_Dagger; magnitude=1; duration=-1; 
+[ActorValueEffect]
+ID=pd_combo;
+actorValue=skill_Fist; magnitude=1; duration=-1; 
+[ActorValueEffect]
+ID=pd_combo;
+actorValue=PhysAtk; magnitude=1; duration=-1;
+
+
+------BRAVERY	
+[ActorValue]
+ID=ari_brave_av;
+name=Bravery;
+icon=BRAVERY;
+--bubbleIcon=Protective Polish;
+--minimum=0;
+maximum=25;
+removedByNegativeMagnitude=true;
+description=...;
+AIValue= 0;
+defaultValue = 0; AIValue = 0;
+harmfulMagnitude = -1;
+bonusesMultiplier = 1;
+animationOnHarmful = ;
+affectsActors = true;
+canAffectIncapped = false;
+showDamageNumbers = true;
+showDamageNumbersMagnitude = true;
+showDamageNumbersSign = true;
+showDamageNumbersIcon = true;
+showDamageNumbersElements = true;
+showDamageNumbersIconInTooltips = true;
+damageNumberColor_Positive = Aqua;
+damageNumberColor_Negative = Aqua;
+actorPaletteOverride =;
+actorPaletteOverrideDuration = 0.27;
+elementReactionModifiesDuration = false;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+recordInActorData = true;
+showEvaluationInfo = true;
+allowDecimalValues = false;
+percentage = false;
+XPCostBase = 1;
+XPCostIncrement = 1;
+XPCostMultiplier = 1;
+XPCostFloorToNearest = 1;
+
+[ActorValueReaction]
+ID=ari_brave_av; element=physical; action=ari_brave_av_act;
+
+[Action] ID=ari_brave_av_act; 
+    icon=iconSharp;
+    special=usableEvenWhenCantAct;
+    special=usableEvenWhenReacting;
+    special=usableEvenWhenYourTurn;
+    special=dontDelayOtherActions;
+[ActionAoE]
+	ID=ari_brave_av_act;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=ari_brave_av_act; 
+	visibleEvaluations=true;
+	actorValue=PhysDef;
+	harmful=false;
+	magnitude=t:ari_brave_av;
+	duration=-5;
+	chance=100;
+	FXOnTile=delay_tiny;
+[AvAffecterAoE]
+	ID=ari_brave_av_act;
+	aoeCasterAsOrigin=true;
+	minRange=0;
+	maxRange=0;
+	maxRangeBonus = 0;
+	canSelectAllies=true;
+[AvAffecter]
+	ID=ari_brave_av_act; 
+	visibleEvaluations=false;
+	actorValue=ari_brave_av;
+	harmful=false;
+	magnitude=-1;
+	duration=-2;
+	chance=100;
+[AvAffecterAoE]
+	ID=ari_brave_av_act;
+	aoeCasterAsOrigin=true;
+	cloneFrom=oneTile;
+	canSelectAllies=true;
+	
+	
+	
+	
+------RALLY	
+[ActorValue]
+ID=ari_rally_av;
+name=Rally;
+icon=RALLY;
+--bubbleIcon=;
+--minimum=0;
+maximum=100;
+removedByNegativeMagnitude=true;
+description=...;
+AIValue= 0;
+defaultValue = 0; AIValue = 0;
+harmfulMagnitude = -1;
+bonusesMultiplier = 1;
+animationOnHarmful = ;
+affectsActors = true;
+canAffectIncapped = false;
+showDamageNumbers = true;
+showDamageNumbersMagnitude = true;
+showDamageNumbersSign = true;
+showDamageNumbersIcon = true;
+showDamageNumbersElements = true;
+showDamageNumbersIconInTooltips = true;
+damageNumberColor_Positive = Aqua;
+damageNumberColor_Negative = Aqua;
+actorPaletteOverride =;
+actorPaletteOverrideDuration = 0.27;
+elementReactionModifiesDuration = false;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+recordInActorData = true;
+showEvaluationInfo = true;
+allowDecimalValues = false;
+percentage = false;
+XPCostBase = 1;
+XPCostIncrement = 1;
+XPCostMultiplier = 1;
+XPCostFloorToNearest = 1;
+executeActionOnDurationEnd=ari_maximum_HP_check_act;
+--[ActorValueReaction]
+--ID=ari_rally_av; actorValues=ari_rally_av; newID=ari_rally_av;
+
+[ActorValueReaction]
+ID=ari_rally_av; aiRatingMod=-12; element=dispel; element=23082004; newID=X;
+
+[ActorValueEffect]
+ID=ari_rally_av; actorValue=TrueHPMax; magnitude=0; formulaMod=c:ari_rally_av; duration=-1;	--The Rally ActorValue increases TrueHPMax and HPMax
+
+[Action] ID=ari_maximum_HP_check_act; 
+    icon=iconSharp;
+    special=usableEvenWhenCantAct;
+    special=usableEvenWhenReacting;
+    special=usableEvenWhenYourTurn;
+    special=dontDelayOtherActions;
+[ActionAoE]
+	ID=ari_maximum_HP_check_act;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=ari_maximum_HP_check_act; 
+	visibleEvaluations=false;
+	visibleMiss=false;
+	actorValue=HP;
+	harmful=false;
+	magnitude=max:0:d:ari_maxHP_check_formula0;
+	duration=-2;
+	chance=100;
+[AvAffecterAoE]
+	ID=ari_maximum_HP_check_act;
+	aoeCasterAsOrigin=true;
+	cloneFrom=oneTile;
+	canSelectAllies=true;
+
+
+------RECOVERY	
+[ActorValue]
+ID=ari_recovery_av;
+name=Recovery;
+icon=RECOVERY;
+--bubbleIcon=Protective Polish;
+--minimum=0;
+maximum=1;
+removedByNegativeMagnitude=true;
+description=...;
+AIValue= 0;
+defaultValue = 0; AIValue = 0;
+harmfulMagnitude = -1;
+bonusesMultiplier = 1;
+animationOnHarmful = ;
+affectsActors = true;
+canAffectIncapped = false;
+showDamageNumbers = true;
+showDamageNumbersMagnitude = true;
+showDamageNumbersSign = true;
+showDamageNumbersIcon = true;
+showDamageNumbersElements = true;
+showDamageNumbersIconInTooltips = true;
+damageNumberColor_Positive = Aqua;
+damageNumberColor_Negative = Aqua;
+actorPaletteOverride =;
+actorPaletteOverrideDuration = 0.27;
+elementReactionModifiesDuration = false;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+recordInActorData = true;
+showEvaluationInfo = true;
+allowDecimalValues = false;
+percentage = false;
+XPCostBase = 1;
+XPCostIncrement = 1;
+XPCostMultiplier = 1;
+XPCostFloorToNearest = 1;
+
+
+
+------STURDY
+[ActorValue]
+ID=ari_sturdy_av;
+name=Sturdy;
+icon=STURDY;
+--bubbleIcon=mafeREINFORCEDStatus;
+--minimum=0;
+maximum=1;
+removedByNegativeMagnitude=true;
+description=Prevents the next time an Item breaking would be caused to you.;
+defaultValue = 0; AIValue = 0;
+harmfulMagnitude = -1;
+bonusesMultiplier = 1;
+animationOnHarmful = pain;
+affectsActors = true;
+canAffectIncapped = false;
+showDamageNumbers = true;
+showDamageNumbersMagnitude = false;
+showDamageNumbersSign = false;
+showDamageNumbersIcon = true;
+showDamageNumbersElements = false;
+showDamageNumbersIconInTooltips = true;
+damageNumberColor_Positive = pBlue2;
+damageNumberColor_Negative = pBlue2;
+actorPaletteOverride =;
+actorPaletteOverrideDuration = 0.27;
+elementReactionModifiesDuration = false;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+recordInActorData = true;
+showEvaluationInfo = true;
+allowDecimalValues = false;
+percentage = false;
+XPCostBase = 0;
+XPCostIncrement = 0;
+XPCostMultiplier = 1;
+XPCostFloorToNearest = 0;
+ 
+[ActorValueReaction]
+ID=ari_sturdy_av; actorValues=breakWeapon; actorValues=breakArmor; damageMultiplier=0; healMultiplier=0;
+[ActorValueReaction]
+ID=ari_sturdy_av; actorValues=breakWeapon; actorValues=breakArmor; newID=X;
+[ActorValueReaction]
+ID=ari_sturdy_av; aiRatingMod=-12; element=dispel; element=23082004; newID=X;
+
+
+
+
+------SECOND WIND	
+[ActorValue]
+ID=ari_second_wind_av;
+name=Second Wind;
+icon=2ND WIND;
+--bubbleIcon=Protective Polish;
+--minimum=0;
+maximum=25;
+removedByNegativeMagnitude=true;
+description=...;
+AIValue= 0;
+defaultValue = 0; AIValue = 0;
+harmfulMagnitude = -1;
+bonusesMultiplier = 1;
+animationOnHarmful = ;
+affectsActors = true;
+canAffectIncapped = false;
+showDamageNumbers = true;
+showDamageNumbersMagnitude = true;
+showDamageNumbersSign = true;
+showDamageNumbersIcon = true;
+showDamageNumbersElements = true;
+showDamageNumbersIconInTooltips = true;
+damageNumberColor_Positive = Aqua;
+damageNumberColor_Negative = Aqua;
+actorPaletteOverride =;
+actorPaletteOverrideDuration = 0.27;
+elementReactionModifiesDuration = false;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+recordInActorData = true;
+showEvaluationInfo = true;
+allowDecimalValues = false;
+percentage = false;
+XPCostBase = 1;
+XPCostIncrement = 1;
+XPCostMultiplier = 1;
+XPCostFloorToNearest = 1;
+[ActorValueReaction]
+ID=ari_second_wind_av; actorValues=ari_second_wind_av; newID=ari_second_wind_av;
+
+[ActorValueReaction]
+ID=ari_second_wind_av; aiRatingMod=-12; element=dispel; element=23082004; newID=X;
+[ActorValueReaction]
+ID=ari_second_wind_av; aiRatingMod=-12; actorValues=sleep; actorValues=stun; newID=X;
+
+[ActorValueReaction]
+ID=ari_second_wind_av; element=physical; action=ari_second_wind_av_act;
+
+[Action] ID=ari_second_wind_av_act; 
+    icon=iconSharp;
+    special=usableEvenWhenCantAct;
+    special=usableEvenWhenReacting;
+    special=usableEvenWhenYourTurn;
+    special=dontDelayOtherActions;
+	FXOnCaster=actor_spreadRed;
+[ActionAoE]
+	ID=ari_second_wind_av_act;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=ari_second_wind_av_act; 
+	visibleEvaluations=true;
+	actorValue=HP;
+	harmful=false;
+	magnitude=t:ari_second_wind_av;
+	duration=-2;
+	chance=100;
+[AvAffecterAoE]
+	ID=ari_second_wind_av_act;
+	aoeCasterAsOrigin=true;
+	cloneFrom=oneTile;
+	canSelectAllies=true;
+
+
+
+------INSTIGATOR	
+[ActorValue]
+ID=ari_instigator_av;
+name=Instigator;
+icon=INSTIGATOR;
+--bubbleIcon=Protective Polish;
+--minimum=0;
+maximum=10;
+removedByNegativeMagnitude=true;
+description=...;
+AIValue= 0;
+defaultValue = 0; AIValue = 0;
+harmfulMagnitude = -1;
+bonusesMultiplier = 1;
+animationOnHarmful = ;
+affectsActors = true;
+canAffectIncapped = false;
+showDamageNumbers = true;
+showDamageNumbersMagnitude = true;
+showDamageNumbersSign = true;
+showDamageNumbersIcon = true;
+showDamageNumbersElements = true;
+showDamageNumbersIconInTooltips = true;
+damageNumberColor_Positive = Aqua;
+damageNumberColor_Negative = Aqua;
+actorPaletteOverride =;
+actorPaletteOverrideDuration = 0.27;
+elementReactionModifiesDuration = false;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+recordInActorData = true;
+showEvaluationInfo = true;
+allowDecimalValues = false;
+percentage = false;
+XPCostBase = 1;
+XPCostIncrement = 1;
+XPCostMultiplier = 1;
+XPCostFloorToNearest = 1;
+[ActorValueReaction]
+ID=ari_instigator_av; actorValue=priority; magnitude=0.4; duration=-1;
+
+[ActorValueReaction]
+ID=ari_instigator_av; aiRatingMod=-6; element=dispel; element=23082004; newID=X;
+[ActorValueReaction]
+ID=ari_instigator_av; aiRatingMod=-6; actorValues=sleep; actorValues=stun; actorValues=morale; actorValues=silence; newID=X;
+
+
+
+
+------BULWARK
+[ActorValue]
+ID=ari_bulwark_av;
+name=Bulwark;
+icon=BULWARK;
+--bubbleIcon=Bleeding!;
+--minimum=0;
+maximum=100;
+removedByNegativeMagnitude=true;
+description=...;
+AIValue= 0;
+defaultValue = 0; AIValue = 0;
+harmfulMagnitude = -1;
+bonusesMultiplier = 1;
+animationOnHarmful = pain;
+affectsActors = true;
+canAffectIncapped = false;
+showDamageNumbers = true;
+showDamageNumbersMagnitude = false;
+showDamageNumbersSign = false;
+showDamageNumbersIcon = true;
+showDamageNumbersElements = false;
+showDamageNumbersIconInTooltips = true;
+damageNumberColor_Positive = White;
+damageNumberColor_Negative = White;
+actorPaletteOverride =;
+actorPaletteOverrideDuration = 0.27;
+elementReactionModifiesDuration = false;
+canBeRemovedByNonspecificAVEffectRemoval = true;
+recordInActorData = true;
+showEvaluationInfo = true;
+allowDecimalValues = false;
+percentage = false;
+XPCostBase = 0;
+XPCostIncrement = 0;
+XPCostMultiplier = 1;
+XPCostFloorToNearest = 0;
+
+[ActorValueReaction]
+ID=ari_bulwark_av; aiRatingMod=-18; element=dispel; newID=X; action=ari_bulwark_av_gone;
+[ActorValueReaction]
+ID=ari_bulwark_av; element=physical; action=ari_bulwark_av_act;
+
+[Action] ID=ari_bulwark_av_gone;
+	special=usableEvenWhenCantAct;
+	special=usableEvenWhenReacting;
+	special=usableEvenWhenYourTurn;
+	special=dontDelayOtherActions;
+[ActionAoE] 
+	ID=ari_bulwark_av_gone;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=ari_bulwark_av_gone; 
+	harmful=false; visibleMiss=false; affectIntangible=true; visibleEvaluations=false;
+	actorValue=ari_bulwark_av;
+	magnitude=-t:ari_bulwark_av;
+	chance=100*t:ari_bulwark_av;
+	duration=-2;
+[AvAffecterAoE]
+	ID=ari_bulwark_av_gone;
+	cloneFrom=oneTile;
+	aoeCasterAsOrigin=true;
+
+[Action] ID=ari_bulwark_av_act; 
+harmful=false;
+special=usableEvenWhenCantAct;
+special=usableEvenWhenReacting;
+special=usableEvenWhenYourTurn;
+[ActionAoE] 
+	ID=ari_bulwark_av_act;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=ari_bulwark_av_act; 
+	harmful=false;
+	actorValue=ari_bulwark_av;
+	magnitude=c:ari_bulwark_av-1;
+	duration=tDur:ari_bulwark_av;
+	chance=m:cLastDmgTakenGreaterThanX(0) * 100;
+	FXOnHit=hitDust_shatterNegate;
+	visibleMiss=false;
+[AvAffecterAoE]
+	ID=ari_bulwark_av_act;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=ari_bulwark_av_act; 
+	harmful=false;
+	actorValue=HPTrue;
+	magnitude=m:cLastDmgTaken;
+	duration=-2;
+	chance=m:cLastDmgTaken * 100;
+	visibleEvaluations=false;
+	visibleMiss=false;
+[AvAffecterAoE]
+	ID=ari_bulwark_av_act;
+	cloneFrom=oneTile;
+
+
+
+
+------STABILIZED
+[ActorValue]
+ID=ari_stabilized_av;
+name=Stabilized;
+icon=STABILIZED;
+--bubbleIcon=Bleeding!;
+--minimum=0;
+maximum=1;
+removedByNegativeMagnitude=true;
+description=...;
+AIValue= 0;
+defaultValue = 0; AIValue = 0;
+harmfulMagnitude = -1;
+bonusesMultiplier = 1;
+animationOnHarmful = pain;
+affectsActors = true;
+canAffectIncapped = false;
+showDamageNumbers = true;
+showDamageNumbersMagnitude = false;
+showDamageNumbersSign = false;
+showDamageNumbersIcon = true;
+showDamageNumbersElements = false;
+showDamageNumbersIconInTooltips = true;
+damageNumberColor_Positive = White;
+damageNumberColor_Negative = White;
+actorPaletteOverride =;
+actorPaletteOverrideDuration = 0.27;
+elementReactionModifiesDuration = false;
+canBeRemovedByNonspecificAVEffectRemoval = true;
+recordInActorData = true;
+showEvaluationInfo = true;
+allowDecimalValues = false;
+percentage = false;
+XPCostBase = 0;
+XPCostIncrement = 0;
+XPCostMultiplier = 1;
+XPCostFloorToNearest = 0;
+
+[ActorValueReaction]
+ID=ari_stabilized_av; aiRatingMod=-18; element=dispel; newID=X;
+[ActorValueReaction]
+ID=ari_stabilized_av; actorValues=push; actorValues=pull; damageMultiplier=0;
+
+
+
+
+------COUNTERING
+[ActorValue]
+ID=ari_countering_av;
+name=Countering;
+icon=COUNTERING;
+--bubbleIcon=Bleeding!;
+--minimum=0;
+maximum=100;
+removedByNegativeMagnitude=true;
+description=...;
+AIValue= 0;
+defaultValue = 0; AIValue = 0;
+harmfulMagnitude = -1;
+bonusesMultiplier = 1;
+animationOnHarmful = pain;
+affectsActors = true;
+canAffectIncapped = false;
+showDamageNumbers = true;
+showDamageNumbersMagnitude = false;
+showDamageNumbersSign = false;
+showDamageNumbersIcon = true;
+showDamageNumbersElements = false;
+showDamageNumbersIconInTooltips = true;
+damageNumberColor_Positive = White;
+damageNumberColor_Negative = White;
+actorPaletteOverride =;
+actorPaletteOverrideDuration = 0.27;
+elementReactionModifiesDuration = false;
+canBeRemovedByNonspecificAVEffectRemoval = true;
+recordInActorData = true;
+showEvaluationInfo = true;
+allowDecimalValues = false;
+percentage = false;
+XPCostBase = 0;
+XPCostIncrement = 0;
+XPCostMultiplier = 1;
+XPCostFloorToNearest = 0;
+
+[ActorValueReaction]
+ID=ari_countering_av; aiRatingMod=-14; element=dispel; newID=X;
+[ActorValueReaction]
+ID=ari_countering_av; aiRatingMod=-14; actorValues=sleep; actorValues=stun; actorValues=push; actorValues=pull; newID=X;
+[ActorValueReaction]
+ID=ari_countering_av; element=physical; action=ari_countering_av_act;
+
+[Action] ID=ari_countering_av_act; 
+	icon=iconP_Wa_counter;
+	special=repositionIfCasterIsPushed;
+	special=canReactMultipleTimesPerTurn;
+	
+	requiredWeaponElement=melee;
+	casterAnimation=weapon;
+	casterAnimationSpeed=1.2;
+	
+	FXOnCaster=counter;
+	FXOnCaster=actor_counter;
+	FXOnCaster=sfx_magicCharge;
+	FXOnTarget=weaponFX;
+[ActionAoE] 
+	ID=ari_countering_av_act; shape=10; 
+	canSelectAllies=false;
+[AvAffecter]
+	ID=ari_countering_av_act; 
+	harmful=false;
+	actorValue=ari_countering_av;
+	magnitude=c:ari_countering_av - 1;
+	duration=tDur:ari_countering_av;
+	chance=m:cLastDmgTakenGreaterThanX(0) * 100;
+	visibleMiss=false;
+[AvAffecterAoE]
+	ID=ari_countering_av_act;
+	cloneFrom=oneTile;
+	aoeCasterAsOrigin=true;
+[AvAffecter]
+	ID=ari_countering_av_act; 
+	weaponAvAffecter=true;
+	magnitude=w:magnitude * 0.5;
+	chance=w:chance * 0.97 * m:cLastDmgTakenGreaterThanX(0);
+	duration=-2;
+[AvAffecterAoE]
+	ID=ari_countering_av_act; shape=11;
+
+
+
+
+------RALLYING PRESENCE
+[ActorValue]
+ID=ari_rallying_presence_av;
+name=Rallying;
+icon=RALLYING;
+--bubbleIcon=Bleeding!;
+--minimum=0;
+maximum=100;
+removedByNegativeMagnitude=true;
+description=...;
+AIValue= 0;
+defaultValue = 0; AIValue = 0;
+harmfulMagnitude = -1;
+bonusesMultiplier = 1;
+animationOnHarmful = pain;
+affectsActors = true;
+canAffectIncapped = false;
+showDamageNumbers = true;
+showDamageNumbersMagnitude = false;
+showDamageNumbersSign = false;
+showDamageNumbersIcon = true;
+showDamageNumbersElements = false;
+showDamageNumbersIconInTooltips = true;
+damageNumberColor_Positive = White;
+damageNumberColor_Negative = White;
+actorPaletteOverride =;
+actorPaletteOverrideDuration = 0.27;
+elementReactionModifiesDuration = false;
+canBeRemovedByNonspecificAVEffectRemoval = true;
+recordInActorData = true;
+showEvaluationInfo = true;
+allowDecimalValues = false;
+percentage = false;
+XPCostBase = 0;
+XPCostIncrement = 0;
+XPCostMultiplier = 1;
+XPCostFloorToNearest = 0;
+
+[ActorValueReaction]
+ID=ari_rallying_presence_av; aiRatingMod=-18; element=dispel; newID=X;
+[ActorValueReaction]
+ID=ari_rallying_presence_av; aiRatingMod=-18; actorValues=sleep; actorValues=stun; actorValues=disable; newID=X;
+[ActorValueReaction]
+ID=ari_rallying_presence_av; element=timerUp; action=ari_rallying_presence_av_act;
+
+[Action] ID=ari_rallying_presence_av_act; 
+    icon=iconSharp;
+    special=usableEvenWhenCantAct;
+    special=usableEvenWhenReacting;
+    special=usableEvenWhenYourTurn;
+    special=dontDelayOtherActions;
+[ActionAoE]
+	ID=ari_rallying_presence_av_act;
+	cloneFrom=adjacentAndSelf;
+	canSelectEnemies=false;
+	minRange=0;
+	maxRange=1;
+[AvAffecter]
+	ID=ari_rallying_presence_av_act; 
+	visibleEvaluations=false;
+	visibleMiss=false;
+	actorValue=ari_rally_av;
+	harmful=false;
+	magnitude=3 * c:ari_rallying_presence_av;
+	duration=-5;
+	chance=100;
+[AvAffecterAoE]
+	ID=ari_rallying_presence_av_act;
+	cloneFrom=adjacentAndSelf;
+	canSelectEnemies=false;
+	minRange=0;
+	maxRange=1;
+[AvAffecter]
+	ID=ari_rallying_presence_av_act; 
+	visibleEvaluations=false;
+	visibleMiss=false;
+	actorValue=HP;
+	harmful=false;
+	magnitude=1 * c:ari_rallying_presence_av;
+	duration=-2;
+	chance=100;
+[AvAffecterAoE]
+	ID=ari_rallying_presence_av_act;
+	cloneFrom=adjacentAndSelf;
+	canSelectEnemies=false;
+	minRange=0;
+	maxRange=1;
+	
+[ActorValueReaction]
+ID=ari_rallying_presence_av; element=endTurn; action=ari_rallying_presence_av_check;
+
+[Action] ID=ari_rallying_presence_av_check; 
+    icon=iconSharp;
+    special=usableEvenWhenCantAct;
+    special=usableEvenWhenReacting;
+    special=usableEvenWhenYourTurn;
+    special=dontDelayOtherActions;
+[ActionAoE]
+	ID=ari_rallying_presence_av_check;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=ari_rallying_presence_av_check; 
+	visibleEvaluations=false;
+	visibleMiss=false;
+	actorValue=ari_rallying_presence_av;
+	harmful=false;
+	magnitude=-t:ari_rallying_presence_av;
+	duration=-2;
+	chance=100 * is:0:m:numAlliesWithin(1);
+[AvAffecterAoE]
+	ID=ari_rallying_presence_av_check;
+	aoeCasterAsOrigin=true;
+	cloneFrom=oneTile;
+	canSelectAllies=true;

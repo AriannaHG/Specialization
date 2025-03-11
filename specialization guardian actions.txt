@@ -1,0 +1,571 @@
+-----------------------Mighty Block
+--3 points for 2 bulwark
+--1 point to add percent chance to proc Regeneration tick
+--2 points to add stabilized, push/pull immune
+--2 points to add a counter
+--3 points for extra range
+
+[Action] ID=Gu_mightyBlock; 
+	name=Mighty Block;
+	icon=icon_Gu_mightyBlock;
+	tooltip=Make an ally nearly invulnerable to physical attacks until their next turn.;
+	rankUpTooltip=;
+	tooltipTopRight=;
+	
+	harmful=false;
+	attractAttention=false;
+	mpCost=2 * d:mpCostMult + d:mpCostMod;
+	
+	XPCost=120;
+	
+	casterAnimation=charge_alt;
+	maxRank=1;
+	
+	AIRatingBias = -999;
+	
+[ActionAoE] 
+	ID=Gu_mightyBlock;
+	cloneFrom=adjacentAndSelf;
+	canSelectEnemies=false;
+	maxRange=1;
+	maxRangeBonus = c:ari_guardian_Gu_mightyBlock_A1ATTRIBUTE5;
+[AvAffecter]
+	ID=Gu_mightyBlock;
+	harmful=false;
+	actorValue=PhysDef;
+	magnitude=3 + dMin0:mightyBlockDef;
+	duration=-3;
+	chance=100;
+	FXOnTarget=shields;
+	FXOnTargetColor=Gold;
+	FXOnTarget=sfx_sliceShingLow;
+[AvAffecterAoE]
+	ID=Gu_mightyBlock;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gu_mightyBlock;
+	harmful=false;
+	visibleEvaluations=false;
+	actorValue=PhysAtk;
+	magnitude=-2;
+	duration=-3;
+	chance=100;
+[AvAffecterAoE]
+	ID=Gu_mightyBlock;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gu_mightyBlock;
+	harmful=false;
+	visibleEvaluations=false;
+	actorValue=recentlyBlocked;
+	magnitude=1 + c:recentlyBlocked;
+	duration=110;
+	chance=100;
+[AvAffecterAoE]
+	ID=Gu_mightyBlock;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gu_mightyBlock;
+	fReq=is:5:c:ari_specialization * c:ari_guardian_Gu_mightyBlock_A1ATTRIBUTE1;
+	harmful=false;
+	visibleMiss=false;
+	visibleEvaluations=true;
+	actorValue=ari_bulwark_av;
+	magnitude=2 * c:ari_guardian_Gu_mightyBlock_A1ATTRIBUTE1;
+	duration=-3;
+	chance=100;
+[AvAffecterAoE]
+	ID=Gu_mightyBlock;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gu_mightyBlock;
+	fReq=is:5:c:ari_specialization * c:ari_guardian_Gu_mightyBlock_A1ATTRIBUTE2;
+	harmful=false;
+	visibleMiss=false;
+	visibleEvaluations=false;
+	element=40001;
+	magnitude=1;
+	duration=-2;
+	chance=15 * c:ari_guardian_Gu_mightyBlock_A1ATTRIBUTE2;
+[AvAffecterAoE]
+	ID=Gu_mightyBlock;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gu_mightyBlock;
+	fReq=is:5:c:ari_specialization * c:ari_guardian_Gu_mightyBlock_A1ATTRIBUTE3;
+	harmful=false;
+	visibleMiss=false;
+	visibleEvaluations=true;
+	actorValue=ari_stabilized_av;
+	magnitude=1;
+	duration=9 * c:ari_guardian_Gu_mightyBlock_A1ATTRIBUTE3;
+	chance=100;
+[AvAffecterAoE]
+	ID=Gu_mightyBlock;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gu_mightyBlock;
+	fReq=is:5:c:ari_specialization * c:ari_guardian_Gu_mightyBlock_A1ATTRIBUTE4;
+	harmful=false;
+	visibleMiss=false;
+	visibleEvaluations=true;
+	actorValue=ari_countering_av;
+	magnitude=1;
+	duration=9 * c:ari_guardian_Gu_mightyBlock_A1ATTRIBUTE4;
+	chance=100;
+[AvAffecterAoE]
+	ID=Gu_mightyBlock;
+	cloneFrom=oneTile;
+
+
+
+
+-----------------------Resuscitate
+--3 points for preserve?
+--2 points for second wind
+--2 points for chance to auto-cast Mighty Block
+--filler
+--filler
+
+[Action] ID=Gu_resuscitate; 
+	name=Resuscitate;
+	icon=icon_Gu_resuscitate;
+	tooltip=Revive an adjacent fallen ally, restoring <math=c:skill_Life + c:MagAtk + 10 * c:rank>% HP.;
+	rankUpTooltip=Each rank increases restored HP by 10%.;
+	tooltipTopRight=<icon=MagAtk_small><icon=skill_Life_small>;
+	harmful=false;
+	attractAttention=false;
+	mpCost=4 * d:mpCostMult * d:mpCostMult_onlyWithCT + d:mpCostMod_onlyWithCT + d:mpCostMod;
+	chargeTime=8 * d:chargeTimeMult * d:chargeTimeMult_onlyWithMP + d:chargeTimeMod + d:chargeTimeMod_onlyWithMP;
+	
+	XPCost=300;
+	XPCost=500;
+	XPCost=800;
+	XPCost=1600;
+	maxRank=4;
+	canExceedMaxRankBy=1;
+	
+	special=requiresCasting;
+	
+	casterAnimation=handsup;
+	FXOnCaster=chargeFast;
+	FXOnCasterColor=Blue;
+	FXOnTarget=darken_minor;
+	FXOnTarget=tallLight;
+[ActionAoE] 
+	ID=Gu_resuscitate; 
+	cloneFrom=adjacent;
+[AvAffecter]
+	ID=Gu_resuscitate;
+	visibleMiss=false;
+	fReq=is:5:c:ari_specialization * c:ari_guardian_Gu_resuscitate_A5ATTRIBUTE4;
+	harmful=false;
+	actorValue=HP;
+	magnitude=t:HPMax * 0.1 * c:rank + 1 + t:HPMax * 0.01 * c:skill_Life + t:HPMax * 0.01 * c:MagAtk;
+	duration=-2;
+	chance=100 * is:0:m:incapped;
+	FXOnHit=chargeSpiralFast_big;
+	FXOnHit=sparkles;
+	FXOnHit=upwardLinesQuick;
+	FXOnHit=whiten;
+	FXOnHit=Powerup_longerEchoBloop;
+[AvAffecterAoE]
+	ID=Gu_resuscitate;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gu_resuscitate;
+	visibleMiss=false;
+	fReq=is:5:c:ari_specialization * c:ari_guardian_Gu_resuscitate_A5ATTRIBUTE4;
+	harmful=false;
+	actorValue=ari_second_wind_av;
+	magnitude=2 * c:ari_guardian_Gu_resuscitate_A5ATTRIBUTE4;
+	duration=20;
+	chance=100 * is:0:m:incapped;
+[AvAffecterAoE]
+	ID=Gu_resuscitate;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gu_resuscitate;
+	harmful=false;
+	actorValue=revive;
+	magnitude=t:HPMax * 0.1 * c:rank + 1 + t:HPMax * 0.01 * c:skill_Life + t:HPMax * 0.01 * c:MagAtk;
+	duration=-2;
+	chance=d:reviveAcc;
+	FXOnTile=chargeSpiralFast;
+	FXOnTile=sfx_longGoodAura_med;
+	FXOnTile=actor_reviveGhost;
+	FXOnHit=chargeSpiralFast_big;
+	FXOnHit=sparkles;
+	FXOnHit=upwardLinesQuick;
+	FXOnHit=whiten;
+	FXOnHit=Powerup_longerEchoBloop;
+	FXOnMiss=hitDustQuiet;
+[AvAffecterAoE]
+	ID=Gu_resuscitate;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gu_resuscitate; 
+	fReq=is:5:c:ari_specialization * c:ari_guardian_Gu_resuscitate_A5ATTRIBUTE2;
+	visibleMiss=false;
+	harmful=false;
+	actorValue=preserve;
+	magnitude=1;
+	duration=12 * c:ari_guardian_Gu_resuscitate_A5ATTRIBUTE2;
+	chance=100;
+	element=magic;
+	element=life;
+[AvAffecterAoE]
+	ID=Gu_resuscitate;
+	cloneFrom=oneTile;
+
+
+[AvAffecter]
+	ID=Gu_resuscitate;
+	fReq=is:5:c:ari_specialization * c:ari_guardian_Gu_resuscitate_A5ATTRIBUTE3;
+	visibleMiss=false;
+	harmful=false;
+	actorValue=PhysDef;
+	magnitude=3 + dMin0:mightyBlockDef;
+	duration=-3;
+	chance=c:ari_guardian_Gu_resuscitate_A5ATTRIBUTE3 * 10;
+	FXOnTarget=shields;
+	FXOnTargetColor=Gold;
+	FXOnTarget=sfx_sliceShingLow;
+[AvAffecterAoE]
+	ID=Gu_resuscitate;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gu_resuscitate;
+	fReq=is:5:c:ari_specialization * c:ari_guardian_Gu_resuscitate_A5ATTRIBUTE3;
+	visibleMiss=false;
+	harmful=false;
+	visibleEvaluations=false;
+	actorValue=PhysAtk;
+	magnitude=-2;
+	duration=-3;
+	chance=c:ari_guardian_Gu_resuscitate_A5ATTRIBUTE3 * 10;
+[AvAffecterAoE]
+	ID=Gu_resuscitate;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gu_resuscitate;
+	fReq=is:5:c:ari_specialization * c:ari_guardian_Gu_resuscitate_A5ATTRIBUTE3;
+	visibleMiss=false;
+	harmful=false;
+	visibleEvaluations=false;
+	actorValue=recentlyBlocked;
+	magnitude=1 + c:recentlyBlocked;
+	duration=110;
+	chance=c:ari_guardian_Gu_resuscitate_A5ATTRIBUTE3 * 10;
+[AvAffecterAoE]
+	ID=Gu_resuscitate;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gu_resuscitate;
+	fReq=is:5:c:ari_specialization * c:ari_guardian_Gu_mightyBlock_A1ATTRIBUTE1 * c:ari_guardian_Gu_resuscitate_A5ATTRIBUTE3;
+	harmful=false;
+	visibleMiss=false;
+	visibleEvaluations=true;
+	actorValue=ari_bulwark_av;
+	magnitude=2 * c:ari_guardian_Gu_mightyBlock_A1ATTRIBUTE1;
+	duration=-3;
+	chance=c:ari_guardian_Gu_resuscitate_A5ATTRIBUTE3 * 10;
+	FXOnTile=delay_tiny;
+[AvAffecterAoE]
+	ID=Gu_resuscitate;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gu_resuscitate;
+	fReq=is:5:c:ari_specialization * c:ari_guardian_Gu_mightyBlock_A1ATTRIBUTE2 * c:ari_guardian_Gu_resuscitate_A5ATTRIBUTE3;
+	harmful=false;
+	visibleMiss=false;
+	visibleEvaluations=false;
+	element=40001;
+	magnitude=1;
+	duration=-2;
+	chance=15 * c:ari_guardian_Gu_mightyBlock_A1ATTRIBUTE2 * c:ari_guardian_Gu_resuscitate_A5ATTRIBUTE3 * thisPreviousAVHit:Gu_resuscitate;
+[AvAffecterAoE]
+	ID=Gu_resuscitate;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gu_resuscitate;
+	fReq=is:5:c:ari_specialization * c:ari_guardian_Gu_mightyBlock_A1ATTRIBUTE3 * c:ari_guardian_Gu_resuscitate_A5ATTRIBUTE3;
+	harmful=false;
+	visibleMiss=false;
+	visibleEvaluations=true;
+	actorValue=ari_stabilized_av;
+	magnitude=1;
+	duration=9 * c:ari_guardian_Gu_mightyBlock_A1ATTRIBUTE3;
+	chance=c:ari_guardian_Gu_resuscitate_A5ATTRIBUTE3 * 10;
+[AvAffecterAoE]
+	ID=Gu_resuscitate;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gu_resuscitate;
+	fReq=is:5:c:ari_specialization * c:ari_guardian_Gu_mightyBlock_A1ATTRIBUTE4 * c:ari_guardian_Gu_resuscitate_A5ATTRIBUTE3;
+	harmful=false;
+	visibleMiss=false;
+	visibleEvaluations=true;
+	actorValue=ari_countering_av;
+	magnitude=1;
+	duration=9 * c:ari_guardian_Gu_mightyBlock_A1ATTRIBUTE4;
+	chance=c:ari_guardian_Gu_resuscitate_A5ATTRIBUTE3 * 10;
+[AvAffecterAoE]
+	ID=Gu_resuscitate;
+	cloneFrom=oneTile;
+
+	
+
+
+
+-----------------------Rally
+--1 point for 2 rally
+--1 point 1 Bravery
+--2 points to add second wind
+--1 point to add 5% healing
+--3 points for 1 act timer?
+	
+[Action] ID=Gu_rally; 
+	name=Rally;
+	icon=icon_Gu_rally;
+	tooltip=Inspire your allies, increasing their morale for <icon=time><math=34+ c:MagAtk*2 + 20 * c:rank>.<n=>Good morale increases <icon=PhysAtk><icon=MagAtk> attack and <icon=PhysDef><icon=MagDef> defense.;
+	rankUpTooltip=Each rank increases duration by <icon=time>20.;
+	tooltipTopRight=<icon=MagAtk_small>;
+	
+	harmful=false;
+	mpCost=2 * d:mpCostMult + d:mpCostMod;
+	
+	XPCost=120;
+	XPCost=280;
+	XPCost=450;
+	XPCost=950;
+	XPCost=1500;
+	
+	maxRank=5;
+	canExceedMaxRankBy=1;
+	casterAnimation=handsup;
+	
+	FXOnCaster=upwardLines;
+	FXOnCaster=sfx_highestAura;
+[ActionAoE] 
+	ID=Gu_rally; 
+	needsLoS = true;
+	needsLoE = true;
+	airborne = true;
+	arc=true;
+	minRange = 0;
+	maxRange = 3;
+	bypassAll=true;
+	occupyAll=true;
+[AvAffecter]
+	ID=Gu_rally;
+	harmful=false;
+	actorValue=morale;
+	magnitude=1;
+	duration=34 + c:MagAtk*2 + 20 * c:rank;
+	chance=100;
+	FXOnTile=chargeFast;
+	FXOnHit=upwardLines;
+	FXOnHit=sparkles;
+	FXOnHit=sfx_powerup2;
+[AvAffecterAoE]
+	ID=Gu_rally;
+	cloneFrom=adjacentAndSelf;	
+	canSelectEnemies=false;
+[AvAffecter]
+	ID=Gu_rally;
+	fReq=is:5:c:ari_specialization * c:ari_guardian_Gu_rally_A4ATTRIBUTE1;
+	visibleMiss=false;
+	harmful=false;
+	actorValue=ari_rally_av;
+	magnitude= 2 * c:ari_guardian_Gu_rally_A4ATTRIBUTE1;
+	duration=34 + c:MagAtk*2 + 20 * c:rank;
+	chance=100 * d:ari_guardian_Gu_rally_A4ATTRIBUTE1;
+[AvAffecterAoE]
+	ID=Gu_rally;
+	cloneFrom=adjacentAndSelf;	
+	canSelectEnemies=false;
+[AvAffecter]
+	ID=Gu_rally;
+	fReq=is:5:c:ari_specialization * c:ari_guardian_Gu_rally_A4ATTRIBUTE1;
+	visibleMiss=false;
+	visibleEvaluations=false;
+	harmful=false;
+	actorValue=HP;
+	magnitude= 2 * c:ari_guardian_Gu_rally_A4ATTRIBUTE1;
+	duration=-2;
+	chance=100 * d:ari_guardian_Gu_rally_A4ATTRIBUTE1;
+[AvAffecterAoE]
+	ID=Gu_rally;
+	cloneFrom=adjacentAndSelf;	
+	canSelectEnemies=false;
+[AvAffecter]
+	ID=Gu_rally;
+	fReq=is:5:c:ari_specialization * c:ari_guardian_Gu_rally_A4ATTRIBUTE2;
+	visibleMiss=false;
+	harmful=false;
+	actorValue=ari_brave_av;
+	magnitude= 1 * c:ari_guardian_Gu_rally_A4ATTRIBUTE2;
+	duration=34 + c:MagAtk*2 + 20 * c:rank;
+	chance=100 * d:ari_guardian_Gu_rally_A4ATTRIBUTE2;
+[AvAffecterAoE]
+	ID=Gu_rally;
+	cloneFrom=adjacentAndSelf;	
+	canSelectEnemies=false;
+[AvAffecter]
+	ID=Gu_rally;
+	fReq=is:5:c:ari_specialization * c:ari_guardian_Gu_rally_A4ATTRIBUTE3;
+	visibleMiss=false;
+	harmful=false;
+	actorValue=ari_second_wind_av;
+	magnitude= 1 * c:ari_guardian_Gu_rally_A4ATTRIBUTE3;
+	duration=34 + c:MagAtk*2 + 20 * c:rank;
+	chance=100 * d:ari_guardian_Gu_rally_A4ATTRIBUTE3;
+[AvAffecterAoE]
+	ID=Gu_rally;
+	cloneFrom=adjacentAndSelf;	
+	canSelectEnemies=false;
+[AvAffecter]
+	ID=Gu_rally;
+	fReq=is:5:c:ari_specialization * c:ari_guardian_Gu_rally_A4ATTRIBUTE4;
+	visibleMiss=false;
+	visibleEvaluations=true;
+	harmful=false;
+	actorValue=HP;
+	magnitude= t:MaxHP * 0.05 * c:ari_guardian_Gu_rally_A4ATTRIBUTE4;
+	duration=-2;
+	chance=100 * d:ari_guardian_Gu_rally_A4ATTRIBUTE4;
+[AvAffecterAoE]
+	ID=Gu_rally;
+	cloneFrom=adjacentAndSelf;	
+	canSelectEnemies=false;
+[AvAffecter]
+	ID=Gu_rally;
+	fReq=is:5:c:ari_specialization * c:ari_guardian_Gu_rally_A4ATTRIBUTE5;
+	visibleMiss=false;
+	visibleEvaluations=true;
+	harmful=false;
+	actorValue=ari_rallying_presence_av;
+	magnitude= 3 * c:ari_guardian_Gu_rally_A4ATTRIBUTE5;
+	duration=300;
+	chance=100 * d:ari_guardian_Gu_rally_A4ATTRIBUTE5;
+[AvAffecterAoE]
+	ID=Gu_rally;
+	fReq=is:5:c:ari_specialization * c:ari_guardian_Gu_rally_A4ATTRIBUTE5;
+	aoeCasterAsOrigin = true;
+	cloneFrom=oneTile;
+	canSelectAllies=true;
+
+	
+
+
+
+-----------------------Discipline
+--2 points for mag evasion
+--2 points for sturdy for 15 timer
+--1 point for mana
+--2 points to make immune to cancel/interrupts
+--filler
+	
+[Action] ID=Gu_discipline; 
+	name=Discipline;
+	icon=icon_Gu_discipline;
+	tooltip=Through sheer fortitude, cure negative status effects.;
+	rankUpTooltip=Each rank increases area of effect.;
+	tooltipTopRight=;
+	
+	harmful=false;
+	attractAttention=false;
+	
+	XPCost=70;
+	XPCost=250;
+	XPCost=700;
+	
+	maxRank=3;
+	canExceedMaxRankBy=1;
+	casterAnimation=charge_alt;
+	
+	FXOnTarget=largePing;
+	FXOnTarget=sfx_risingBipLow;
+[ActionAoE] 
+	ID=Gu_discipline; 
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gu_discipline;
+	harmful=false;
+	actorValue=cure;
+	magnitude=1;
+	duration=-2;
+	chance=100 * m:tCurable;
+	FXOnTile=sparkle;
+	FXOnHit=sparklesFast;
+	FXOnHit=briefAuraSound;
+[AvAffecterAoE]
+	ID=Gu_discipline;
+	cloneFrom=oneTile;	
+	canSelectEnemies=false;
+	maxRangeBonus=c:rank - 1;
+	
+
+
+
+-----------------------Impair
+--2 points for flinch
+--1 point for blunder
+--2 points for movement speed reduction
+--1 point for exposed
+--3 points for 1 act timer?
+
+[Action] ID=Gu_impair; 
+	name=Impair;
+	icon=icon_Gu_impair;
+	tooltip=Inflict -<math=c:rank + 2> <icon=PhysAtk><icon=MagAtk> for <icon=time>90 and deal half damage.;
+	rankUpTooltip=Further reduce <icon=PhysAtk><icon=MagAtk> by +1.;
+	tooltipTopRight=<icon=PhysAtk_small><icon=melee_small>;
+	
+	XPCost=100;
+	XPCost=300;
+	XPCost=500;
+	XPCost=800;
+	
+	casterAnimation=weapon;
+	maxRank=4;
+	canExceedMaxRankBy=1;
+	
+	requiredWeaponElement=weapon;
+	
+	FXOnCaster=chargeFast;
+	FXOnTarget=weaponFX;
+[ActionAoE] 
+	ID=Gu_impair; shape=10;
+[AvAffecter]
+	ID=Gu_impair; 
+	weaponAvAffecter=true;
+	magnitude=w:magnitude * 0.5;
+	chance=w:chance;
+	duration=-2;
+[AvAffecterAoE]
+	ID=Gu_impair; shape=11;
+[AvAffecter]
+	ID=Gu_impair; 
+	visibleMiss=false;
+	actorValue=PhysAtk;
+	magnitude=-c:rank - 2;
+	duration=90 + c:PhysAtk - t:PhysDef;
+	chance=w:chance;
+	FXOnHit=downwardLines;
+	FXOnHitColor=Red;
+	FXOnHit=Debuff_lowPitch;
+[AvAffecterAoE]
+	ID=Gu_impair;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gu_impair; 
+	visibleMiss=false;
+	actorValue=MagAtk;
+	magnitude=-c:rank - 2;
+	duration=90 + c:PhysAtk - t:PhysDef;
+	chance=w:chance;
+[AvAffecterAoE]
+	ID=Gu_impair;
+	cloneFrom=oneTile;

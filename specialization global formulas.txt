@@ -1,0 +1,75 @@
+--Use IDs 40000 through 41000 for custom Elements
+
+--Specialization "ID" of 1 is Berserker
+--Specialization "ID" of 2 is Warrior
+--Specialization "ID" of 3 is Gladiator
+--Specialization "ID" of 4 is Brawler
+--Specialization "ID" of 5 is Guardian
+
+--Specialization "ID" of 66 is Gravekeeper
+
+
+[ActorValue] ID=ari_specialization;
+minimum=0;
+maximum=255;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+removedByNegativeMagnitude=true;
+harmfulMagnitude = 1;
+[ActorValueReaction]
+ID=ari_specialization; actorValues=ari_specialization; newID=ari_specialization;
+
+
+
+[FormulaGlobal] ID=ari_maxHP_check_formula0;
+formula=t:HPMax - t:HP;
+[FormulaGlobal] ID=ari_specialization_check_formula;
+formula=t:ari_specialization;
+
+
+[Action] ID=ari_set_specialization_reset; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_set_specialization_reset;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_set_specialization_reset;
+	harmful=false;
+	actorValue=ari_specialization;
+    magnitude=-255;
+	duration=-1;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnHit=shroudExplode;
+	FXOnTile=delay_tiny;
+[AvAffecterAoE]
+	ID=ari_set_specialization_reset; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+
+[GlobalTrigger] aliasID=ari_specialization_reset_trigger;
+[GlobalTriggerEffect] ID=ari_specialization_reset_trigger; effectID=actionOnPartyNumActor; sValue=ari_set_specialization_reset; sValue2=; bValue1=False; bValue2=False; fValue=0; delay=0; xValue=-1; yValue=-1;
+
+
+
+[Action] ID=ari_specialization_check; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_specialization_check;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_specialization_check;
+	harmful=false;
+	actorValue=task;
+    magnitude=setGlobalVar_math,ari_specialization_check0,d:ari_specialization_check_formula;
+	duration=-1;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+	FXOnTile=delay_big;
+[AvAffecterAoE]
+	ID=ari_specialization_check; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+	
+[GlobalTrigger] aliasID=ari_specialization_check_trigger;
+[GlobalTriggerEffect] ID=ari_specialization_check_trigger; effectID=actionOnPartyNumActor; sValue=ari_specialization_check; sValue2=; bValue1=False; bValue2=False; fValue=0; delay=0; xValue=-1; yValue=-1;

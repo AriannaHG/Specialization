@@ -1,0 +1,1839 @@
+------------------------------------------------------------------------------------------
+--        Replace the following phrases:
+------------------------------------------------------------------------------------------
+--        gladiator                            			gets replaced with the actual class ID
+--        classIcon_gladiator                  			gets replaced with the class Icon
+--        Gla_smash                           			gets replaced with the class's first ability
+--        icon_Gla_smash           			gets replaced with the first ability's Icon
+--				A1ATTRIBUTE1			                gets replaced with the first ability's first attribute
+--				A1ATTRIBUTE2			                gets replaced with the first ability's second attribute
+--				A1ATTRIBUTE3			                gets replaced with the first ability's third attribute
+--				A1ATTRIBUTE4			                gets replaced with the first ability's fourth attribute
+--				A1ATTRIBUTE5			                gets replaced with the first ability's fifth attribute
+--        Gla_swift                           			gets replaced with the class's second ability
+--        icon_Gla_swift           			gets replaced with the second ability's Icon
+--				A2ATTRIBUTE1			                gets replaced with the second ability's first attribute
+--				A2ATTRIBUTE2			                gets replaced with the second ability's second attribute
+--				A2ATTRIBUTE3			                gets replaced with the second ability's third attribute
+--				A2ATTRIBUTE4			                gets replaced with the second ability's fourth attribute
+--				A2ATTRIBUTE5			                gets replaced with the second ability's fifth attribute
+--        Gla_revenge                           			gets replaced with the class's third ability
+--        icon_Gla_revenge           			gets replaced with the third ability's Icon
+--				A3ATTRIBUTE1			                gets replaced with the third ability's first attribute
+--				A3ATTRIBUTE2			                gets replaced with the third ability's second attribute
+--				A3ATTRIBUTE3			                gets replaced with the third ability's third attribute
+--				A3ATTRIBUTE4			                gets replaced with the third ability's fourth attribute
+--				A3ATTRIBUTE5			                gets replaced with the third ability's fifth attribute
+--        Gla_taunt                           			gets replaced with the class's fourth ability
+--        icon_Gla_taunt           			gets replaced with the fourth ability's Icon
+--				A4ATTRIBUTE1			                gets replaced with the fourth ability's first attribute
+--				A4ATTRIBUTE2			                gets replaced with the fourth ability's second attribute
+--				A4ATTRIBUTE3			                gets replaced with the fourth ability's third attribute
+--				A4ATTRIBUTE4			                gets replaced with the fourth ability's fourth attribute
+--				A4ATTRIBUTE5			                gets replaced with the fourth ability's fifth attribute
+--        Gla_throwWeapon                           			gets replaced with the class's fifth ability
+--        icon_Gla_throwWeapon           			gets replaced with the fifth ability's Icon
+--				A5ATTRIBUTE1			                gets replaced with the fifth ability's first attribute
+--				A5ATTRIBUTE2			                gets replaced with the fifth ability's second attribute
+--				A5ATTRIBUTE3			                gets replaced with the fifth ability's third attribute
+--				A5ATTRIBUTE4			                gets replaced with the fifth ability's fourth attribute
+--				A5ATTRIBUTE5			                gets replaced with the fifth ability's fifth attribute
+------------------------------------------------------------------------------------------
+
+
+-----------------------------gladiator Skill point setup
+[ActorValue]
+ID=ari_gladiator_total;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[ActorValue]
+ID=ari_gladiator_current;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+removedByNegativeMagnitude=false;
+
+
+
+-----------------------------gladiator formula setup
+[FormulaGlobal] ID=ari_gladiator_current_check_formula;
+formula=t:ari_gladiator_current;
+[FormulaGlobal] ID=ari_gladiator_total_check_formula;
+formula=t:ari_gladiator_total;
+[FormulaGlobal] ID=ari_gladiator_current_xp_check_formula;
+formula=t:gladiator_XP;
+
+[FormulaGlobal] ID=ari_gladiator_skillpoint_exp0;
+formula=1 + g:ari_total_points0;
+
+[FormulaGlobal] ID=ari_gladiator_skillpoint_exp1;
+formula=d:ari_gladiator_skillpoint_exp0 * 1000;
+
+[FormulaGlobal] ID=ari_gladiator_skillpoint_exp_req0;
+formula=d:ari_gladiator_skillpoint_exp1 - 1;
+
+[FormulaGlobal] ID=ari_gladiator_skillpoint_exp_req1;
+formula=g:ari_current_gladiator_exp0 - d:ari_gladiator_skillpoint_exp_req0;
+
+
+
+[Action] ID=ari_set_specialization_gladiator; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_set_specialization_gladiator;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_set_specialization_gladiator;
+	--harmful=false;
+	actorValue=ari_specialization;
+    magnitude=3;----------------------------------------------------------CHANGE THIS TO THE INDEXED CLASS'S SPECIALIZATION ID
+	duration=-1;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_set_specialization_gladiator; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+	
+[GlobalTrigger] aliasID=ari_set_specialization_gladiator_trigger;
+[GlobalTriggerEffect] ID=ari_set_specialization_gladiator_trigger; effectID=actionOnPartyNumActor; sValue=ari_set_specialization_gladiator; sValue2=; bValue1=False; bValue2=False; fValue=0; delay=0; xValue=-1; yValue=-1;	
+	
+
+
+
+[Action] ID=ari_specialization_gladiator_skillpoint_check; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_specialization_gladiator_skillpoint_check;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_specialization_gladiator_skillpoint_check;
+	harmful=false;
+	actorValue=task;
+    magnitude=setGlobalVar_math,ari_total_points0,d:ari_gladiator_total_check_formula;
+	duration=-1;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_specialization_gladiator_skillpoint_check; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_specialization_gladiator_skillpoint_check;
+	harmful=false;
+	actorValue=task;
+    magnitude=setGlobalVar_math,ari_current_points0,d:ari_gladiator_current_check_formula;
+	duration=-1;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_specialization_gladiator_skillpoint_check; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_specialization_gladiator_skillpoint_check;
+	harmful=false;
+	actorValue=task;
+    magnitude=setGlobalVar_math,ari_current_gladiator_exp0,d:ari_gladiator_current_xp_check_formula;
+	duration=-1;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_specialization_gladiator_skillpoint_check; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+
+[GlobalTrigger] aliasID=ari_specialization_gladiator_skillpoint_check_trigger;
+[GlobalTriggerEffect] ID=ari_specialization_gladiator_skillpoint_check_trigger; effectID=actionOnPartyNumActor; sValue=ari_specialization_gladiator_skillpoint_check; sValue2=; bValue1=False; bValue2=False; fValue=0; delay=0; xValue=-1; yValue=-1;	
+
+
+
+
+[Action] ID=ari_gladiator_skillpoint; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_skillpoint;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_skillpoint;
+	harmful=false;
+	actorValue=gladiator_XP;
+	magnitude=d:ari_gladiator_skillpoint_exp1 * -1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_gladiator_skillpoint; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_skillpoint;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_skillpoint; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_skillpoint;
+	harmful=false;
+	actorValue=ari_gladiator_total;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_skillpoint; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+	
+
+
+-----------------------------gladiator dialogue begin
+-----------------------------Set up specialization
+[DialogNode] ID=class_gladiator2;
+animations=;
+statements=Hoh, what do we have here? You looking for something?;
+
+[DialogOption] ID=class_gladiator2; text=I'm looking for additional training as a Gladiator<iconBig=classIcon_gladiator>;
+--formulaReq=is:1:g:class_gladiator;
+specialEffect=ari_specialization_check_trigger;
+specialEffect=fx,delay;
+newLineOfOptions=true;
+nodeToConnectTo=ari_gladiator_specialization_training;
+
+
+
+[DialogNode] ID=ari_gladiator_specialization_training;
+animations=;
+statements=We're looking to get tougher, are we? What kind of training are you here for, exactly?;
+
+[DialogOption] text=<portraitBig=0><partyActorName=0><n=>I want to specialize in being a Gladiator<iconBig=classIcon_gladiator>;
+formulaReq=isNot:1:g:ari_specialized_ever;
+nodeToConnectTo=ari_gladiator_specialization;
+
+[DialogOption] text=<portraitBig=0><partyActorName=0><n=>I want to specialize in being a Gladiator<iconBig=classIcon_gladiator> 2;
+formulaReq=is:1:g:ari_specialized_ever * isNot:3:g:ari_specialization_check0;		----------------------------------------------------------CHANGE THIS TO THE INDEXED CLASS'S SPECIALIZATION ID
+newLineOfOptions=false;
+nodeToConnectTo=ari_gladiator_specialization_different;
+
+[DialogOption] text=<portraitBig=0><partyActorName=0><n=>I want to specialize my Gladiator<iconBig=classIcon_gladiator> abilities;
+formulaReq=is:3:g:ari_specialization_check0;		------------------------------------------------------------------------------------------CHANGE THIS TO THE INDEXED CLASS'S SPECIALIZATION ID
+newLineOfOptions=true;
+nodeToConnectTo=ari_gladiator_specialize_skills;
+
+[DialogOption] text=Nevermind;
+newLineOfOptions=true;
+bottomOption=true;
+nodeToConnectTo=;
+
+
+
+[DialogNode] ID=ari_gladiator_specialization_different;
+animations=;
+statements=It's a shame, but you seem to be specialized in something else and I can only toughen you up if you're committing to being a Gladiator.<n=>Do you really want to specialize as a Gladiator?;
+
+[DialogOption] text=<portraitBig=0><partyActorName=0><n=>Yes, I want to specialize in being a Gladiator<iconBig=classIcon_gladiator>;
+nodeToConnectTo=ari_gladiator_specialization;
+
+[DialogOption] text=Nevermind;
+newLineOfOptions=true;
+bottomOption=true;
+nodeToConnectTo=;
+
+
+-----------------------------Specialization set, skill training begin
+[DialogNode] ID=ari_gladiator_specialization;
+animations=;
+statements=There we go, you've got guts.<n=>As long as you've committed, I'll toughen up some of your Gladiator abilities.;
+statements=How should we do this?;
+specialEffect=setGlobalVar,ari_specialized_ever,1;
+specialEffect=ari_set_specialization_gladiator_trigger;
+specialEffect=ari_specialization_gladiator_skillpoint_check_trigger;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=I'd like to train in a skill point;
+nodeToConnectTo=ari_gladiator_specialization_skillpoint;
+
+[DialogOption] text=I'd like to train <Smash><iconBig=icon_Gla_smash>;
+nodeToConnectTo=ari_gladiator_Gla_smash_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Swift><iconBig=icon_Gla_swift>;
+nodeToConnectTo=ari_gladiator_Gla_swift_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Revenge><iconBig=icon_Gla_revenge>;
+nodeToConnectTo=ari_gladiator_Gla_revenge_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Taunt><iconBig=icon_Gla_taunt>;
+nodeToConnectTo=ari_gladiator_Gla_taunt_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Hurl Weapon><iconBig=icon_Gla_throwWeapon>;
+nodeToConnectTo=ari_gladiator_Gla_throwWeapon_train;
+newLineOfOptions=true;
+
+[DialogOption] text=That's all, thanks;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+
+
+[DialogNode] ID=ari_gladiator_specialize_skills;
+animations=;
+statements=Nice, I'll turn you into a champion in no time.<n=>Now what're we going to improve?;
+specialEffect=ari_specialization_gladiator_skillpoint_check_trigger;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=I'd like to train in a skill point;
+nodeToConnectTo=ari_gladiator_specialization_skillpoint;
+
+[DialogOption] text=I'd like to train <Smash><iconBig=icon_Gla_smash>;
+nodeToConnectTo=ari_gladiator_Gla_smash_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Swift><iconBig=icon_Gla_swift>;
+nodeToConnectTo=ari_gladiator_Gla_swift_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Revenge><iconBig=icon_Gla_revenge>;
+nodeToConnectTo=ari_gladiator_Gla_revenge_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Taunt><iconBig=icon_Gla_taunt>;
+nodeToConnectTo=ari_gladiator_Gla_taunt_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Hurl Weapon><iconBig=icon_Gla_throwWeapon>;
+nodeToConnectTo=ari_gladiator_Gla_throwWeapon_train;
+newLineOfOptions=true;
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+[DialogNode] ID=ari_gladiator_specialize_skills_extra;
+animations=;
+statements=So how should we do this?;
+specialEffect=ari_specialization_gladiator_skillpoint_check_trigger;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=I'd like to train in a skill point;
+nodeToConnectTo=ari_gladiator_specialization_skillpoint;
+
+[DialogOption] text=I'd like to train <Smash><iconBig=icon_Gla_smash>;
+nodeToConnectTo=ari_gladiator_Gla_smash_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Swift><iconBig=icon_Gla_swift>;
+nodeToConnectTo=ari_gladiator_Gla_swift_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Revenge><iconBig=icon_Gla_revenge>;
+nodeToConnectTo=ari_gladiator_Gla_revenge_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Taunt><iconBig=icon_Gla_taunt>;
+nodeToConnectTo=ari_gladiator_Gla_taunt_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Hurl Weapon><iconBig=icon_Gla_throwWeapon>;
+nodeToConnectTo=ari_gladiator_Gla_throwWeapon_train;
+newLineOfOptions=true;
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+-----------------------------Buying skill points
+[DialogNode] ID=ari_gladiator_specialization_skillpoint;
+animations=;
+statements=A skill point's gunna take <math=d:ari_gladiator_skillpoint_exp1> experience. <n=>Are you tough enough to take on that burden?;
+specialEffect=setPCDialogWindowSizeY;
+
+[DialogOption] text=Yes, I'd like to train in a skill point;
+formulaReq=moreThan:0:d:ari_gladiator_skillpoint_exp_req1;
+specialEffect=actionOnPartyNumActor,ari_gladiator_skillpoint,0;
+nodeToConnectTo=ari_gladiator_specialization_skillpoint_purchase;
+
+[DialogOption] text=<color=SlateGray>Yes, I'd like to train in a skill point;
+formulaReq=lessThan:1:d:ari_gladiator_skillpoint_exp_req1;
+nodeToConnectTo=ari_gladiator_specialization_skillpoint_purchase_cant;
+
+[DialogOption] text=Go back;
+newLineOfOptions=true;
+nodeToConnectTo=ari_gladiator_specialize_skills_extra;
+
+[DialogOption] text=Nevermind;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+
+
+[DialogNode] ID=ari_gladiator_specialization_skillpoint_purchase;
+animations=;
+statements=Wonderful. We're going to make use of your efforts.;
+specialEffect=actionOnPartyNumActor,ari_specialization_check,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+
+
+[DialogNode] ID=ari_gladiator_specialization_skillpoint_purchase_cant;
+animations=;
+statements=It looks like you don't have enough experience for that.;
+statements=You should come back once you've accrued more experience.;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+
+
+[DialogNode] ID=ari_gladiator_insufficient_skillpts;
+animations=stern;
+statements=You don't have enough skill points for that.;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+
+
+
+-----------------------------Gla_smash actorValue begin
+[ActorValue]
+ID=ari_gladiator_Gla_smash_A1ATTRIBUTE1;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_gladiator_Gla_smash_A1ATTRIBUTE1_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_Gla_smash_A1ATTRIBUTE1_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_Gla_smash_A1ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_gladiator_Gla_smash_A1ATTRIBUTE1;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_smash_A1ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_Gla_smash_A1ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_smash_A1ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_gladiator_Gla_smash_A1ATTRIBUTE2;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_gladiator_Gla_smash_A1ATTRIBUTE2_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_Gla_smash_A1ATTRIBUTE2_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_Gla_smash_A1ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_gladiator_Gla_smash_A1ATTRIBUTE2;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_smash_A1ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_Gla_smash_A1ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_smash_A1ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_gladiator_Gla_smash_A1ATTRIBUTE3;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_gladiator_Gla_smash_A1ATTRIBUTE3_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_Gla_smash_A1ATTRIBUTE3_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_Gla_smash_A1ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_gladiator_Gla_smash_A1ATTRIBUTE3;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_smash_A1ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_Gla_smash_A1ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_smash_A1ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_gladiator_Gla_smash_A1ATTRIBUTE4;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_gladiator_Gla_smash_A1ATTRIBUTE4_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_Gla_smash_A1ATTRIBUTE4_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_Gla_smash_A1ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_gladiator_Gla_smash_A1ATTRIBUTE4;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_smash_A1ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_Gla_smash_A1ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_smash_A1ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_gladiator_Gla_smash_A1ATTRIBUTE5;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_gladiator_Gla_smash_A1ATTRIBUTE5_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_Gla_smash_A1ATTRIBUTE5_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_Gla_smash_A1ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_gladiator_Gla_smash_A1ATTRIBUTE5;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_smash_A1ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_Gla_smash_A1ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_smash_A1ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+	
+-----------------------------Gla_smash
+[DialogNode] ID=ari_gladiator_Gla_smash_train;
+animations=;
+statements=How do you want to get better with <Smash><iconBig=icon_Gla_smash>?;
+specialEffect=setPCDialogWindowSizeY,312;
+
+[DialogOption] text=Increase accuracy by 5%. (1);
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_Gla_smash_A1ATTRIBUTE1_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase accuracy by 5%. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_insufficient_skillpts;
+
+[DialogOption] text=Grant a 20% chance to damage the target for 15% of their current health. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_Gla_smash_A1ATTRIBUTE2_dialogue;
+
+[DialogOption] text=<color=SlateGray>Grant a 20% chance to damage the target for 15% of their current health. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_insufficient_skillpts;
+
+[DialogOption] text=Grant a 7% chance to break the target's armor. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_Gla_smash_A1ATTRIBUTE3_dialogue;
+
+[DialogOption] text=<color=SlateGray>Grant a 7% chance to break the target's armor. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_insufficient_skillpts;
+
+[DialogOption] text=Deal 10% of the damage in an area around the target. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_Gla_smash_A1ATTRIBUTE4_dialogue;
+
+[DialogOption] text=<color=SlateGray>Deal 10% of the damage in an area around the target. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_insufficient_skillpts;
+
+[DialogOption] text=Grant the ability to stun the target for 3<iconBig=time> at half of the normal accuracy. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_Gla_smash_A1ATTRIBUTE5_dialogue;
+
+[DialogOption] text=<color=SlateGray>Grant the ability to stun the target for 3<iconBig=time> at half of the normal accuracy. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_insufficient_skillpts;
+
+[DialogOption] text=Go back;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=ari_gladiator_specialize_skills_extra;
+
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+--5% accuracy
+[DialogNode] ID=ari_gladiator_Gla_smash_A1ATTRIBUTE1_dialogue;
+animations=;
+statements=Now you'll never miss your target.;
+specialEffect=actionOnPartyNumActor,ari_gladiator_Gla_smash_A1ATTRIBUTE1_point,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+--20% chance for 15% current hp damage
+[DialogNode] ID=ari_gladiator_Gla_smash_A1ATTRIBUTE2_dialogue;
+animations=;
+statements=A big <Smash><iconBig=icon_Gla_smash> attack is perfect for <Smash><iconBig=icon_Gla_smash>.;
+specialEffect=actionOnPartyNumActor,ari_gladiator_Gla_smash_A1ATTRIBUTE2_point,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+--7% chance to break armor
+[DialogNode] ID=ari_gladiator_Gla_smash_A1ATTRIBUTE3_dialogue;
+animations=;
+statements=That's some solid effort. Armor and defenses will crumble under the weight of your attack.;
+specialEffect=actionOnPartyNumActor,ari_gladiator_Gla_smash_A1ATTRIBUTE3_point,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+--10% damage in aoe +10% per point
+[DialogNode] ID=ari_gladiator_Gla_smash_A1ATTRIBUTE4_dialogue;
+animations=;
+statements=Your <Smash><iconBig=icon_Gla_smash> is kind of scary. It's going to hurt anyone near your target.;
+specialEffect=actionOnPartyNumActor,ari_gladiator_Gla_smash_A1ATTRIBUTE4_point,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+--3 stun at half accuracy
+[DialogNode] ID=ari_gladiator_Gla_smash_A1ATTRIBUTE5_dialogue;
+animations=;
+statements=Sometimes you just hit so hard that they don't know what to do in response.;
+specialEffect=actionOnPartyNumActor,ari_gladiator_Gla_smash_A1ATTRIBUTE5_point,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+
+
+
+-----------------------------Gla_swift
+-----------------------------Gla_swift actorValue begin
+[ActorValue]
+ID=ari_gladiator_Gla_swift_A2ATTRIBUTE1;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_gladiator_Gla_swift_A2ATTRIBUTE1_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_Gla_swift_A2ATTRIBUTE1_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_Gla_swift_A2ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_gladiator_Gla_swift_A2ATTRIBUTE1;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_swift_A2ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_Gla_swift_A2ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_swift_A2ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_gladiator_Gla_swift_A2ATTRIBUTE2;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_gladiator_Gla_swift_A2ATTRIBUTE2_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_Gla_swift_A2ATTRIBUTE2_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_Gla_swift_A2ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_gladiator_Gla_swift_A2ATTRIBUTE2;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_swift_A2ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_Gla_swift_A2ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_swift_A2ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_gladiator_Gla_swift_A2ATTRIBUTE3;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_gladiator_Gla_swift_A2ATTRIBUTE3_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_Gla_swift_A2ATTRIBUTE3_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_Gla_swift_A2ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_gladiator_Gla_swift_A2ATTRIBUTE3;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_swift_A2ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_Gla_swift_A2ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_swift_A2ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_gladiator_Gla_swift_A2ATTRIBUTE4;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_gladiator_Gla_swift_A2ATTRIBUTE4_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_Gla_swift_A2ATTRIBUTE4_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_Gla_swift_A2ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_gladiator_Gla_swift_A2ATTRIBUTE4;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+	FXOnTile=delay_tiny;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_swift_A2ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_Gla_swift_A2ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_swift_A2ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_gladiator_Gla_swift_A2ATTRIBUTE5;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_gladiator_Gla_swift_A2ATTRIBUTE5_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_Gla_swift_A2ATTRIBUTE5_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_Gla_swift_A2ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_gladiator_Gla_swift_A2ATTRIBUTE5;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_swift_A2ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_Gla_swift_A2ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_swift_A2ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+	
+-----------------------------Gla_swift
+[DialogNode] ID=ari_gladiator_Gla_swift_train;
+animations=;
+statements=How would you like to improve <Swift><iconBig=icon_Gla_swift>?;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=Increase damage by 5%. (1);
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_Gla_swift_A2ATTRIBUTE1_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase damage by 5%. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_insufficient_skillpts;
+
+[DialogOption] text=Add +2 flat damage. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_Gla_swift_A2ATTRIBUTE2_dialogue;
+
+[DialogOption] text=<color=SlateGray>Add +2 flat damage. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_insufficient_skillpts;
+
+[DialogOption] text=Increase movement speed by 1 until the end of the next turn. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_Gla_swift_A2ATTRIBUTE3_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase movement speed by 1 until the end of the next turn. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_insufficient_skillpts;
+
+[DialogOption] text=Grant 3 Act timer. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_Gla_swift_A2ATTRIBUTE4_dialogue;
+
+[DialogOption] text=<color=SlateGray>Grant 3 Act timer. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_insufficient_skillpts;
+
+[DialogOption] text=Increase Physical Evasion by 10% for 10<iconBig=time>. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_Gla_swift_A2ATTRIBUTE5_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase Physical Evasion by 10% for 10<iconBig=time>. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_insufficient_skillpts;
+
+[DialogOption] text=Go back;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=ari_gladiator_specialize_skills_extra;
+
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+--5% damage
+[DialogNode] ID=ari_gladiator_Gla_swift_A2ATTRIBUTE1_dialogue;
+animations=;
+statements=They'll really feel that pain, both in the arenas and out.;
+specialEffect=actionOnPartyNumActor,ari_gladiator_Gla_swift_A2ATTRIBUTE1_point,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+--2 flat damage
+[DialogNode] ID=ari_gladiator_Gla_swift_A2ATTRIBUTE2_dialogue;
+animations=;
+statements=You'll be able to hit right on target, regardless of what weapon you're using.;
+specialEffect=actionOnPartyNumActor,ari_gladiator_Gla_swift_A2ATTRIBUTE2_point,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+--1 movement speed until end of next turn
+[DialogNode] ID=ari_gladiator_Gla_swift_A2ATTRIBUTE3_dialogue;
+animations=;
+statements=Living up to your name. <Swift><iconBig=icon_Gla_swift>'s going to allow you to quickly reposition.;
+specialEffect=actionOnPartyNumActor,ari_gladiator_Gla_swift_A2ATTRIBUTE3_point,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+--3 act timer
+[DialogNode] ID=ari_gladiator_Gla_swift_A2ATTRIBUTE4_dialogue;
+animations=;
+statements=Strike swiftly and precisely to gain an edge in combat.;
+specialEffect=actionOnPartyNumActor,ari_gladiator_Gla_swift_A2ATTRIBUTE4_point,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+--10% increased physical evasion
+[DialogNode] ID=ari_gladiator_Gla_swift_A2ATTRIBUTE5_dialogue;
+animations=;
+statements=Dance and run amok between your enemy's blows.;
+specialEffect=actionOnPartyNumActor,ari_gladiator_Gla_swift_A2ATTRIBUTE5_point,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+
+
+
+
+-----------------------------Gla_revenge
+-----------------------------Gla_revenge actorValue begin
+[ActorValue]
+ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE1;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE1_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE1_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_gladiator_Gla_revenge_A3ATTRIBUTE1;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE2;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE2_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE2_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_gladiator_Gla_revenge_A3ATTRIBUTE2;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE3;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE3_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE3_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_gladiator_Gla_revenge_A3ATTRIBUTE3;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE4;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE4_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE4_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_gladiator_Gla_revenge_A3ATTRIBUTE4;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+	FXOnTile=delay_tiny;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE5;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE5_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE5_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_gladiator_Gla_revenge_A3ATTRIBUTE5;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+	
+-----------------------------Gla_revenge
+[DialogNode] ID=ari_gladiator_Gla_revenge_train;
+animations=;
+statements=How would you like to improve <Revenge><iconBig=icon_Gla_revenge>?;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=Increase A3ATTRIBUTE1. (1);
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_Gla_revenge_A3ATTRIBUTE1_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A3ATTRIBUTE1. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_insufficient_skillpts;
+
+[DialogOption] text=Increase A3ATTRIBUTE2. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_Gla_revenge_A3ATTRIBUTE2_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A3ATTRIBUTE2. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_insufficient_skillpts;
+
+[DialogOption] text=Increase A3ATTRIBUTE3. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_Gla_revenge_A3ATTRIBUTE3_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A3ATTRIBUTE3. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_insufficient_skillpts;
+
+[DialogOption] text=Increase A3ATTRIBUTE4. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_Gla_revenge_A3ATTRIBUTE4_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A3ATTRIBUTE4. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_insufficient_skillpts;
+
+[DialogOption] text=Increase A3ATTRIBUTE5. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_Gla_revenge_A3ATTRIBUTE5_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A3ATTRIBUTE5. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_insufficient_skillpts;
+
+[DialogOption] text=Go back;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=ari_gladiator_specialize_skills_extra;
+
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+--5% damage
+[DialogNode] ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE1_dialogue;
+animations=;
+statements=Good choice. A3ATTRIBUTE1 was increased.;
+specialEffect=actionOnPartyNumActor,ari_gladiator_Gla_revenge_A3ATTRIBUTE1_point,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+--4% accuracy
+[DialogNode] ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE2_dialogue;
+animations=;
+statements=Good choice. A3ATTRIBUTE2 was increased.;
+specialEffect=actionOnPartyNumActor,ari_gladiator_Gla_revenge_A3ATTRIBUTE2_point,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+--4% current hp
+[DialogNode] ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE3_dialogue;
+animations=;
+statements=Good choice. A3ATTRIBUTE3 was increased.;
+specialEffect=actionOnPartyNumActor,ari_gladiator_Gla_revenge_A3ATTRIBUTE3_point,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+--7% damage based on missing target hp
+[DialogNode] ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE4_dialogue;
+animations=;
+statements=Good choice. A3ATTRIBUTE4 was increased.;
+specialEffect=actionOnPartyNumActor,ari_gladiator_Gla_revenge_A3ATTRIBUTE4_point,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+--5 exposed for 10 timer
+[DialogNode] ID=ari_gladiator_Gla_revenge_A3ATTRIBUTE5_dialogue;
+animations=;
+statements=Good choice. A3ATTRIBUTE5 was increased.;
+specialEffect=actionOnPartyNumActor,ari_gladiator_Gla_revenge_A3ATTRIBUTE5_point,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+
+
+
+-----------------------------Gla_taunt
+-----------------------------Gla_taunt actorValue begin
+[ActorValue]
+ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE1;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE1_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE1_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_gladiator_Gla_taunt_A4ATTRIBUTE1;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE2;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE2_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE2_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_gladiator_Gla_taunt_A4ATTRIBUTE2;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE3;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE3_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE3_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_gladiator_Gla_taunt_A4ATTRIBUTE3;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE4;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE4_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE4_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_gladiator_Gla_taunt_A4ATTRIBUTE4;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+	FXOnTile=delay_tiny;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE5;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE5_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE5_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_gladiator_Gla_taunt_A4ATTRIBUTE5;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=-2;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+	
+-----------------------------Gla_taunt
+[DialogNode] ID=ari_gladiator_Gla_taunt_train;
+animations=;
+statements=How would you like to improve <Taunt><iconBig=icon_Gla_taunt>?;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=Increase A4ATTRIBUTE1. (1);
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_Gla_taunt_A4ATTRIBUTE1_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A4ATTRIBUTE1. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_insufficient_skillpts;
+
+[DialogOption] text=Increase A4ATTRIBUTE2. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_Gla_taunt_A4ATTRIBUTE2_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A4ATTRIBUTE2. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_insufficient_skillpts;
+
+[DialogOption] text=Increase A4ATTRIBUTE3. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_Gla_taunt_A4ATTRIBUTE3_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A4ATTRIBUTE3. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_insufficient_skillpts;
+
+[DialogOption] text=Increase A4ATTRIBUTE4. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_Gla_taunt_A4ATTRIBUTE4_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A4ATTRIBUTE4. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_insufficient_skillpts;
+
+[DialogOption] text=Increase A4ATTRIBUTE5. (2);
+newLineOfOptions=true;
+formulaReq=moreThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_Gla_taunt_A4ATTRIBUTE5_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A4ATTRIBUTE5. (2);
+newLineOfOptions=false;
+formulaReq=lessThan:2:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_insufficient_skillpts;
+
+[DialogOption] text=Go back;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=ari_gladiator_specialize_skills_extra;
+
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+--3% phys and mag evasion reduction
+[DialogNode] ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE1_dialogue;
+animations=;
+statements=Good choice. A4ATTRIBUTE1 was increased.;
+specialEffect=actionOnPartyNumActor,ari_gladiator_Gla_taunt_A4ATTRIBUTE1_point,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+--2 brave
+[DialogNode] ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE2_dialogue;
+animations=;
+statements=Good choice. A4ATTRIBUTE2 was increased.;
+specialEffect=actionOnPartyNumActor,ari_gladiator_Gla_taunt_A4ATTRIBUTE2_point,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+--1 instigator
+[DialogNode] ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE3_dialogue;
+animations=;
+statements=Good choice. A4ATTRIBUTE3 was increased.;
+specialEffect=actionOnPartyNumActor,ari_gladiator_Gla_taunt_A4ATTRIBUTE3_point,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+--5 rally for half duration
+[DialogNode] ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE4_dialogue;
+animations=;
+statements=Good choice. A4ATTRIBUTE4 was increased.;
+specialEffect=actionOnPartyNumActor,ari_gladiator_Gla_taunt_A4ATTRIBUTE4_point,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+--10% phys defense for 15 timer
+[DialogNode] ID=ari_gladiator_Gla_taunt_A4ATTRIBUTE5_dialogue;
+animations=;
+statements=Good choice. A4ATTRIBUTE5 was increased.;
+specialEffect=actionOnPartyNumActor,ari_gladiator_Gla_taunt_A4ATTRIBUTE5_point,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+
+
+
+-----------------------------Gla_throwWeapon
+-----------------------------Gla_throwWeapon actorValue begin
+[ActorValue]
+ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE1;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE1_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE1_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE1;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE2;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE2_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE2_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE2;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE3;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE3_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE3_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE3;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE4;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE4_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE4_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE4;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+	FXOnTile=delay_tiny;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE5;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE5_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE5_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE5;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_gladiator_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+	
+-----------------------------Gla_throwWeapon
+[DialogNode] ID=ari_gladiator_Gla_throwWeapon_train;
+animations=;
+statements=How would you like to improve <Hurl Weapon><iconBig=icon_Gla_throwWeapon>?;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=Increase A5ATTRIBUTE1. (1);
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE1_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A5ATTRIBUTE1. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_insufficient_skillpts;
+
+[DialogOption] text=Increase A5ATTRIBUTE2. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE2_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A5ATTRIBUTE2. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_insufficient_skillpts;
+
+[DialogOption] text=Increase A5ATTRIBUTE3. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE3_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A5ATTRIBUTE3. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_insufficient_skillpts;
+
+[DialogOption] text=Increase A5ATTRIBUTE4. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE4_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A5ATTRIBUTE4. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_insufficient_skillpts;
+
+[DialogOption] text=Increase A5ATTRIBUTE5. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE5_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A5ATTRIBUTE5. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_gladiator_insufficient_skillpts;
+
+[DialogOption] text=Go back;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=ari_gladiator_specialize_skills_extra;
+
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+--A5ATTRIBUTE1
+[DialogNode] ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE1_dialogue;
+animations=;
+statements=Good choice. A5ATTRIBUTE1 was increased.;
+specialEffect=actionOnPartyNumActor,ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE1_point,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+--A5ATTRIBUTE2
+[DialogNode] ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE2_dialogue;
+animations=;
+statements=Good choice. A5ATTRIBUTE2 was increased.;
+specialEffect=actionOnPartyNumActor,ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE2_point,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+--A5ATTRIBUTE3
+[DialogNode] ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE3_dialogue;
+animations=;
+statements=Good choice. A5ATTRIBUTE3 was increased.;
+specialEffect=actionOnPartyNumActor,ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE3_point,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+--A5ATTRIBUTE4
+[DialogNode] ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE4_dialogue;
+animations=;
+statements=Good choice. A5ATTRIBUTE4 was increased.;
+specialEffect=actionOnPartyNumActor,ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE4_point,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;
+
+--A5ATTRIBUTE5
+[DialogNode] ID=ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE5_dialogue;
+animations=;
+statements=Good choice. A5ATTRIBUTE5 was increased.;
+specialEffect=actionOnPartyNumActor,ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE5_point,0;
+nextNodeID=ari_gladiator_specialize_skills_extra;

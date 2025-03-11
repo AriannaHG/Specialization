@@ -1,0 +1,661 @@
+-----------------------Smash
+--1 point for 5% accuracy
+--1 point for 20% chance for 15% current hp damage
+--1 point for 7% chance to break armor
+--2 points for 10% damage in aoe +10% per point
+--2 points for half accuracy chance for 3 stun
+[FormulaGlobal] ID=ari_smash_accuracy_formula0;
+formula=is:3:c:ari_specialization * 5 * c:ari_gladiator_Gla_smash_A1ATTRIBUTE1;
+[FormulaGlobal] ID=ari_smash_accuracy_formula1;
+formula=w:chance * 0.75 + d:ari_smash_accuracy_formula0;
+[FormulaGlobal] ID=ari_smash_damage_formula0;
+formula=w:magnitude * 1.2 + w:magnitude * 0.05 * c:rank;
+[FormulaGlobal] ID=ari_smash_damage_scale0;
+formula=0.1 * c:ari_gladiator_Gla_smash_A1ATTRIBUTE4;
+
+[Action] ID=Gla_smash; 
+	name=Smash;
+	icon=icon_Gla_smash;
+	tooltip=Step forward and attack recklessly for +<math=20 + 5 * c:rank>% damage, but with 75% accuracy.<n=><textIf=Has a 20% chance to deal additional damage based on the target's current health. =is:3:c:ari_specialization * c:ari_gladiator_Gla_smash_A1ATTRIBUTE2><n=><textIf=Has a chance to stun the target. =is:3:c:ari_specialization * c:ari_gladiator_Gla_smash_A1ATTRIBUTE5><n=><textIf=Has a chance to shatter the target's armor. =is:3:c:ari_specialization * c:ari_gladiator_Gla_smash_A1ATTRIBUTE3><n=><textIf=The ground beneath your target erupts, dealing additional area damage. =is:3:c:ari_specialization * c:ari_gladiator_Gla_smash_A1ATTRIBUTE4>;
+	rankUpTooltip=Each rank adds +5% damage.;
+	tooltipIcons=<icon=noRanged>;
+	tooltipTopRight=<icon=PhysAtk_small><icon=melee_small>;
+	
+	XPCost=90;
+	XPCost=200;
+	XPCost=400;
+	XPCost=800;
+	
+	special=moveCasterNextToTarget;
+	requiredWeaponElement=melee;
+	casterAnimation=weapon;
+	casterAnimationSpeed=0.8;
+	maxRank=4;
+	canExceedMaxRankBy=1;
+	
+	FXOnCaster=chargeBurst;
+	FXOnCasterColor=Red;
+	FXOnCaster=sfx_risingSwishHigh;
+	
+	FXOnTarget=weaponFX;
+[ActionAoE]
+	ID=Gla_smash; shape=2; 
+	needsLoS = false;
+	needsLoE = true;
+	minRange = 1;
+	maxRange = 2;
+	airborne=false;
+	bypassAll=false;
+	occupyAll=true;
+	canSelectActors=true;
+	fReq=1 - m:actorInTheWayOfMoveToTarget;
+[AvAffecter]
+	ID=Gla_smash; 
+	weaponAvAffecter=true;
+	magnitude=w:magnitude * 1.2 + w:magnitude * 0.05 * c:rank;
+	chance=w:chance * 0.75 + d:ari_smash_accuracy_formula0;
+	duration=-2;
+	element=smash;
+	FXOnTile=woosh;
+	FXOnHit=ping;
+	FXOnHitColor=Red;
+	FXOnHit=manySplatter;
+	FXOnHitColor=Red;
+	FXOnHit=smallShakeHoriz;
+	FXOnHit=SLAM;
+[AvAffecterAoE]
+	ID=Gla_smash;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gla_smash;
+	fReq=is:3:c:ari_specialization * c:ari_gladiator_Gla_smash_A1ATTRIBUTE5;
+	visibleMiss=false;
+	actorValue=stun;
+	magnitude=1;
+	chance=d:ari_smash_accuracy_formula1 / 2;
+	duration=c:ari_gladiator_Gla_smash_A1ATTRIBUTE5 * 3;
+	element=smash;
+[AvAffecterAoE]
+	ID=Gla_smash;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gla_smash;
+	fReq=is:3:c:ari_specialization * c:ari_gladiator_Gla_smash_A1ATTRIBUTE2;
+	visibleMiss=false;
+	weaponAvAffecter=true;
+	magnitude=c:ari_gladiator_Gla_smash_A1ATTRIBUTE2 * -0.15 * t:HP;
+	chance=w:chance * 0.2 + d:ari_smash_accuracy_formula0;
+	duration=-2;
+	element=HPbased;
+[AvAffecterAoE]
+	ID=Gla_smash;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gla_smash;
+	fReq=is:3:c:ari_specialization * c:ari_gladiator_Gla_smash_A1ATTRIBUTE3;
+	visibleMiss=false;
+	actorValue=breakArmor;
+	magnitude=1;
+	chance=7 * c:ari_gladiator_Gla_smash_A1ATTRIBUTE3 * m:tBreakableArmor;
+	duration=-2;
+	element=breakItem;
+	FXOnTile=chargeFast;
+	FXOnTileColor=DarkRed;
+	FXOnTile=strike;
+	FXOnTileColor=DarkRed;
+	FXOnHit=whiteExplosion;
+	FXOnHit=ThudShotBigger;
+	FXOnHit=sfx_lowIceSnap;
+	FXOnHit=tinyShakeHoriz;
+	FXOnMiss=woosh;
+[AvAffecterAoE]
+	ID=Gla_smash;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gla_smash;
+	fReq=is:3:c:ari_specialization * c:ari_gladiator_Gla_smash_A1ATTRIBUTE4;
+	magnitude=d:ari_smash_damage_formula0 * d:ari_smash_damage_scale0;
+	chance=w:chance * 0.75 + d:ari_smash_accuracy_formula0;
+	duration=-2;
+	element=smash;
+[AvAffecterAoE]
+	ID=Gla_smash;
+	cloneFrom=oneTile;
+	minRange=1;
+	maxRange=1.5;
+	canSelectAllies=false;
+[AvAffecter]
+--purely for visuals
+	ID=Gla_smash;
+	fReq=is:3:c:ari_specialization * c:ari_gladiator_Gla_smash_A1ATTRIBUTE4;
+	actorValue=height;
+	magnitude=-1;
+	duration=-2;
+	chance=w:chance * 0.75 + d:ari_smash_accuracy_formula0;
+	FXOnTile=delay_small;
+[AvAffecterAoE]
+--purely for visuals
+	ID=Gla_smash;
+	cloneFrom=oneTile;
+	needsLoS = true;
+	needsLoE = true;
+	minRange = 1;
+	maxRange = 1.5;
+	coneAngle= 180;
+	bypassAll=false;
+	occupyAll=false;
+[AvAffecter]
+--purely for visuals
+	ID=Gla_smash;
+	fReq=is:3:c:ari_specialization * c:ari_gladiator_Gla_smash_A1ATTRIBUTE4;
+	actorValue=height;
+	magnitude=1;
+	duration=-2;
+	chance=w:chance * 0.75 + d:ari_smash_accuracy_formula0;
+	FXOnTile=delay_small;
+[AvAffecterAoE]
+--purely for visuals
+	ID=Gla_smash;
+	cloneFrom=oneTile;
+	needsLoS = true;
+	needsLoE = true;
+	minRange = 1;
+	maxRange = 1.5;
+	coneAngle= 180;
+	bypassAll=false;
+	occupyAll=false;
+
+
+
+-----------------------Swift
+--1 point for 5% damage
+--1 point for 2 flat damage
+--2 points for 1 movement speed on next turn
+--2 points for 3 act timer
+--1 point for 10% increased physical evasion
+[FormulaGlobal] ID=ari_swift_damage_scale0;
+formula=-2 * c:ari_gladiator_Gla_swift_A2ATTRIBUTE2 * is:3:c:ari_specialization;
+[FormulaGlobal] ID=ari_swift_damage_formula0;
+formula=w:magnitude * 0.75 + d:ari_swift_damage_scale0;
+[FormulaGlobal] ID=ari_swift_damage_scale1;
+formula=1 + 0.05 * c:ari_gladiator_Gla_swift_A2ATTRIBUTE1 * is:3:c:ari_specialization;
+[FormulaGlobal] ID=ari_swift_damage_formula1;
+formula=d:ari_swift_damage_formula0 * d:ari_swift_damage_scale1;
+
+[Action] ID=Gla_swift; 
+	name=Swift;
+	icon=icon_Gla_swift;
+	tooltip=Attack precisely for 75%<textIf= or more =is:3:c:ari_specialization * c:ari_gladiator_Gla_swift_A2ATTRIBUTE1 + is:3:c:ari_specialization * c:ari_gladiator_Gla_swift_A2ATTRIBUTE2> damage and +<math=c:rank * 5>% accuracy. Pierces Guard and can't be counter attacked.<n=><textIf= Grants additional movement speed until the end of your next turn. =is:3:c:ari_specialization * c:ari_gladiator_Gla_swift_A2ATTRIBUTE3><n=><textIf=Gain additional Act time, allowing your next turn to come more quickly. =is:3:c:ari_specialization * c:ari_gladiator_Gla_swift_A2ATTRIBUTE4><n=><textIf=Grants a bonus to your Physical Evasion. =is:3:c:ari_specialization * c:ari_gladiator_Gla_swift_A2ATTRIBUTE5>;
+	rankUpTooltip=Each rank increases accuracy by another 5%.;
+	tooltipTopRight=<icon=PhysAtk_small><icon=melee_small>;
+	
+	XPCost=90;
+	XPCost=250;
+	XPCost=350;
+	XPCost=500;
+	
+	FXOnCaster=swing;
+	
+	casterAnimation=weapon;
+	casterAnimationSpeed=1.5;
+	maxRank=4;
+	canExceedMaxRankBy=1;
+	
+	requiredWeaponElement=weapon;
+	
+	FXOnTarget=weaponFX;
+[ActionAoE] 
+	ID=Gla_swift; shape=10; 
+[AvAffecter]
+	ID=Gla_swift; 
+	weaponAvAffecter=true;
+	removeTheseElementsFromWeaponAvAffecter=any;
+	magnitude=d:ari_swift_damage_formula1;
+	chance=w:chance + c:rank * 0.05 * w:chance;
+	duration=-2;
+	FXOnHit=ThudShot;
+[AvAffecterAoE]
+	ID=Gla_swift;
+	shape=11;
+[AvAffecter]
+	ID=Gla_swift; 
+	FXOnTile=targetRet2;
+[AvAffecterAoE]
+	ID=Gla_swift;
+	shape=11;
+[AvAffecter]
+	ID=Gla_swift;
+	visibleMiss=false;
+	harmful=false;
+	actorValue=moveDistance;
+	magnitude=c:ari_gladiator_Gla_swift_A2ATTRIBUTE3 * 1;
+	duration=-5;
+	chance=100 * is:3:c:ari_specialization * c:ari_gladiator_Gla_swift_A2ATTRIBUTE3;
+	FXOnHit=upwardLines;
+	FXOnHitColor=White;
+[AvAffecterAoE]
+	ID=Gla_swift;
+	fReq=is:3:c:ari_specialization * c:ari_gladiator_Gla_swift_A2ATTRIBUTE3;
+	aoeCasterAsOrigin=true;
+	cloneFrom=oneTile;
+	canSelectAllies=true;
+[AvAffecter]
+	ID=Gla_swift;
+	visibleMiss=false;
+	harmful=false;
+	actorValue=actTimer;
+	magnitude=3 * c:ari_gladiator_Gla_swift_A2ATTRIBUTE4;
+	duration=-2;
+	chance=100 * is:3:c:ari_specialization * c:ari_gladiator_Gla_swift_A2ATTRIBUTE4;
+	FXOnHit=upwardLines;
+	FXOnHitColor=White;
+[AvAffecterAoE]
+	ID=Gla_swift;
+	fReq=is:3:c:ari_specialization * c:ari_gladiator_Gla_swift_A2ATTRIBUTE4;
+	aoeCasterAsOrigin=true;
+	cloneFrom=oneTile;
+	canSelectAllies=true;
+[AvAffecter]
+	ID=Gla_swift;
+	visibleMiss=false;
+	harmful=false;
+	actorValue=PhysEva;
+	magnitude=c:PhysEva * c:ari_gladiator_Gla_swift_A2ATTRIBUTE5 * 0.1;
+	duration=10;
+	chance=100 * is:3:c:ari_specialization * c:ari_gladiator_Gla_swift_A2ATTRIBUTE5;
+	FXOnHit=upwardLines;
+	FXOnHitColor=White;
+[AvAffecterAoE]
+	ID=Gla_swift;
+	fReq=is:3:c:ari_specialization * c:ari_gladiator_Gla_swift_A2ATTRIBUTE5;
+	aoeCasterAsOrigin=true;
+	cloneFrom=oneTile;
+	canSelectAllies=true;
+	
+
+
+-----------------------Revenge
+--2 points for 10% phys defense siphon for 20 timer
+--1 point for 4% accuracy
+--1 point for 4% target's current hp
+--1 point for 7% more damage based on how low target's hp is
+--1 point for 10 timer 5 Exposed
+[FormulaGlobal] ID=ari_revenge_damage_formula0;
+formula=m:percentHPLost * w:magnitude * 0.40 + m:percentHPLost * w:magnitude * 0.10 * c:rank + m:targetPercentHPLost * w:magnitude * 0.07 * c:ari_gladiator_Gla_revenge_A3ATTRIBUTE4 * is:3:c:ari_specialization + w:magnitude;
+--Original ability: m:percentHPLost * w:magnitude * 0.40 + m:percentHPLost * w:magnitude * 0.10 * c:rank + w:magnitude
+
+
+[FormulaGlobal] ID=ari_revenge_accuracy_formula0;
+formula=is:3:c:ari_specialization * 4 * c:ari_gladiator_Gla_revenge_A3ATTRIBUTE2;
+
+[Action] ID=Gla_revenge; 
+	name=Revenge;
+	icon=icon_Gla_revenge;
+	mpCost=5 * d:mpCostMult + d:mpCostMod;
+	tooltip=Deal up to +<math=40 + 10 * c:rank>% damage based on how low your current <icon=HP>HP is.<n=><textIf= Steals some of your target's Physical Defense for your own use. =is:3:c:ari_specialization * c:ari_gladiator_Gla_revenge_A3ATTRIBUTE1><n=><textIf=Deals additional damage based on how low your target's health is. =is:3:c:ari_specialization * c:ari_gladiator_Gla_revenge_A3ATTRIBUTE4><n=><textIf=Deals additional damage based on your target's current health. =is:3:c:ari_specialization * c:ari_gladiator_Gla_revenge_A3ATTRIBUTE3><n=><textIf=Exposes your target. =is:3:c:ari_specialization * c:ari_gladiator_Gla_revenge_A3ATTRIBUTE5>;
+	rankUpTooltip=Each rank increases bonus damage from having low HP by 10%.;
+	tooltipTopRight=<icon=PhysAtk_small><icon=melee_small>;
+	
+	XPCost=250;
+	XPCost=400;
+	XPCost=600;
+	XPCost=650;
+	XPCost=850;
+	
+	casterAnimation=swing;
+	casterAnimationDependsOnWeaponHand=true;
+	casterAnimationSpeed=0.6;
+	maxRank=5;
+	canExceedMaxRankBy=1;
+	
+	requiredWeaponElement=weapon;
+	
+	FXOnCaster=upwardLines;
+	FXOnCasterColor=Purple;
+	FXOnCaster=chargeSpiralFast_big;
+	FXOnCasterColor=Purple;
+	FXOnCaster=chargeSpiralFast;
+	FXOnCasterColor=Purple;
+	FXOnCaster=sfx_risingSwish;
+	
+	FXOnTarget=weaponFX;
+	FXOnTarget=sfx_thunderStrike_quiet;
+[ActionAoE] 
+	ID=Gla_revenge; shape=10;
+[AvAffecter]
+	ID=Gla_revenge; 
+	fReq=is:3:c:ari_specialization * c:ari_gladiator_Gla_revenge_A3ATTRIBUTE1;
+	actorValue=PhysDef;
+	magnitude=t:PhysDef * 0.1 * c:ari_gladiator_Gla_revenge_A3ATTRIBUTE1;
+	chance=w:chance + d:ari_revenge_accuracy_formula0;
+	duration=20;
+[AvAffecterAoE]
+	ID=Gla_revenge;
+	aoeCasterAsOrigin = true;
+	cloneFrom=oneTile;
+	canSelectAllies=true;
+[AvAffecter]
+	ID=Gla_revenge; 
+	fReq=is:3:c:ari_specialization * c:ari_gladiator_Gla_revenge_A3ATTRIBUTE1;
+	actorValue=PhysDef;
+	magnitude=t:PhysDef * -0.1 * c:ari_gladiator_Gla_revenge_A3ATTRIBUTE1;
+	chance=w:chance + d:ari_revenge_accuracy_formula0;
+	duration=20;
+[AvAffecterAoE]
+	ID=Gla_revenge;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gla_revenge; 
+	weaponAvAffecter=true;
+	magnitude=d:ari_revenge_damage_formula0;
+	chance=w:chance + d:ari_revenge_accuracy_formula0;
+	duration=-2;
+	FXOnTile=whirlSlash_big;
+	FXOnTileColor=Purple;
+	FXOnTile=stomp;
+	FXOnTile=smallShock;
+	FXOnHit=chargeBurst;
+	FXOnHitColor=Purple;
+	FXOnHit=smallShakeHoriz;
+	FXOnHit=SLAM;
+[AvAffecterAoE]
+	ID=Gla_revenge;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gla_revenge;
+	fReq=is:3:c:ari_specialization * c:ari_gladiator_Gla_revenge_A3ATTRIBUTE3;
+	weaponAvAffecter=true;
+	magnitude=c:ari_gladiator_Gla_revenge_A3ATTRIBUTE3 * t:HP * -0.04;
+	chance=w:chance + d:ari_revenge_accuracy_formula0;
+	duration=-2;
+	element=HPbased;
+[AvAffecterAoE]
+	ID=Gla_revenge;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gla_revenge; 
+	fReq=is:3:c:ari_specialization * c:ari_gladiator_Gla_revenge_A3ATTRIBUTE5;
+	actorValue=ari_exposed_av;
+	magnitude=5 * c:ari_gladiator_Gla_revenge_A3ATTRIBUTE5;
+	chance=w:chance + d:ari_revenge_accuracy_formula0;
+	duration=10;
+[AvAffecterAoE]
+	ID=Gla_revenge;
+	cloneFrom=oneTile;
+	
+
+
+
+-----------------------Taunt
+--1 point for -3% phys and mag eva
+--2 points for 2 Brave to taunter
+--1 point for 1 instigator
+--1 point for 5 rally for half duration
+--2 points for 2 counter for 15 timer
+
+[Action] ID=Gla_taunt; 
+	name=Taunt;
+	icon=icon_Gla_taunt;
+	mpCost=1 * d:mpCostMult + d:mpCostMod;
+	tooltip=Force enemies to look at you, and inflict -<math=40 + c:ari_gladiator_Gla_taunt_A4ATTRIBUTE1 * 3>% <icon=PhysEva><icon=MagEva> and<n=>-2<icon=PhysDef><icon=MagDef> for <icon=time>80.<n=><textIf=Grants Bravery. =is:3:c:ari_specialization * c:ari_gladiator_Gla_taunt_A4ATTRIBUTE2><n=><textIf=Makes you more likely to be targeted by enemies. =is:3:c:ari_specialization * c:ari_gladiator_Gla_taunt_A4ATTRIBUTE3><n=><textIf=Grants Rally for half of the normal duration. =is:3:c:ari_specialization * c:ari_gladiator_Gla_taunt_A4ATTRIBUTE4><n=><textIf=Grants a surge of Physical Defense. =is:3:c:ari_specialization * c:ari_gladiator_Gla_taunt_A4ATTRIBUTE5>;
+	rankUpTooltip=Each rank increases area of effect.;
+	tooltipTopRight=;
+	
+	AIRatingBias = -60;
+	
+	special=attractEnemyAttentionInCombat;
+	
+	XPCost=150;
+	XPCost=400;
+	XPCost=700;
+	
+	FXOnCaster=chargeSpiralFast;
+	FXOnCaster=delay;
+	FXOnCaster=sfx_whistle_short;
+	FXOnCaster=exclamation;
+	FXOnCaster=chargeSpiralFast;
+	
+	casterAnimation=handsup_angry;
+	casterAnimationSpeed=1.5;
+	maxRank=3;
+	canExceedMaxRankBy=1;
+[ActionAoE]
+	ID=Gla_taunt;
+	cloneFrom=adjacent;
+	needsLoS = true;
+	needsLoE = false;
+	airborne = true;
+	maxRange=2;
+	maxRangeBonus = c:rank;
+	arc=true;
+	bypassAll=true;
+	occupyAll=true;
+	canSelectAllies=false;
+[AvAffecter]
+	ID=Gla_taunt; 
+	actorValue=PhysEva;
+	magnitude= -40 - c:ari_gladiator_Gla_taunt_A4ATTRIBUTE1 * 3;
+	duration=80;
+	chance=100;
+	FXOnTile=chargeFast_overlap;
+	FXOnHit=downwardLines;
+	FXOnHitColor=Purple;
+	FXOnHit=sfx_debuffMild;
+[AvAffecterAoE]
+	ID=Gla_taunt;
+	aoeCasterAsOrigin=true;
+	canSelectAllies=false;
+[AvAffecter]
+	ID=Gla_taunt; 
+	visibleMiss=false;
+	actorValue=MagEva;
+	magnitude= -40 - c:ari_gladiator_Gla_taunt_A4ATTRIBUTE1 * 3;
+	duration=80;
+	chance=100;
+[AvAffecterAoE]
+	ID=Gla_taunt;
+	aoeCasterAsOrigin=true;
+	canSelectAllies=false;
+[AvAffecter]
+	ID=Gla_taunt; 
+	visibleMiss=false;
+	actorValue=PhysDef;
+	magnitude= -2;
+	duration=80;
+	chance=100;
+[AvAffecterAoE]
+	ID=Gla_taunt;
+	aoeCasterAsOrigin=true;
+	canSelectAllies=false;
+[AvAffecter]
+	ID=Gla_taunt; 
+	visibleMiss=false;
+	actorValue=MagDef;
+	magnitude= -2;
+	duration=80;
+	chance=100;
+[AvAffecterAoE]
+	ID=Gla_taunt;
+	aoeCasterAsOrigin=true;
+	canSelectAllies=false;
+[AvAffecter]
+	ID=Gla_taunt;
+	harmful=false;
+	actorValue=ari_brave_av;
+	magnitude=2 * c:ari_gladiator_Gla_taunt_A4ATTRIBUTE2;
+	duration=80;
+	chance=100;
+	FXOnHit=upwardLines;
+	FXOnHitColor=White;
+[AvAffecterAoE]
+	ID=Gla_taunt;
+	fReq=is:3:c:ari_specialization * c:ari_gladiator_Gla_taunt_A4ATTRIBUTE2;
+	aoeCasterAsOrigin = true;
+	cloneFrom=oneTile;
+	canSelectAllies=true;
+[AvAffecter]
+	ID=Gla_taunt;
+	harmful=false;
+	actorValue=ari_instigator_av;
+	magnitude=1 * c:ari_gladiator_Gla_taunt_A4ATTRIBUTE3;
+	duration=80;
+	chance=100;
+	FXOnHit=upwardLines;
+	FXOnHitColor=Red;
+[AvAffecterAoE]
+	ID=Gla_taunt;
+	fReq=is:3:c:ari_specialization * c:ari_gladiator_Gla_taunt_A4ATTRIBUTE3;
+	aoeCasterAsOrigin = true;
+	cloneFrom=oneTile;
+	canSelectAllies=true;
+[AvAffecter]
+	ID=Gla_taunt;
+	harmful=false;
+	actorValue=ari_rally_av;
+	magnitude=5 * c:ari_gladiator_Gla_taunt_A4ATTRIBUTE4;
+	duration=40;
+	chance=100;
+	FXOnHit=upwardLines;
+	FXOnHitColor=Red;
+[AvAffecterAoE]
+	ID=Gla_taunt;
+	fReq=is:3:c:ari_specialization * c:ari_gladiator_Gla_taunt_A4ATTRIBUTE4;
+	aoeCasterAsOrigin = true;
+	cloneFrom=oneTile;
+	canSelectAllies=true;
+[AvAffecter]
+	ID=Gla_taunt;
+	visibleEvaluations=false;
+	harmful=false;
+	actorValue=HP;
+	magnitude=5 * c:ari_gladiator_Gla_taunt_A4ATTRIBUTE4;
+	duration=-2;
+	chance=100;
+[AvAffecterAoE]
+	ID=Gla_taunt;
+	fReq=is:3:c:ari_specialization * c:ari_gladiator_Gla_taunt_A4ATTRIBUTE4;
+	aoeCasterAsOrigin = true;
+	cloneFrom=oneTile;
+	canSelectAllies=true;
+[AvAffecter]
+	ID=Gla_taunt;
+	harmful=false;
+	actorValue=ari_countering_av;
+	magnitude=2 * c:ari_gladiator_Gla_taunt_A4ATTRIBUTE5;
+	duration=15;
+	chance=100;
+	FXOnHit=upwardLines;
+	FXOnHitColor=White;
+[AvAffecterAoE]
+	ID=Gla_taunt;
+	fReq=is:3:c:ari_specialization * c:ari_gladiator_Gla_taunt_A4ATTRIBUTE5;
+	aoeCasterAsOrigin = true;
+	cloneFrom=oneTile;
+	canSelectAllies=true;
+	
+
+	
+	
+
+-----------------------Hurl Weapon
+--1 point for 5% damage
+--1 point 4% accuracy
+--1 point for negate strip
+--1 point for 2 stun
+--1 point for 5 blind
+[FormulaGlobal] ID=ari_throwweapon_accuracy_formula0;
+formula=d:fistAcc - w:weight * 2;
+[FormulaGlobal] ID=ari_throwweapon_accuracy_scale0;
+formula=is:3:c:ari_specialization * 4 * c:ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE2;
+[FormulaGlobal] ID=ari_throwweapon_damage_formula0;
+formula=1.35 * w:magnitude - w:weight - w:throwDamageMod;
+[FormulaGlobal] ID=ari_throwweapon_damage_scale1;
+formula=1 + 0.05 * c:ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE1 * is:3:c:ari_specialization;
+[FormulaGlobal] ID=ari_throwweapon_damage_formula1;
+formula=d:ari_throwweapon_damage_formula0 * d:ari_throwweapon_damage_scale1;
+
+[Action] ID=Gla_throwWeapon; 
+	name=Hurl Weapon;
+	icon=icon_Gla_throwWeapon;
+	tooltip=Throw your weapon for +50% or more damage! Weapon type affects range & power. It lands at the target's feet and can be picked up afterward.;
+	rankUpTooltip=Each rank adds +1 range.;
+	tooltipIcons=<icon=noRanged>;
+	tooltipTopRight=<icon=PhysAtk_small><icon=melee_small><icon=skill_Fist_small>;
+	AIRatingBias=-8;
+	
+	XPCost=150;
+	XPCost=350;
+	XPCost=500;
+	
+	special=throwWeapon;
+	
+	casterAnimation=throw;
+	casterAnimationDependsOnWeaponHand=true;
+	maxRank=3;
+	canExceedMaxRankBy=1;
+	requiredWeaponElement=melee;
+	
+	FXOnTarget=weaponThrowFX;
+[ActionAoE] 
+	ID=Gla_throwWeapon; 
+	needsLoS = true;
+	needsLoE = true;
+	minRange = 1;
+	maxRange = 3;
+	maxRangeBonus = c:rank - w:throwRangePenalty;
+	airborne=true;
+	bypassAll=true;
+	occupyAll=true;
+[AvAffecter]
+	ID=Gla_throwWeapon;
+	fReq=is:3:c:ari_specialization * c:ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE3;
+	harmful=false;
+	actorValue=negate;
+	magnitude=-1;
+	duration=-2;
+	chance=d:ari_throwweapon_accuracy_formula0 * t:negate + d:ari_throwweapon_accuracy_scale0 * t:negate;
+	visibleMiss=false;
+	FXOnHit=delay_tiny;
+[AvAffecterAoE]
+	ID=Gla_throwWeapon; cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gla_throwWeapon; 
+	actorValue=HP;
+	weaponAvAffecter=true;
+	showWeaponAvAffecterFX=false;
+	magnitude=d:ari_throwweapon_damage_formula1;
+	chance=d:ari_throwweapon_accuracy_formula0 + d:ari_throwweapon_accuracy_scale0;
+	duration=-2;
+	FXOnTile=weaponThrowFX;
+	FXOnTile=swing2;
+	FXOnHit=manySplatter;
+	FXOnHit=sfx_slashingHit;
+[AvAffecterAoE]
+	ID=Gla_throwWeapon; cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gla_throwWeapon;
+	fReq=is:3:c:ari_specialization * c:ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE4;
+	actorValue=stun;
+	magnitude=1;
+	chance=d:ari_throwweapon_accuracy_formula0 + d:ari_throwweapon_accuracy_scale0;
+	duration=2 * c:ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE5;
+[AvAffecterAoE]
+	ID=Gla_throwWeapon; cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gla_throwWeapon;
+	fReq=is:3:c:ari_specialization * c:ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE5;
+	actorValue=blind;
+	magnitude=1;
+	chance=d:ari_throwweapon_accuracy_formula0 + d:ari_throwweapon_accuracy_scale0;
+	duration=8 * c:ari_gladiator_Gla_throwWeapon_A5ATTRIBUTE5;
+[AvAffecterAoE]
+	ID=Gla_throwWeapon; cloneFrom=oneTile;
+[AvAffecter]
+	ID=Gla_throwWeapon; 
+	actorValue=summonItem;
+	magnitude=throwWeapon;
+	duration=1;
+[AvAffecterAoE]
+	ID=Gla_throwWeapon;
+	cloneFrom=oneTile;
+

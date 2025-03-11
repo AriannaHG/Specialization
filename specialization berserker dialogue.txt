@@ -1,0 +1,1817 @@
+
+-----------------------------Berserker Skill point setup
+[ActorValue]
+ID=ari_berserker_total;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[ActorValue]
+ID=ari_berserker_current;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+removedByNegativeMagnitude=false;
+
+
+
+-----------------------------Berserker formula setup
+[FormulaGlobal] ID=ari_berserker_current_check_formula;
+formula=t:ari_berserker_current;
+[FormulaGlobal] ID=ari_berserker_total_check_formula;
+formula=t:ari_berserker_total;
+[FormulaGlobal] ID=ari_berserker_current_xp_check_formula;
+formula=t:berserker_XP;
+
+[FormulaGlobal] ID=ari_berserker_skillpoint_exp0;
+formula=1 + g:ari_total_points0;
+
+[FormulaGlobal] ID=ari_berserker_skillpoint_exp1;
+formula=d:ari_berserker_skillpoint_exp0 * 1000;
+
+[FormulaGlobal] ID=ari_berserker_skillpoint_exp_req0;
+formula=d:ari_berserker_skillpoint_exp1 - 1;
+
+[FormulaGlobal] ID=ari_berserker_skillpoint_exp_req1;
+formula=g:ari_current_berserker_exp0 - d:ari_berserker_skillpoint_exp_req0;
+
+
+
+[Action] ID=ari_set_specialization_berserker; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_set_specialization_berserker;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_set_specialization_berserker;
+	--harmful=false;
+	actorValue=ari_specialization;
+    magnitude=1;
+	duration=-1;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_set_specialization_berserker; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+	
+[GlobalTrigger] aliasID=ari_set_specialization_berserker_trigger;
+[GlobalTriggerEffect] ID=ari_set_specialization_berserker_trigger; effectID=actionOnPartyNumActor; sValue=ari_set_specialization_berserker; sValue2=; bValue1=False; bValue2=False; fValue=0; delay=0; xValue=-1; yValue=-1;	
+	
+
+
+
+[Action] ID=ari_specialization_berserker_skillpoint_check; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_specialization_berserker_skillpoint_check;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_specialization_berserker_skillpoint_check;
+	harmful=false;
+	actorValue=task;
+    magnitude=setGlobalVar_math,ari_total_points0,d:ari_berserker_total_check_formula;
+	duration=-1;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_specialization_berserker_skillpoint_check; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_specialization_berserker_skillpoint_check;
+	harmful=false;
+	actorValue=task;
+    magnitude=setGlobalVar_math,ari_current_points0,d:ari_berserker_current_check_formula;
+	duration=-1;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_specialization_berserker_skillpoint_check; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_specialization_berserker_skillpoint_check;
+	harmful=false;
+	actorValue=task;
+    magnitude=setGlobalVar_math,ari_current_berserker_exp0,d:ari_berserker_current_xp_check_formula;
+	duration=-1;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_specialization_berserker_skillpoint_check; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+
+[GlobalTrigger] aliasID=ari_specialization_berserker_skillpoint_check_trigger;
+[GlobalTriggerEffect] ID=ari_specialization_berserker_skillpoint_check_trigger; effectID=actionOnPartyNumActor; sValue=ari_specialization_berserker_skillpoint_check; sValue2=; bValue1=False; bValue2=False; fValue=0; delay=0; xValue=-1; yValue=-1;	
+
+
+
+
+[Action] ID=ari_berserker_skillpoint; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_skillpoint;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_skillpoint;
+	harmful=false;
+	actorValue=berserker_XP;
+	magnitude=d:ari_berserker_skillpoint_exp1 * -1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_berserker_skillpoint; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_skillpoint;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_skillpoint; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_skillpoint;
+	harmful=false;
+	actorValue=ari_berserker_total;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_skillpoint; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+	
+
+
+-----------------------------Berserker dialogue begin
+-----------------------------Set up specialization
+[DialogOption] ID=class_berserker2; text=I'm looking for additional training as a Berserker<iconBig=classIcon_berserker>;
+formulaReq=is:1:g:class_berserker;
+specialEffect=ari_specialization_check_trigger;
+newLineOfOptions=true;
+nodeToConnectTo=ari_berserker_specialization_training;
+
+
+
+[DialogNode] ID=ari_berserker_specialization_training;
+animations=;
+statements=Ah. What kind of training are ya looking for?;
+
+[DialogOption] text=<portraitBig=0><partyActorName=0><n=>I want to specialize in being a Berserker<iconBig=classIcon_berserker>;
+formulaReq=isNot:1:g:ari_specialized_ever;
+nodeToConnectTo=ari_berserker_specialization;
+
+[DialogOption] text=<portraitBig=0><partyActorName=0><n=>I want to specialize in being a Berserker<iconBig=classIcon_berserker> 2;
+formulaReq=is:1:g:ari_specialized_ever * isNot:1:g:ari_specialization_check0;
+newLineOfOptions=false;
+nodeToConnectTo=ari_berserker_specialization_different;
+
+[DialogOption] text=<portraitBig=0><partyActorName=0><n=>I want to specialize my Berserker<iconBig=classIcon_berserker> abilities;
+formulaReq=is:1:g:ari_specialization_check0;
+newLineOfOptions=true;
+nodeToConnectTo=ari_berserker_specialize_skills;
+
+[DialogOption] text=Nevermind;
+newLineOfOptions=true;
+bottomOption=true;
+nodeToConnectTo=;
+
+
+
+[DialogNode] ID=ari_berserker_specialization_different;
+animations=;
+statements=Looks like you've got something else in mind. Ya only get to specialize in one class at a time.<p=> Do you really want to specialize as a Berserker?;
+
+[DialogOption] text=<portraitBig=0><partyActorName=0><n=>Yes, I want to specialize in being a Berserker<iconBig=classIcon_berserker>;
+--specialEffect=ari_specialization_reset_trigger;
+--specialEffect=actionOnPartyNumActor,ari_set_specialization_berserker,0;
+nodeToConnectTo=ari_berserker_specialization;
+
+[DialogOption] text=Nevermind;
+newLineOfOptions=true;
+bottomOption=true;
+nodeToConnectTo=;
+
+
+-----------------------------Specialization set, skill training begin
+[DialogNode] ID=ari_berserker_specialization;
+animations=;
+statements=Got some smarts to ya after all.<n=>I hope you've got some experience built up.;
+statements=Anything else I can do for you?;
+specialEffect=setGlobalVar,ari_specialized_ever,1;
+specialEffect=ari_set_specialization_berserker_trigger;
+--specialEffect=actionOnPartyNumActor,ari_set_specialization_berserker,0;
+specialEffect=ari_specialization_berserker_skillpoint_check_trigger;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=I'd like to train in a skill point;
+nodeToConnectTo=ari_berserker_specialization_skillpoint;
+
+[DialogOption] text=I'd like to train <Frenzy><iconBig=icon_Ber_frenzy>;
+nodeToConnectTo=ari_berserker_frenzy_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Rage><iconBig=icon_Ber_rage>;
+nodeToConnectTo=ari_berserker_rage_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Scream><iconBig=icon_Ber_scream>;
+nodeToConnectTo=ari_berserker_scream_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Terrorize><iconBig=icon_Ber_terrorize>;
+nodeToConnectTo=ari_berserker_terrorize_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Scatter><iconBig=icon_Ber_scatter>;
+nodeToConnectTo=ari_berserker_scatter_train;
+newLineOfOptions=true;
+
+[DialogOption] text=That's all, thanks;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+
+
+[DialogNode] ID=ari_berserker_specialize_skills;
+animations=;
+statements=Got some smarts to ya.<n=>What're you looking to improve?;
+specialEffect=ari_specialization_berserker_skillpoint_check_trigger;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=I'd like to train in a skill point;
+nodeToConnectTo=ari_berserker_specialization_skillpoint;
+[DialogOption] text=I'd like to train <Frenzy><iconBig=icon_Ber_frenzy>;
+nodeToConnectTo=ari_berserker_frenzy_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Rage><iconBig=icon_Ber_rage>;
+nodeToConnectTo=ari_berserker_rage_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Scream><iconBig=icon_Ber_scream>;
+nodeToConnectTo=ari_berserker_scream_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Terrorize><iconBig=icon_Ber_terrorize>;
+nodeToConnectTo=ari_berserker_terrorize_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Scatter><iconBig=icon_Ber_scatter>;
+nodeToConnectTo=ari_berserker_scatter_train;
+newLineOfOptions=true;
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+[DialogNode] ID=ari_berserker_specialize_skills_extra;
+animations=;
+statements=What else can I do for ya?;
+specialEffect=ari_specialization_berserker_skillpoint_check_trigger;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=I'd like to train in a skill point;
+nodeToConnectTo=ari_berserker_specialization_skillpoint;
+[DialogOption] text=I'd like to train <Frenzy><iconBig=icon_Ber_frenzy>;
+nodeToConnectTo=ari_berserker_frenzy_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Rage><iconBig=icon_Ber_rage>;
+nodeToConnectTo=ari_berserker_rage_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Scream><iconBig=icon_Ber_scream>;
+nodeToConnectTo=ari_berserker_scream_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Terrorize><iconBig=icon_Ber_terrorize>;
+nodeToConnectTo=ari_berserker_terrorize_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Scatter><iconBig=icon_Ber_scatter>;
+nodeToConnectTo=ari_berserker_scatter_train;
+newLineOfOptions=true;
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+-----------------------------Buying skill points
+[DialogNode] ID=ari_berserker_specialization_skillpoint;
+animations=;
+statements=I can certainly train you up some, but it'll take a toll of <math=d:ari_berserker_skillpoint_exp1> experience. <p=>Sure you can handle it?;
+specialEffect=setPCDialogWindowSizeY;
+
+[DialogOption] text=Yes, I'd like to train in a skill point;
+formulaReq=moreThan:0:d:ari_berserker_skillpoint_exp_req1;
+specialEffect=actionOnPartyNumActor,ari_berserker_skillpoint,0;
+nodeToConnectTo=ari_berserker_specialization_skillpoint_purchase;
+
+[DialogOption] text=<color=SlateGray>Yes, I'd like to train in a skill point;
+formulaReq=lessThan:1:d:ari_berserker_skillpoint_exp_req1;
+nodeToConnectTo=ari_berserker_specialization_skillpoint_purchase_cant;
+
+[DialogOption] text=Go back;
+newLineOfOptions=true;
+nodeToConnectTo=ari_berserker_specialize_skills_extra;
+
+[DialogOption] text=Nevermind;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+
+
+[DialogNode] ID=ari_berserker_specialization_skillpoint_purchase;
+animations=;
+statements=Har har! You're tougher'n ya look! That experience should help you improve some.;
+specialEffect=actionOnPartyNumActor,ari_specialization_check,0;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+
+
+[DialogNode] ID=ari_berserker_specialization_skillpoint_purchase_cant;
+animations=;
+statements=Looks like you don't quite have enough experience on ya.;
+statements=Come back when you've built up a bit more muscle, yeah?;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+
+
+[DialogNode] ID=ari_berserker_insufficient_skillpts;
+animations=stern;
+statements=Not enough training on ya for that.;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+
+
+
+-----------------------------Frenzy actorValue begin
+[ActorValue]
+ID=ari_berserker_frenzy_damage;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_berserker_frenzy_damage_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_frenzy_damage_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_frenzy_damage_point;
+	harmful=false;
+	actorValue=ari_berserker_frenzy_damage;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_berserker_frenzy_damage_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_frenzy_damage_point;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_frenzy_damage_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_berserker_frenzy_accuracy;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_berserker_frenzy_accuracy_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_frenzy_accuracy_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_frenzy_accuracy_point;
+	harmful=false;
+	actorValue=ari_berserker_frenzy_accuracy;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_berserker_frenzy_accuracy_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_frenzy_accuracy_point;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_frenzy_accuracy_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_berserker_frenzy_MP;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_berserker_frenzy_MP_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_frenzy_MP_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_frenzy_MP_point;
+	harmful=false;
+	actorValue=ari_berserker_frenzy_MP;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_berserker_frenzy_MP_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_frenzy_MP_point;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=-3;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_frenzy_MP_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_berserker_frenzy_targets;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_berserker_frenzy_targets_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_frenzy_targets_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_frenzy_targets_point;
+	harmful=false;
+	actorValue=ari_berserker_frenzy_targets;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_berserker_frenzy_targets_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_frenzy_targets_point;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=-4;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_frenzy_targets_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_berserker_frenzy_special;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_berserker_frenzy_special_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_frenzy_special_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_frenzy_special_point;
+	harmful=false;
+	actorValue=ari_berserker_frenzy_special;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_berserker_frenzy_special_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_frenzy_special_point;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=-6;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_frenzy_special_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+	
+-----------------------------Frenzy
+[DialogNode] ID=ari_berserker_frenzy_train;
+animations=;
+statements=How do ya want to improve <Frenzy><iconBig=icon_Ber_frenzy>?;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=Increase damage by 5%. (1);
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_frenzy_damage_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase damage by 5%. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_insufficient_skillpts;
+
+[DialogOption] text=Increase accuracy by 4%. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_frenzy_accuracy_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase accuracy by 4%. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_insufficient_skillpts;
+
+[DialogOption] text=Reduce MP consumption by 1. (3);
+newLineOfOptions=true;
+formulaReq=moreThan:2:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_frenzy_MP_dialogue;
+
+[DialogOption] text=<color=SlateGray>Reduce MP consumption by 1. (3);
+newLineOfOptions=false;
+formulaReq=lessThan:3:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_insufficient_skillpts;
+
+[DialogOption] text=Increase number of targets by 1. (4);
+newLineOfOptions=true;
+formulaReq=moreThan:3:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_frenzy_targets_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase number of targets by 1. (4);
+newLineOfOptions=false;
+formulaReq=lessThan:4:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_insufficient_skillpts;
+
+[DialogOption] text=Add a Frenzied Strike to <Frenzy><iconBig=icon_Ber_frenzy>. (6);
+newLineOfOptions=true;
+formulaReq=moreThan:5:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_frenzy_special_dialogue;
+
+[DialogOption] text=<color=SlateGray>Add a Frenzied Strike to <Frenzy><iconBig=icon_Ber_frenzy>. (6);
+newLineOfOptions=false;
+formulaReq=lessThan:6:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_insufficient_skillpts;
+
+[DialogOption] text=Go back;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=ari_berserker_specialize_skills_extra;
+
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+--Damage
+[DialogNode] ID=ari_berserker_frenzy_damage_dialogue;
+animations=;
+statements=Good choice. You'll hit 'em much harder now.;
+specialEffect=actionOnPartyNumActor,ari_berserker_frenzy_damage_point,0;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+--Accuracy
+[DialogNode] ID=ari_berserker_frenzy_accuracy_dialogue;
+animations=;
+statements=They'll never see it coming!;
+specialEffect=actionOnPartyNumActor,ari_berserker_frenzy_accuracy_point,0;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+--MP reduction
+[DialogNode] ID=ari_berserker_frenzy_MP_dialogue;
+animations=;
+statements=Ha! I bet you'll always be able to use <Frenzy><iconBig=icon_Ber_frenzy> now, huh?;
+specialEffect=actionOnPartyNumActor,ari_berserker_frenzy_MP_point,0;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+--Number of targets
+[DialogNode] ID=ari_berserker_frenzy_targets_dialogue;
+animations=;
+statements=Now you'll whack 'em all at once!;
+specialEffect=actionOnPartyNumActor,ari_berserker_frenzy_targets_point,0;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+--Specialized
+[DialogNode] ID=ari_berserker_frenzy_special_dialogue;
+animations=;
+statements=That'll give you a burst of power for sure.;
+specialEffect=actionOnPartyNumActor,ari_berserker_frenzy_special_point,0;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+
+
+
+-----------------------------Rage
+-----------------------------Rage actorValue begin
+[ActorValue]
+ID=ari_berserker_rage_mdefense;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_berserker_rage_mdefense_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_rage_mdefense_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_rage_mdefense_point;
+	harmful=false;
+	actorValue=ari_berserker_rage_mdefense;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_berserker_rage_mdefense_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_rage_mdefense_point;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=-2;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_rage_mdefense_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_berserker_rage_pdefense;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_berserker_rage_pdefense_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_rage_pdefense_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_rage_pdefense_point;
+	harmful=false;
+	actorValue=ari_berserker_rage_pdefense;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_berserker_rage_pdefense_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_rage_pdefense_point;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=-2;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_rage_pdefense_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_berserker_rage_pattack;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_berserker_rage_pattack_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_rage_pattack_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_rage_pattack_point;
+	harmful=false;
+	actorValue=ari_berserker_rage_pattack;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_berserker_rage_pattack_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_rage_pattack_point;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_rage_pattack_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_berserker_rage_special1;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_berserker_rage_special1_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_rage_special1_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_rage_special1_point;
+	harmful=false;
+	actorValue=ari_berserker_rage_special1;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+	FXOnTile=delay_tiny;
+[AvAffecterAoE]
+	ID=ari_berserker_rage_special1_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_rage_special1_point;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=-2;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_rage_special1_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_berserker_rage_special2;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_berserker_rage_special2_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_rage_special2_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_rage_special2_point;
+	harmful=false;
+	actorValue=ari_berserker_rage_special2;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_berserker_rage_special2_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_rage_special2_point;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=-2;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_rage_special2_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+	
+-----------------------------Rage
+[DialogNode] ID=ari_berserker_rage_train;
+animations=;
+statements=How do ya want to improve <Rage><iconBig=icon_Ber_rage>?;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=Reduce Physical Defense reduction by 1. (2);
+formulaReq=moreThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_rage_pdefense_dialogue;
+
+[DialogOption] text=<color=SlateGray>Reduce Physical Defense reduction by 1. (2);
+newLineOfOptions=false;
+formulaReq=lessThan:2:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_insufficient_skillpts;
+
+[DialogOption] text=Reduce Magical Defense reduction by 1. (2);
+newLineOfOptions=true;
+formulaReq=moreThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_rage_mdefense_dialogue;
+
+[DialogOption] text=<color=SlateGray>Reduce Magical Defense reduction by 1. (2);
+newLineOfOptions=false;
+formulaReq=lessThan:2:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_insufficient_skillpts;
+
+[DialogOption] text=Increase Physical Attack buff by 1. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_rage_pattack_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase Physical Attack buff by 1. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_insufficient_skillpts;
+
+[DialogOption] text=Heal yourself for 5% maximum HP. (2);
+newLineOfOptions=true;
+formulaReq=moreThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_rage_special1_dialogue;
+
+[DialogOption] text=<color=SlateGray>Heal yourself for 5% maximum HP. (2);
+newLineOfOptions=false;
+formulaReq=lessThan:2:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_insufficient_skillpts;
+
+[DialogOption] text=Grant +2<iconBig=skill_Axe> buff. (2);
+newLineOfOptions=true;
+formulaReq=moreThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_rage_special2_dialogue;
+
+[DialogOption] text=<color=SlateGray>Grant +2<iconBig=skill_Axe>. (2);
+newLineOfOptions=true;
+formulaReq=lessThan:2:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_insufficient_skillpts;
+
+[DialogOption] text=Go back;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=ari_berserker_specialize_skills_extra;
+
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+--PDef
+[DialogNode] ID=ari_berserker_rage_pdefense_dialogue;
+animations=;
+statements=Good idea. Now you won't get hit as hard.;
+specialEffect=actionOnPartyNumActor,ari_berserker_rage_pdefense_point,0;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+
+--MDef
+[DialogNode] ID=ari_berserker_rage_mdefense_dialogue;
+animations=;
+statements=This'll show those element-wielding cowards.;
+specialEffect=actionOnPartyNumActor,ari_berserker_rage_mdefense_point,0;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+
+--PAtk
+[DialogNode] ID=ari_berserker_rage_pattack_dialogue;
+animations=;
+statements=That'll definitely make <Frenzy><iconBig=icon_Ber_frenzy> stronger.;
+specialEffect=actionOnPartyNumActor,ari_berserker_rage_pattack_point,0;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+
+--Heal 5%
+[DialogNode] ID=ari_berserker_rage_special1_dialogue;
+animations=;
+statements=Now you'll never die!;
+specialEffect=actionOnPartyNumActor,ari_berserker_rage_special1_point,0;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+
+--2 Axe skill
+[DialogNode] ID=ari_berserker_rage_special2_dialogue;
+animations=;
+statements=Now you'll really dole out the hurt.;
+specialEffect=actionOnPartyNumActor,ari_berserker_rage_special2_point,0;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+
+
+
+
+-----------------------------Scream
+-----------------------------Scream actorValue begin
+[ActorValue]
+ID=ari_berserker_scream_MP;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_berserker_scream_mana_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_scream_mana_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_scream_mana_point;
+	harmful=false;
+	actorValue=ari_berserker_scream_MP;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_berserker_scream_mana_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_scream_mana_point;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=-3;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_scream_mana_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_berserker_scream_range;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_berserker_scream_range_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_scream_range_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_scream_range_point;
+	harmful=false;
+	actorValue=ari_berserker_scream_range;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_berserker_scream_range_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_scream_range_point;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_scream_range_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_berserker_scream_duration;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_berserker_scream_duration_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_scream_duration_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_scream_duration_point;
+	harmful=false;
+	actorValue=ari_berserker_scream_duration;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_berserker_scream_duration_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_scream_duration_point;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_scream_duration_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_berserker_scream_special1;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_berserker_scream_special1_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_scream_special1_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_scream_special1_point;
+	harmful=false;
+	actorValue=ari_berserker_scream_special1;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+	FXOnTile=delay_tiny;
+[AvAffecterAoE]
+	ID=ari_berserker_scream_special1_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_scream_special1_point;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=-2;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_scream_special1_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_berserker_scream_special2;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_berserker_scream_special2_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_scream_special2_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_scream_special2_point;
+	harmful=false;
+	actorValue=ari_berserker_scream_special2;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_berserker_scream_special2_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_scream_special2_point;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_scream_special2_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+	
+-----------------------------Scream
+[DialogNode] ID=ari_berserker_scream_train;
+animations=;
+statements=How do ya want to improve <Scream><iconBig=icon_Ber_scream>?;
+specialEffect=setPCDialogWindowSizeY,280;
+
+[DialogOption] text=Reduce MP consumption by 1. (3);
+formulaReq=moreThan:2:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_scream_MP_dialogue;
+
+[DialogOption] text=<color=SlateGray>Reduce MP consumption by 1. (3);
+newLineOfOptions=false;
+formulaReq=lessThan:3:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_insufficient_skillpts;
+
+[DialogOption] text=Increase the area of effect by 1. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_scream_range_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase the area of effect by 1. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_insufficient_skillpts;
+
+[DialogOption] text=Increase the duration by 5. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_scream_duration_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase the duration by 5. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_insufficient_skillpts;
+
+[DialogOption] text=Gain a 5% chance to cancel spellcasting. Higher chance for those facing you. (2);
+newLineOfOptions=true;
+formulaReq=moreThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_scream_special1_dialogue;
+
+[DialogOption] text=<color=SlateGray>Gain a 5% chance to cancel spellcasting. Higher chance for those facing you. (2);
+newLineOfOptions=false;
+formulaReq=lessThan:2:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_insufficient_skillpts;
+
+[DialogOption] text=Deal minor unmitigated damage to enemies in the area. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_scream_special2_dialogue;
+
+[DialogOption] text=<color=SlateGray>Deal minor unmitigated damage to enemies<n=> in the area. (1);
+newLineOfOptions=true;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_insufficient_skillpts;
+
+[DialogOption] text=Go back;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=ari_berserker_specialize_skills_extra;
+
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+--MP reduction
+[DialogNode] ID=ari_berserker_scream_MP_dialogue;
+animations=;
+statements=Now you'll be able to <Scream><iconBig=icon_Ber_scream> more often.;
+specialEffect=actionOnPartyNumActor,ari_berserker_scream_mana_point,0;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+
+--Range
+[DialogNode] ID=ari_berserker_scream_range_dialogue;
+animations=;
+statements=Everyone'll fear you for miles!;
+specialEffect=actionOnPartyNumActor,ari_berserker_scream_range_point,0;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+
+--Duration
+[DialogNode] ID=ari_berserker_scream_duration_dialogue;
+animations=;
+statements=Your foes will never forget ya.;
+specialEffect=actionOnPartyNumActor,ari_berserker_scream_duration_point,0;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+
+--Stun
+[DialogNode] ID=ari_berserker_scream_special1_dialogue;
+animations=;
+statements=Your enemies'll be knocked senseless.;
+specialEffect=actionOnPartyNumActor,ari_berserker_scream_special1_point,0;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+
+--True damage
+[DialogNode] ID=ari_berserker_scream_special2_dialogue;
+animations=;
+statements=Your <Scream><iconBig=icon_Ber_scream> will shatter their ear drums!;
+specialEffect=actionOnPartyNumActor,ari_berserker_scream_special2_point,0;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+
+
+
+-----------------------------Terrorize
+-----------------------------Terrorize actorValue begin
+[ActorValue]
+ID=ari_berserker_terrorize_range;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_berserker_terrorize_range_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_terrorize_range_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_terrorize_range_point;
+	harmful=false;
+	actorValue=ari_berserker_terrorize_range;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_berserker_terrorize_range_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_terrorize_range_point;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_terrorize_range_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_berserker_terrorize_duration;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_berserker_terrorize_duration_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_terrorize_duration_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_terrorize_duration_point;
+	harmful=false;
+	actorValue=ari_berserker_terrorize_duration;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_berserker_terrorize_duration_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_terrorize_duration_point;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_terrorize_duration_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_berserker_terrorize_delay;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_berserker_terrorize_delay_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_terrorize_delay_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_terrorize_delay_point;
+	harmful=false;
+	actorValue=ari_berserker_terrorize_delay;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_berserker_terrorize_delay_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_terrorize_delay_point;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_terrorize_delay_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_berserker_terrorize_special1;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_berserker_terrorize_special1_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_terrorize_special1_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_terrorize_special1_point;
+	harmful=false;
+	actorValue=ari_berserker_terrorize_special1;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+	FXOnTile=delay_tiny;
+[AvAffecterAoE]
+	ID=ari_berserker_terrorize_special1_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_terrorize_special1_point;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=-3;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_terrorize_special1_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_berserker_terrorize_special2;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_berserker_terrorize_special2_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_terrorize_special2_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_terrorize_special2_point;
+	harmful=false;
+	actorValue=ari_berserker_terrorize_special2;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+	FXOnTile=delay_tiny;
+[AvAffecterAoE]
+	ID=ari_berserker_terrorize_special2_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_terrorize_special2_point;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_terrorize_special2_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+
+	
+-----------------------------Terrorize
+[DialogNode] ID=ari_berserker_terrorize_train;
+animations=;
+statements=How do ya want to improve <Terrorize><iconBig=icon_Ber_terrorize>?;
+specialEffect=setPCDialogWindowSizeY,272;
+
+[DialogOption] text=Increase the range by 1. (1);
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_terrorize_range_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase the range by 1. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_insufficient_skillpts;
+
+[DialogOption] text=Increase the duration by 10. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_terrorize_duration_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase the duration by 10. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_insufficient_skillpts;
+
+[DialogOption] text=Increase the enemy turn delay by 1. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_terrorize_delay_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase the enemy turn delay by 1. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_insufficient_skillpts;
+
+[DialogOption] text=Reduce an enemy's movement by 1. (3);
+newLineOfOptions=true;
+formulaReq=moreThan:2:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_terrorize_special1_dialogue;
+
+[DialogOption] text=<color=SlateGray>Reduce an enemy's movement by 1. (3);
+newLineOfOptions=false;
+formulaReq=lessThan:3:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_insufficient_skillpts;
+
+[DialogOption] text=Damage an enemy's psyche, reducing their Magic Defense by 2. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_terrorize_special2_dialogue;
+
+[DialogOption] text=<color=SlateGray>Damage an enemy's psyche, reducing their Magic Defense by 2. (1);
+newLineOfOptions=true;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_insufficient_skillpts;
+
+[DialogOption] text=Go back;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=ari_berserker_specialize_skills_extra;
+
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+--Range
+[DialogNode] ID=ari_berserker_terrorize_range_dialogue;
+animations=;
+statements=Now you'll be able to <Terrorize><iconBig=icon_Ber_terrorize> 'em from afar.;
+specialEffect=actionOnPartyNumActor,ari_berserker_terrorize_range_point,0;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+
+--Duration
+[DialogNode] ID=ari_berserker_terrorize_duration_dialogue;
+animations=;
+statements=No one'll be able to escape your gaze.;
+specialEffect=actionOnPartyNumActor,ari_berserker_terrorize_duration_point,0;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+
+--Delay
+[DialogNode] ID=ari_berserker_terrorize_delay_dialogue;
+animations=;
+statements=Your foes will tremble before you.;
+specialEffect=actionOnPartyNumActor,ari_berserker_terrorize_delay_point,0;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+
+--Movement impair
+[DialogNode] ID=ari_berserker_terrorize_special1_dialogue;
+animations=;
+statements=They'll be too scared to move!;
+specialEffect=actionOnPartyNumActor,ari_berserker_terrorize_special1_point,0;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+
+--MDef strip
+[DialogNode] ID=ari_berserker_terrorize_special2_dialogue;
+animations=;
+statements=Your <Terrorize><iconBig=icon_Ber_terrorize> will scare 'em senseless.;
+specialEffect=actionOnPartyNumActor,ari_berserker_terrorize_special2_point,0;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+
+
+
+-----------------------------Scatter
+-----------------------------Scatter actorValue begin
+[ActorValue]
+ID=ari_berserker_scatter_MP;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_berserker_scatter_mana_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_scatter_mana_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_scatter_mana_point;
+	harmful=false;
+	actorValue=ari_berserker_scatter_MP;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_berserker_scatter_mana_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_scatter_mana_point;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_scatter_mana_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_berserker_scatter_damage;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_berserker_scatter_damage_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_scatter_damage_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_scatter_damage_point;
+	harmful=false;
+	actorValue=ari_berserker_scatter_damage;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_berserker_scatter_damage_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_scatter_damage_point;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_scatter_damage_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_berserker_scatter_push;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_berserker_scatter_push_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_scatter_push_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_scatter_push_point;
+	harmful=false;
+	actorValue=ari_berserker_scatter_push;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_berserker_scatter_push_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_scatter_push_point;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=-2;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_scatter_push_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_berserker_scatter_special1;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_berserker_scatter_special1_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_scatter_special1_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_scatter_special1_point;
+	harmful=false;
+	actorValue=ari_berserker_scatter_special1;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+	FXOnTile=delay_tiny;
+[AvAffecterAoE]
+	ID=ari_berserker_scatter_special1_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_scatter_special1_point;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=-2;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_scatter_special1_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_berserker_scatter_special2;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_berserker_scatter_special2_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_berserker_scatter_special2_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_berserker_scatter_special2_point;
+	harmful=false;
+	actorValue=ari_berserker_scatter_special2;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+	FXOnTile=delay_tiny;
+[AvAffecterAoE]
+	ID=ari_berserker_scatter_special2_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_berserker_scatter_special2_point;
+	harmful=false;
+	actorValue=ari_berserker_current;
+	magnitude=-3;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_berserker_scatter_special2_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+
+	
+-----------------------------Scatter
+[DialogNode] ID=ari_berserker_scatter_train;
+animations=;
+statements=How do ya want to improve <Scatter><iconBig=icon_Ber_scatter>?;
+specialEffect=setPCDialogWindowSizeY,272;
+
+[DialogOption] text=Reduce MP consumption by 1. (1);
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_scatter_MP_dialogue;
+
+[DialogOption] text=<color=SlateGray>Reduce MP consumption by 1. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_insufficient_skillpts;
+
+[DialogOption] text=Increase damage by 5%. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_scatter_damage_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase damage by 5%. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_insufficient_skillpts;
+
+[DialogOption] text=Increase the push distance by 1. (2);
+newLineOfOptions=true;
+formulaReq=moreThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_scatter_push_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase the push distance by 1. (2);
+newLineOfOptions=false;
+formulaReq=lessThan:2:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_insufficient_skillpts;
+
+[DialogOption] text=Grant a brief +1<iconBig=skill_Axe> buff for each nearby enemy. (2);
+newLineOfOptions=true;
+formulaReq=moreThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_scatter_special1_dialogue;
+
+[DialogOption] text=<color=SlateGray>Grant a brief +1<iconBig=skill_Axe> buff for each nearby enemy. (2);
+newLineOfOptions=false;
+formulaReq=lessThan:2:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_insufficient_skillpts;
+
+[DialogOption] text=10% chance to go into a lesser <Rage><iconBig=icon_Ber_rage> after cast. (3);
+newLineOfOptions=true;
+formulaReq=moreThan:2:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_scatter_special2_dialogue;
+
+[DialogOption] text=<color=SlateGray>10% chance to go into a lesser <Rage><iconBig=icon_Ber_rage> after cast. (3);
+newLineOfOptions=true;
+formulaReq=lessThan:3:g:ari_current_points0;
+nodeToConnectTo=ari_berserker_insufficient_skillpts;
+
+[DialogOption] text=Go back;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=ari_berserker_specialize_skills_extra;
+
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+--MP reduction
+[DialogNode] ID=ari_berserker_scatter_MP_dialogue;
+animations=;
+statements=You can <Scatter><iconBig=icon_Ber_scatter> your enemies more often.;
+specialEffect=actionOnPartyNumActor,ari_berserker_scatter_mana_point,0;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+
+--Damage
+[DialogNode] ID=ari_berserker_scatter_damage_dialogue;
+animations=;
+statements=Hit 'em once and hit 'em hard.;
+specialEffect=actionOnPartyNumActor,ari_berserker_scatter_damage_point,0;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+
+--Push
+[DialogNode] ID=ari_berserker_scatter_push_dialogue;
+animations=;
+statements=Blast your enemies away!;
+specialEffect=actionOnPartyNumActor,ari_berserker_scatter_push_point,0;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+
+--Axe buff
+[DialogNode] ID=ari_berserker_scatter_special1_dialogue;
+animations=;
+statements=Tear 'em apart!;
+specialEffect=actionOnPartyNumActor,ari_berserker_scatter_special1_point,0;
+nextNodeID=ari_berserker_specialize_skills_extra;
+
+
+--Lesser Rage
+[DialogNode] ID=ari_berserker_scatter_special2_dialogue;
+animations=;
+statements=Don't let it consume you, now.;
+specialEffect=actionOnPartyNumActor,ari_berserker_scatter_special2_point,0;
+nextNodeID=ari_berserker_specialize_skills_extra;

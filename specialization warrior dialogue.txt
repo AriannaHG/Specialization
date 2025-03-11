@@ -1,0 +1,1845 @@
+------------------------------------------------------------------------------------------
+--        Replace the following phrases:
+------------------------------------------------------------------------------------------
+--        Warrior                            			gets replaced with the actual class ID
+--        classIcon_warrior                  			gets replaced with the class Icon
+--        Wa_shove                           			gets replaced with the class's first ability
+--        icon_Wa_push           			gets replaced with the first ability's Icon
+--				A1ATTRIBUTE1			                gets replaced with the first ability's first attribute
+--				A1ATTRIBUTE2			                gets replaced with the first ability's second attribute
+--				A1ATTRIBUTE3			                gets replaced with the first ability's third attribute
+--				A1ATTRIBUTE4			                gets replaced with the first ability's fourth attribute
+--				A1ATTRIBUTE5			                gets replaced with the first ability's fifth attribute
+--        Wa_charge                           			gets replaced with the class's second ability
+--        icon_Wa_charge           			gets replaced with the second ability's Icon
+--				A2ATTRIBUTE1			                gets replaced with the second ability's first attribute
+--				A2ATTRIBUTE2			                gets replaced with the second ability's second attribute
+--				A2ATTRIBUTE3			                gets replaced with the second ability's third attribute
+--				A2ATTRIBUTE4			                gets replaced with the second ability's fourth attribute
+--				A2ATTRIBUTE5			                gets replaced with the second ability's fifth attribute
+--        Wa_Brave                           			gets replaced with the class's third ability
+--        icon_Wa_brave           			gets replaced with the third ability's Icon
+--				A3ATTRIBUTE1			                gets replaced with the third ability's first attribute
+--				A3ATTRIBUTE2			                gets replaced with the third ability's second attribute
+--				A3ATTRIBUTE3			                gets replaced with the third ability's third attribute
+--				A3ATTRIBUTE4			                gets replaced with the third ability's fourth attribute
+--				A3ATTRIBUTE5			                gets replaced with the third ability's fifth attribute
+--        Wa_Bide                           			gets replaced with the class's fourth ability
+--        icon_Wa_bide           			gets replaced with the fourth ability's Icon
+--				A4ATTRIBUTE1			                gets replaced with the fourth ability's first attribute
+--				A4ATTRIBUTE2			                gets replaced with the fourth ability's second attribute
+--				A4ATTRIBUTE3			                gets replaced with the fourth ability's third attribute
+--				A4ATTRIBUTE4			                gets replaced with the fourth ability's fourth attribute
+--				A4ATTRIBUTE5			                gets replaced with the fourth ability's fifth attribute
+--        Wa_battlecry                           			gets replaced with the class's fifth ability
+--        icon_Wa_battlecry           			gets replaced with the fifth ability's Icon
+--				A5ATTRIBUTE1			                gets replaced with the fifth ability's first attribute
+--				A5ATTRIBUTE2			                gets replaced with the fifth ability's second attribute
+--				A5ATTRIBUTE3			                gets replaced with the fifth ability's third attribute
+--				A5ATTRIBUTE4			                gets replaced with the fifth ability's fourth attribute
+--				A5ATTRIBUTE5			                gets replaced with the fifth ability's fifth attribute
+------------------------------------------------------------------------------------------
+
+
+-----------------------------Warrior Skill point setup
+[ActorValue]
+ID=ari_Warrior_total;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[ActorValue]
+ID=ari_Warrior_current;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+removedByNegativeMagnitude=false;
+
+
+
+-----------------------------Warrior formula setup
+[FormulaGlobal] ID=ari_Warrior_current_check_formula;
+formula=t:ari_Warrior_current;
+[FormulaGlobal] ID=ari_Warrior_total_check_formula;
+formula=t:ari_Warrior_total;
+[FormulaGlobal] ID=ari_Warrior_current_xp_check_formula;
+formula=t:warrior_XP;
+
+[FormulaGlobal] ID=ari_Warrior_skillpoint_exp0;
+formula=1 + g:ari_total_points0;
+
+[FormulaGlobal] ID=ari_Warrior_skillpoint_exp1;
+formula=d:ari_Warrior_skillpoint_exp0 * 1000;
+
+[FormulaGlobal] ID=ari_Warrior_skillpoint_exp_req0;
+formula=d:ari_Warrior_skillpoint_exp1 - 1;
+
+[FormulaGlobal] ID=ari_Warrior_skillpoint_exp_req1;
+formula=g:ari_current_Warrior_exp0 - d:ari_Warrior_skillpoint_exp_req0;
+
+
+
+[Action] ID=ari_set_specialization_Warrior; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_set_specialization_Warrior;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_set_specialization_Warrior;
+	--harmful=false;
+	actorValue=ari_specialization;
+    magnitude=2;
+	duration=-1;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_set_specialization_Warrior; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+	
+[GlobalTrigger] aliasID=ari_set_specialization_Warrior_trigger;
+[GlobalTriggerEffect] ID=ari_set_specialization_Warrior_trigger; effectID=actionOnPartyNumActor; sValue=ari_set_specialization_Warrior; sValue2=; bValue1=False; bValue2=False; fValue=0; delay=0; xValue=-1; yValue=-1;	
+	
+
+
+
+[Action] ID=ari_specialization_Warrior_skillpoint_check; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_specialization_Warrior_skillpoint_check;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_specialization_Warrior_skillpoint_check;
+	harmful=false;
+	actorValue=task;
+    magnitude=setGlobalVar_math,ari_total_points0,d:ari_Warrior_total_check_formula;
+	duration=-1;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_specialization_Warrior_skillpoint_check; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_specialization_Warrior_skillpoint_check;
+	harmful=false;
+	actorValue=task;
+    magnitude=setGlobalVar_math,ari_current_points0,d:ari_Warrior_current_check_formula;
+	duration=-1;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_specialization_Warrior_skillpoint_check; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_specialization_Warrior_skillpoint_check;
+	harmful=false;
+	actorValue=task;
+    magnitude=setGlobalVar_math,ari_current_Warrior_exp0,d:ari_Warrior_current_xp_check_formula;
+	duration=-1;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_specialization_Warrior_skillpoint_check; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+
+[GlobalTrigger] aliasID=ari_specialization_Warrior_skillpoint_check_trigger;
+[GlobalTriggerEffect] ID=ari_specialization_Warrior_skillpoint_check_trigger; effectID=actionOnPartyNumActor; sValue=ari_specialization_Warrior_skillpoint_check; sValue2=; bValue1=False; bValue2=False; fValue=0; delay=0; xValue=-1; yValue=-1;	
+
+
+
+
+[Action] ID=ari_Warrior_skillpoint; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_skillpoint;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_skillpoint;
+	harmful=false;
+	actorValue=warrior_XP;
+	magnitude=d:ari_Warrior_skillpoint_exp1 * -1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_Warrior_skillpoint; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_skillpoint;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_skillpoint; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_skillpoint;
+	harmful=false;
+	actorValue=ari_Warrior_total;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_skillpoint; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+	
+
+
+-----------------------------Warrior dialogue begin
+-----------------------------Set up specialization
+[DialogNode] ID=class_WarriorIntro;
+animations=;
+statements=Well hello. Thanks again for assisting us at Tidehaven. Your prowess in battle was splendid.;
+statements=While you're here, is there anything I can do for you?;
+
+[DialogOption] ID=class_WarriorIntro; text=I'm looking for additional training as a Warrior<iconBig=classIcon_warrior>;
+--formulaReq=is:1:g:class_Warrior;
+specialEffect=ari_specialization_check_trigger;
+specialEffect=fx,delay;
+newLineOfOptions=true;
+nodeToConnectTo=ari_Warrior_specialization_training;
+[DialogOption] text=Goodbye;
+newLineOfOptions=true;
+bottomOption=true;
+nodeToConnectTo=;
+
+
+
+[DialogNode] ID=ari_Warrior_specialization_training;
+animations=;
+statements=Magnificent. And what kind of training are you looking for, exactly?;
+
+[DialogOption] text=<portraitBig=0><partyActorName=0><n=>I want to specialize in being a Warrior<iconBig=classIcon_warrior>;
+formulaReq=isNot:1:g:ari_specialized_ever;
+nodeToConnectTo=ari_Warrior_specialization;
+
+[DialogOption] text=<portraitBig=0><partyActorName=0><n=>I want to specialize in being a Warrior<iconBig=classIcon_warrior> 2;
+formulaReq=is:1:g:ari_specialized_ever * isNot:2:g:ari_specialization_check0;		----------------------------------------------------------CHANGE THIS TO THE INDEXED CLASS'S SPECIALIZATION ID
+newLineOfOptions=false;
+nodeToConnectTo=ari_Warrior_specialization_different;
+
+[DialogOption] text=<portraitBig=0><partyActorName=0><n=>I want to specialize my Warrior<iconBig=classIcon_warrior> abilities;
+formulaReq=is:2:g:ari_specialization_check0;		------------------------------------------------------------------------------------------CHANGE THIS TO THE INDEXED CLASS'S SPECIALIZATION ID
+newLineOfOptions=true;
+nodeToConnectTo=ari_Warrior_specialize_skills;
+
+[DialogOption] text=Nevermind;
+newLineOfOptions=true;
+bottomOption=true;
+nodeToConnectTo=;
+
+
+
+[DialogNode] ID=ari_Warrior_specialization_different;
+animations=;
+statements=Were you aware that you can only be specialized in one class at once and you're currently not specialized as Warrior?<n=>Are you sure you want to specialize as a Warrior?;
+
+[DialogOption] text=<portraitBig=0><partyActorName=0><n=>Yes, I want to specialize in being a Warrior<iconBig=classIcon_warrior>;
+--specialEffect=ari_specialization_reset_trigger;
+nodeToConnectTo=ari_Warrior_specialization;
+
+[DialogOption] text=Nevermind;
+newLineOfOptions=true;
+bottomOption=true;
+nodeToConnectTo=;
+
+
+-----------------------------Specialization set, skill training begin
+[DialogNode] ID=ari_Warrior_specialization;
+animations=;
+statements=What a great choice.<n=>Now we can get down to training and I can help convert some of that experience into pure power.;
+statements=So how can I help you?;
+specialEffect=setGlobalVar,ari_specialized_ever,1;
+specialEffect=ari_set_specialization_Warrior_trigger;
+specialEffect=ari_specialization_Warrior_skillpoint_check_trigger;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=I'd like to train in a skill point;
+nodeToConnectTo=ari_Warrior_specialization_skillpoint;
+
+[DialogOption] text=I'd like to train <Bash><iconBig=icon_Wa_push>;
+nodeToConnectTo=ari_Warrior_Wa_shove_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Charge><iconBig=icon_Wa_charge>;
+nodeToConnectTo=ari_Warrior_Wa_charge_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Brave><iconBig=icon_Wa_brave>;
+nodeToConnectTo=ari_Warrior_Wa_Brave_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Bide><iconBig=icon_Wa_bide>;
+nodeToConnectTo=ari_Warrior_Wa_Bide_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Battlecry><iconBig=icon_Wa_battlecry>;
+nodeToConnectTo=ari_Warrior_Wa_battlecry_train;
+newLineOfOptions=true;
+
+[DialogOption] text=That's all, thanks;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+
+
+[DialogNode] ID=ari_Warrior_specialize_skills;
+animations=;
+statements=Make sure you've got enough training built up for this. We don't want to waste any time. <n=>Which ability do we want to train?;
+specialEffect=ari_specialization_Warrior_skillpoint_check_trigger;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=I'd like to train in a skill point;
+nodeToConnectTo=ari_Warrior_specialization_skillpoint;
+
+[DialogOption] text=I'd like to train <Bash><iconBig=icon_Wa_push>;
+nodeToConnectTo=ari_Warrior_Wa_shove_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Charge><iconBig=icon_Wa_charge>;
+nodeToConnectTo=ari_Warrior_Wa_charge_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Brave><iconBig=icon_Wa_brave>;
+nodeToConnectTo=ari_Warrior_Wa_Brave_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Bide><iconBig=icon_Wa_bide>;
+nodeToConnectTo=ari_Warrior_Wa_Bide_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Battlecry><iconBig=icon_Wa_battlecry>;
+nodeToConnectTo=ari_Warrior_Wa_battlecry_train;
+newLineOfOptions=true;
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+[DialogNode] ID=ari_Warrior_specialize_skills_extra;
+animations=;
+statements=Anything else you want to train at while you're here?;
+specialEffect=ari_specialization_Warrior_skillpoint_check_trigger;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=I'd like to train in a skill point;
+nodeToConnectTo=ari_Warrior_specialization_skillpoint;
+
+[DialogOption] text=I'd like to train <Bash><iconBig=icon_Wa_push>;
+nodeToConnectTo=ari_Warrior_Wa_shove_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Charge><iconBig=icon_Wa_charge>;
+nodeToConnectTo=ari_Warrior_Wa_charge_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Brave><iconBig=icon_Wa_brave>;
+nodeToConnectTo=ari_Warrior_Wa_Brave_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Bide><iconBig=icon_Wa_bide>;
+nodeToConnectTo=ari_Warrior_Wa_Bide_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Battlecry><iconBig=icon_Wa_battlecry>;
+nodeToConnectTo=ari_Warrior_Wa_battlecry_train;
+newLineOfOptions=true;
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+-----------------------------Buying skill points
+[DialogNode] ID=ari_Warrior_specialization_skillpoint;
+animations=;
+statements=A skill point will cost you <math=d:ari_Warrior_skillpoint_exp1> experience. <n=>I hope you've accumulated enough.;
+specialEffect=setPCDialogWindowSizeY;
+
+[DialogOption] text=Yes, I'd like to train in a skill point;
+formulaReq=moreThan:0:d:ari_Warrior_skillpoint_exp_req1;
+specialEffect=actionOnPartyNumActor,ari_Warrior_skillpoint,0;
+nodeToConnectTo=ari_Warrior_specialization_skillpoint_purchase;
+
+[DialogOption] text=<color=SlateGray>Yes, I'd like to train in a skill point;
+formulaReq=lessThan:1:d:ari_Warrior_skillpoint_exp_req1;
+nodeToConnectTo=ari_Warrior_specialization_skillpoint_purchase_cant;
+
+[DialogOption] text=Go back;
+newLineOfOptions=true;
+nodeToConnectTo=ari_Warrior_specialize_skills_extra;
+
+[DialogOption] text=Nevermind;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+
+
+[DialogNode] ID=ari_Warrior_specialization_skillpoint_purchase;
+animations=;
+statements=Magnificent. Your experience pulled through for you.;
+specialEffect=actionOnPartyNumActor,ari_specialization_check,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+
+
+[DialogNode] ID=ari_Warrior_specialization_skillpoint_purchase_cant;
+animations=;
+statements=It looks like you don't have enough experience for me to train you just yet.;
+statements=You should come back once you've accrued more experience.;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+
+
+[DialogNode] ID=ari_Warrior_insufficient_skillpts;
+animations=stern;
+statements=You don't have enough skill points for that.;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+
+
+
+-----------------------------Wa_shove actorValue begin
+[ActorValue]
+ID=ari_Warrior_Wa_shove_A1ATTRIBUTE1;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_Warrior_Wa_shove_A1ATTRIBUTE1_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_Wa_shove_A1ATTRIBUTE1_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_Wa_shove_A1ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_Warrior_Wa_shove_A1ATTRIBUTE1;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_shove_A1ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_Wa_shove_A1ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_shove_A1ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_Warrior_Wa_shove_A1ATTRIBUTE2;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_Warrior_Wa_shove_A1ATTRIBUTE2_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_Wa_shove_A1ATTRIBUTE2_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_Wa_shove_A1ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_Warrior_Wa_shove_A1ATTRIBUTE2;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_shove_A1ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_Wa_shove_A1ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_shove_A1ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_Warrior_Wa_shove_A1ATTRIBUTE3;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_Warrior_Wa_shove_A1ATTRIBUTE3_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_Wa_shove_A1ATTRIBUTE3_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_Wa_shove_A1ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_Warrior_Wa_shove_A1ATTRIBUTE3;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_shove_A1ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_Wa_shove_A1ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_shove_A1ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_Warrior_Wa_shove_A1ATTRIBUTE4;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_Warrior_Wa_shove_A1ATTRIBUTE4_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_Wa_shove_A1ATTRIBUTE4_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_Wa_shove_A1ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_Warrior_Wa_shove_A1ATTRIBUTE4;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_shove_A1ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_Wa_shove_A1ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_shove_A1ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_Warrior_Wa_shove_A1ATTRIBUTE5;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_Warrior_Wa_shove_A1ATTRIBUTE5_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_Wa_shove_A1ATTRIBUTE5_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_Wa_shove_A1ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_Warrior_Wa_shove_A1ATTRIBUTE5;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_shove_A1ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_Wa_shove_A1ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_shove_A1ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+	
+-----------------------------Wa_shove
+[DialogNode] ID=ari_Warrior_Wa_shove_train;
+animations=;
+statements=How're we going to train <Bash><iconBig=icon_Wa_push>?;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=Increase damage by 5%. (1);
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_Wa_shove_A1ATTRIBUTE1_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase damage by 5%. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_insufficient_skillpts;
+
+[DialogOption] text=Add +2 flat damage. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_Wa_shove_A1ATTRIBUTE2_dialogue;
+
+[DialogOption] text=<color=SlateGray>Add +2 flat damage. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_insufficient_skillpts;
+
+[DialogOption] text=Increase accuracy by 4%. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_Wa_shove_A1ATTRIBUTE3_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase accuracy by 4%. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_insufficient_skillpts;
+
+[DialogOption] text=Add a 25% chance to stun the target for 2<iconBig=time>. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_Wa_shove_A1ATTRIBUTE4_dialogue;
+
+[DialogOption] text=<color=SlateGray>Add a 25% chance to stun the target for 2<iconBig=time>. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_insufficient_skillpts;
+
+[DialogOption] text=Immobilize the target for 3<iconBig=time>. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_Wa_shove_A1ATTRIBUTE5_dialogue;
+
+[DialogOption] text=<color=SlateGray>Immobilize the target for 3<iconBig=time>. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_insufficient_skillpts;
+
+[DialogOption] text=Go back;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=ari_Warrior_specialize_skills_extra;
+
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+--5% damage
+[DialogNode] ID=ari_Warrior_Wa_shove_A1ATTRIBUTE1_dialogue;
+animations=;
+statements=Magnificent. I can see the force of which you use <Bash><iconBig=icon_Wa_push> has improved.;
+specialEffect=actionOnPartyNumActor,ari_Warrior_Wa_shove_A1ATTRIBUTE1_point,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+--2 flat damage
+[DialogNode] ID=ari_Warrior_Wa_shove_A1ATTRIBUTE2_dialogue;
+animations=;
+statements=Wonderful. Many times focusing in on a niche ends up the winning choice.;
+specialEffect=actionOnPartyNumActor,ari_Warrior_Wa_shove_A1ATTRIBUTE2_point,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+--4% accuracy
+[DialogNode] ID=ari_Warrior_Wa_shove_A1ATTRIBUTE3_dialogue;
+animations=;
+statements=Good choice. I doubt you'll ever miss with <Bash><iconBig=icon_Wa_push>.;
+specialEffect=actionOnPartyNumActor,ari_Warrior_Wa_shove_A1ATTRIBUTE3_point,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+--25% chance for 2 stun
+[DialogNode] ID=ari_Warrior_Wa_shove_A1ATTRIBUTE4_dialogue;
+animations=;
+statements=Magnificent. You'll be able to hit them with such force that they'll be stunned.;
+specialEffect=actionOnPartyNumActor,ari_Warrior_Wa_shove_A1ATTRIBUTE4_point,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+--3 immobilize
+[DialogNode] ID=ari_Warrior_Wa_shove_A1ATTRIBUTE5_dialogue;
+animations=;
+statements=Masterfully done. They won't be able to move an inch.;
+specialEffect=actionOnPartyNumActor,ari_Warrior_Wa_shove_A1ATTRIBUTE5_point,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+
+
+
+-----------------------------Wa_charge
+-----------------------------Wa_charge actorValue begin
+[ActorValue]
+ID=ari_Warrior_Wa_charge_A2ATTRIBUTE1;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_Warrior_Wa_charge_A2ATTRIBUTE1_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_Wa_charge_A2ATTRIBUTE1_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_Wa_charge_A2ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_Warrior_Wa_charge_A2ATTRIBUTE1;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_charge_A2ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_Wa_charge_A2ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_charge_A2ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_Warrior_Wa_charge_A2ATTRIBUTE2;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_Warrior_Wa_charge_A2ATTRIBUTE2_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_Wa_charge_A2ATTRIBUTE2_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_Wa_charge_A2ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_Warrior_Wa_charge_A2ATTRIBUTE2;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_charge_A2ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_Wa_charge_A2ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=-2;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_charge_A2ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_Warrior_Wa_charge_A2ATTRIBUTE3;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_Warrior_Wa_charge_A2ATTRIBUTE3_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_Wa_charge_A2ATTRIBUTE3_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_Wa_charge_A2ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_Warrior_Wa_charge_A2ATTRIBUTE3;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_charge_A2ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_Wa_charge_A2ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_charge_A2ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_Warrior_Wa_charge_A2ATTRIBUTE4;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_Warrior_Wa_charge_A2ATTRIBUTE4_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_Wa_charge_A2ATTRIBUTE4_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_Wa_charge_A2ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_Warrior_Wa_charge_A2ATTRIBUTE4;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+	FXOnTile=delay_tiny;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_charge_A2ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_Wa_charge_A2ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_charge_A2ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_Warrior_Wa_charge_A2ATTRIBUTE5;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_Warrior_Wa_charge_A2ATTRIBUTE5_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_Wa_charge_A2ATTRIBUTE5_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_Wa_charge_A2ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_Warrior_Wa_charge_A2ATTRIBUTE5;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_charge_A2ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_Wa_charge_A2ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=-3;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_charge_A2ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+	
+-----------------------------Wa_charge
+[DialogNode] ID=ari_Warrior_Wa_charge_train;
+animations=;
+statements=How are we going to train to improve <Charge><iconBig=icon_Wa_charge>?;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=Increase damage by 5%. (1);
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_Wa_charge_A2ATTRIBUTE1_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase damage by 5%. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_insufficient_skillpts;
+
+[DialogOption] text=Increase damage by the amount of distance covered. (2);
+newLineOfOptions=true;
+formulaReq=moreThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_Wa_charge_A2ATTRIBUTE2_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase damage by the amount of distance covered. (2);
+newLineOfOptions=false;
+formulaReq=lessThan:2:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_insufficient_skillpts;
+
+[DialogOption] text=Grant Guard for 6<iconBig=time>. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_Wa_charge_A2ATTRIBUTE3_dialogue;
+
+[DialogOption] text=<color=SlateGray>Grant Guard for 6<iconBig=time>. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_insufficient_skillpts;
+
+[DialogOption] text=Immobilize the target for 5<iconBig=time>. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_Wa_charge_A2ATTRIBUTE4_dialogue;
+
+[DialogOption] text=<color=SlateGray>Immobilize the target for 5<iconBig=time>. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_insufficient_skillpts;
+
+[DialogOption] text=Causes damage to an area on impact. (3);
+newLineOfOptions=true;
+formulaReq=moreThan:2:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_Wa_charge_A2ATTRIBUTE5_dialogue;
+
+[DialogOption] text=<color=SlateGray>Causes damage to an area on impact. (3);
+newLineOfOptions=false;
+formulaReq=lessThan:3:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_insufficient_skillpts;
+
+[DialogOption] text=Go back;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=ari_Warrior_specialize_skills_extra;
+
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+--5% Damage
+[DialogNode] ID=ari_Warrior_Wa_charge_A2ATTRIBUTE1_dialogue;
+animations=;
+statements=Excellent. You'll run enemies down with ease.;
+specialEffect=actionOnPartyNumActor,ari_Warrior_Wa_charge_A2ATTRIBUTE1_point,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+--Momentum Damage
+[DialogNode] ID=ari_Warrior_Wa_charge_A2ATTRIBUTE2_dialogue;
+animations=;
+statements=Magnificent. <Charge><iconBig=icon_Wa_charge>'s impact will truly hurt.;
+specialEffect=actionOnPartyNumActor,ari_Warrior_Wa_charge_A2ATTRIBUTE2_point,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+--Guard for 6
+[DialogNode] ID=ari_Warrior_Wa_charge_A2ATTRIBUTE3_dialogue;
+animations=;
+statements=Good choice. The best defense is a strong offense.;
+specialEffect=actionOnPartyNumActor,ari_Warrior_Wa_charge_A2ATTRIBUTE3_point,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+--Immobilize for 5
+[DialogNode] ID=ari_Warrior_Wa_charge_A2ATTRIBUTE4_dialogue;
+animations=;
+statements=Wonderful. Now they'll have no choice but to face you.;
+specialEffect=actionOnPartyNumActor,ari_Warrior_Wa_charge_A2ATTRIBUTE4_point,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+--Splash damage
+[DialogNode] ID=ari_Warrior_Wa_charge_A2ATTRIBUTE5_dialogue;
+animations=;
+statements=Magnificent. The impact will resonate throughout the battlefield.;
+specialEffect=actionOnPartyNumActor,ari_Warrior_Wa_charge_A2ATTRIBUTE5_point,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+
+
+
+
+-----------------------------Wa_Brave
+-----------------------------Wa_Brave actorValue begin
+[ActorValue]
+ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE1;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE1_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE1_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_Warrior_Wa_Brave_A3ATTRIBUTE1;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE2;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE2_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE2_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_Warrior_Wa_Brave_A3ATTRIBUTE2;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=-2;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE3;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE3_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE3_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_Warrior_Wa_Brave_A3ATTRIBUTE3;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE4;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE4_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE4_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_Warrior_Wa_Brave_A3ATTRIBUTE4;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+	FXOnTile=delay_tiny;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=-2;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE5;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE5_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE5_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_Warrior_Wa_Brave_A3ATTRIBUTE5;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=-3;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+	
+-----------------------------Wa_Brave
+[DialogNode] ID=ari_Warrior_Wa_Brave_train;
+animations=;
+statements=How're we looking to train <Brave><iconBig=icon_Wa_brave> today?;
+specialEffect=setPCDialogWindowSizeY,312;
+
+[DialogOption] text=Increase duration by 10. (1);
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_Wa_Brave_A3ATTRIBUTE1_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase duration by 10. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_insufficient_skillpts;
+
+[DialogOption] text=Grant 1 Physical Defense to adjacent allies for half of the normal duration. (2);
+newLineOfOptions=true;
+formulaReq=moreThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_Wa_Brave_A3ATTRIBUTE2_dialogue;
+
+[DialogOption] text=<color=SlateGray>Grant 1 Physical Defense to adjacent allies for half of the normal duration. (2);
+newLineOfOptions=false;
+formulaReq=lessThan:2:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_insufficient_skillpts;
+
+[DialogOption] text=Grant 2 Bravery, increasing Physical Defense by 2 when struck. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_Wa_Brave_A3ATTRIBUTE3_dialogue;
+
+[DialogOption] text=<color=SlateGray>Grant 2 Bravery, increasing Physical Defense by 2 when struck. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_insufficient_skillpts;
+
+[DialogOption] text=Grant a target 3<iconBig=time> when cast on someone other than yourself. (2);
+newLineOfOptions=true;
+formulaReq=moreThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_Wa_Brave_A3ATTRIBUTE4_dialogue;
+
+[DialogOption] text=<color=SlateGray>Grant a target 3<iconBig=time> when cast on someone other than yourself. (2);
+newLineOfOptions=false;
+formulaReq=lessThan:2:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_insufficient_skillpts;
+
+[DialogOption] text=Grant 2 Second Wind for half of the normal duration, healing when taking physical damage. (3);
+newLineOfOptions=true;
+formulaReq=moreThan:2:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_Wa_Brave_A3ATTRIBUTE5_dialogue;
+
+[DialogOption] text=<color=SlateGray>Grant 2 Second Wind for half of the normal duration, healing when taking physical damage. (3);
+newLineOfOptions=false;
+formulaReq=lessThan:3:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_insufficient_skillpts;
+
+[DialogOption] text=Go back;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=ari_Warrior_specialize_skills_extra;
+
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+--10 Duration
+[DialogNode] ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE1_dialogue;
+animations=;
+statements=Fantastic. You will stand <Brave><iconBig=icon_Wa_brave> even in the most difficulty of circumstances.;
+specialEffect=actionOnPartyNumActor,ari_Warrior_Wa_Brave_A3ATTRIBUTE1_point,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+--1 Physical Defense to adjance allies
+[DialogNode] ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE2_dialogue;
+animations=;
+statements=Excellent. Your allies will stand tall.;
+specialEffect=actionOnPartyNumActor,ari_Warrior_Wa_Brave_A3ATTRIBUTE2_point,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+--2 Bravery AV
+[DialogNode] ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE3_dialogue;
+animations=;
+statements=Magnificent. None shall falter under your gaze!;
+specialEffect=actionOnPartyNumActor,ari_Warrior_Wa_Brave_A3ATTRIBUTE3_point,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+--3 time to act when cast on ally
+[DialogNode] ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE4_dialogue;
+animations=;
+statements=Magnificent. Your allies will act with determination and perseverance.;
+specialEffect=actionOnPartyNumActor,ari_Warrior_Wa_Brave_A3ATTRIBUTE4_point,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+--2 Second Wind AV
+[DialogNode] ID=ari_Warrior_Wa_Brave_A3ATTRIBUTE5_dialogue;
+animations=;
+statements=A grand display. Supplying Second Wind will ensure your troop stay healthy and fit.;
+specialEffect=actionOnPartyNumActor,ari_Warrior_Wa_Brave_A3ATTRIBUTE5_point,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+
+
+
+-----------------------------Wa_Bide
+-----------------------------Wa_Bide actorValue begin
+[ActorValue]
+ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE1;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE1_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE1_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_Warrior_Wa_Bide_A4ATTRIBUTE1;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE2;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE2_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE2_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_Warrior_Wa_Bide_A4ATTRIBUTE2;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE3;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE3_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE3_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_Warrior_Wa_Bide_A4ATTRIBUTE3;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=-2;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE4;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE4_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE4_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_Warrior_Wa_Bide_A4ATTRIBUTE4;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+	FXOnTile=delay_tiny;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE5;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE5_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE5_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_Warrior_Wa_Bide_A4ATTRIBUTE5;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=-5;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+	
+-----------------------------Wa_Bide
+[DialogNode] ID=ari_Warrior_Wa_Bide_train;
+animations=;
+statements=How would you like to improve <Bide><iconBig=icon_Wa_bide>?;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=Increase damage by 5%. (1);
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_Wa_Bide_A4ATTRIBUTE1_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase damage by 5%. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_insufficient_skillpts;
+
+[DialogOption] text=Reduce charge time by 1. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_Wa_Bide_A4ATTRIBUTE2_dialogue;
+
+[DialogOption] text=<color=SlateGray>Reduce charge time by 1. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_insufficient_skillpts;
+
+[DialogOption] text=Deal 2% of the target's maximum HP as damage. (2);
+newLineOfOptions=true;
+formulaReq=moreThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_Wa_Bide_A4ATTRIBUTE3_dialogue;
+
+[DialogOption] text=<color=SlateGray>Deal 2% of the target's maximum HP as damage. (2);
+newLineOfOptions=false;
+formulaReq=lessThan:2:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_insufficient_skillpts;
+
+[DialogOption] text=Stun the target for 3<iconBig=time>. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_Wa_Bide_A4ATTRIBUTE4_dialogue;
+
+[DialogOption] text=<color=SlateGray>Stun the target for 3<iconBig=time>. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_insufficient_skillpts;
+
+[DialogOption] text=Strike beforehand, inflicting 5 Exposed for 18<iconBig=time>. (5);
+newLineOfOptions=true;
+formulaReq=moreThan:4:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_Wa_Bide_A4ATTRIBUTE5_dialogue;
+
+[DialogOption] text=<color=SlateGray>Strike beforehand, inflicting 5 Exposed for 18<iconBig=time>. (5);
+newLineOfOptions=false;
+formulaReq=lessThan:5:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_insufficient_skillpts;
+
+[DialogOption] text=Go back;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=ari_Warrior_specialize_skills_extra;
+
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+--5% damage
+[DialogNode] ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE1_dialogue;
+animations=;
+statements=Excellent. A masterful blow.;
+specialEffect=actionOnPartyNumActor,ari_Warrior_Wa_Bide_A4ATTRIBUTE1_point,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+--1 charge time reduction
+[DialogNode] ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE2_dialogue;
+animations=;
+statements=Excellent. With enough training, <Bide><iconBig=icon_Wa_bide> will swiftly eliminate your foes.;
+specialEffect=actionOnPartyNumActor,ari_Warrior_Wa_Bide_A4ATTRIBUTE2_point,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+--2% maximum hp damage
+[DialogNode] ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE3_dialogue;
+animations=;
+statements=Magnificent. Rend and tear your enemies asunder.;
+specialEffect=actionOnPartyNumActor,ari_Warrior_Wa_Bide_A4ATTRIBUTE3_point,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+--3 timer stun
+[DialogNode] ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE4_dialogue;
+animations=;
+statements=Good choice. With such force, your enemy will have lost their wits.;
+specialEffect=actionOnPartyNumActor,ari_Warrior_Wa_Bide_A4ATTRIBUTE4_point,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+--Exposed strike
+[DialogNode] ID=ari_Warrior_Wa_Bide_A4ATTRIBUTE5_dialogue;
+animations=;
+statements=A grand feat. Exposing your foe before a follow-up will ensure their demise.;
+specialEffect=actionOnPartyNumActor,ari_Warrior_Wa_Bide_A4ATTRIBUTE5_point,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+
+
+
+-----------------------------Wa_battlecry
+-----------------------------Wa_battlecry actorValue begin
+[ActorValue]
+ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE1;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE1_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE1_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_Warrior_Wa_battlecry_A5ATTRIBUTE1;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE2;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE2_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE2_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_Warrior_Wa_battlecry_A5ATTRIBUTE2;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE3;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE3_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE3_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_Warrior_Wa_battlecry_A5ATTRIBUTE3;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=-4;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE4;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE4_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE4_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_Warrior_Wa_battlecry_A5ATTRIBUTE4;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+	FXOnTile=delay_tiny;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=-2;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE5;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE5_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE5_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_Warrior_Wa_battlecry_A5ATTRIBUTE5;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_Warrior_current;
+	magnitude=-2;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+	
+-----------------------------Wa_battlecry
+[DialogNode] ID=ari_Warrior_Wa_battlecry_train;
+animations=;
+statements=How would you like to improve <Battlecry><iconBig=icon_Wa_battlecry>?;
+specialEffect=setPCDialogWindowSizeY,312;
+
+[DialogOption] text=Increase duration by 10. (1);
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_Wa_battlecry_A5ATTRIBUTE1_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase duration by 10. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_insufficient_skillpts;
+
+[DialogOption] text=Increase accuracy by 8%. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_Wa_battlecry_A5ATTRIBUTE2_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase accuracy by 8%. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_insufficient_skillpts;
+
+[DialogOption] text=Boost ally morale within the area for half of the normal duration. (4);
+newLineOfOptions=true;
+formulaReq=moreThan:3:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_Wa_battlecry_A5ATTRIBUTE3_dialogue;
+
+[DialogOption] text=<color=SlateGray>Boost ally morale within the area for half of the normal duration. (4);
+newLineOfOptions=false;
+formulaReq=lessThan:4:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_insufficient_skillpts;
+
+[DialogOption] text=Grant 1 Bravery to allies within the area for half of the normal duration. (2);
+newLineOfOptions=true;
+formulaReq=moreThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_Wa_battlecry_A5ATTRIBUTE4_dialogue;
+
+[DialogOption] text=<color=SlateGray>Grant 1 Bravery to allies within the area for half of the normal duration. (2);
+newLineOfOptions=false;
+formulaReq=lessThan:2:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_insufficient_skillpts;
+
+[DialogOption] text=Grant 2 Rally to allies within the area for half of the normal duration. (2);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_Wa_battlecry_A5ATTRIBUTE5_dialogue;
+
+[DialogOption] text=<color=SlateGray>Grant 2 Rally to allies within the area for half of the normal duration. (2);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_Warrior_insufficient_skillpts;
+
+[DialogOption] text=Go back;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=ari_Warrior_specialize_skills_extra;
+
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+--10 timer
+[DialogNode] ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE1_dialogue;
+animations=;
+statements=Excellent. Your <Battlecry><iconBig=icon_Wa_battlecry> will echo across the ages.;
+specialEffect=actionOnPartyNumActor,ari_Warrior_Wa_battlecry_A5ATTRIBUTE1_point,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+--8% accuracy
+[DialogNode] ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE2_dialogue;
+animations=;
+statements=Magnificent. Whether facing you or not, your voice will be heard.;
+specialEffect=actionOnPartyNumActor,ari_Warrior_Wa_battlecry_A5ATTRIBUTE2_point,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+--ally morale
+[DialogNode] ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE3_dialogue;
+animations=;
+statements=Excellent. Not only will enemies flee, but allies will persist.;
+specialEffect=actionOnPartyNumActor,ari_Warrior_Wa_battlecry_A5ATTRIBUTE3_point,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+--1 Bravery
+[DialogNode] ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE4_dialogue;
+animations=;
+statements=Wonderful. Your allies will not falter in the face of danger.;
+specialEffect=actionOnPartyNumActor,ari_Warrior_Wa_battlecry_A5ATTRIBUTE4_point,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;
+
+--2 Rally
+[DialogNode] ID=ari_Warrior_Wa_battlecry_A5ATTRIBUTE5_dialogue;
+animations=;
+statements=Masterful. Allies will Rally around you.;
+specialEffect=actionOnPartyNumActor,ari_Warrior_Wa_battlecry_A5ATTRIBUTE5_point,0;
+nextNodeID=ari_Warrior_specialize_skills_extra;

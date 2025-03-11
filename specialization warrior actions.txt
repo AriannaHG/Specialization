@@ -1,0 +1,638 @@
+-----------------------Bash
+--1 point for 5% damage
+--1 point for +2 damage
+--1 point for 4% accuracy
+--1 point for 25% chance for 2 stun
+--1 point for 3 immobilize
+[FormulaGlobal] ID=ari_bash_damage_scale0;
+formula=-2 * c:ari_Warrior_Wa_shove_A1ATTRIBUTE2 * is:2:c:ari_specialization;
+[FormulaGlobal] ID=ari_bash_damage_formula0;
+formula=w:magnitude * 0.9 + d:ari_bash_damage_scale0;
+[FormulaGlobal] ID=ari_bash_damage_scale1;
+formula=1 + 0.05 * c:ari_Warrior_Wa_shove_A1ATTRIBUTE1 * is:2:c:ari_specialization;
+[FormulaGlobal] ID=ari_bash_damage_formula1;
+formula=d:ari_bash_damage_formula0 * d:ari_bash_damage_scale1;
+[FormulaGlobal] ID=ari_bash_accuracy_formula0;
+formula=is:2:c:ari_specialization * 4 * c:ari_Warrior_Wa_shove_A1ATTRIBUTE3;
+
+[Action] ID=Wa_shove; 
+	name=Bash;
+	icon=icon_Wa_push;
+	tooltip=Push <math=c:rank> tile(s) and deal 90% damage<textIf= or more =is:2:c:ari_specialization * c:ari_Warrior_Wa_shove_A1ATTRIBUTE2 + is:2:c:ari_specialization * c:ari_Warrior_Wa_shove_A1ATTRIBUTE1> with your weapon. Pushing into an obstacle hurts your target and the obstacle. <n=><textIf=Has a chance to briefly stun the target. =is:2:c:ari_specialization * c:ari_Warrior_Wa_shove_A1ATTRIBUTE4> <n=><textIf=Immobilizes the target. =is:2:c:ari_specialization * c:ari_Warrior_Wa_shove_A1ATTRIBUTE5>;
+	rankUpTooltip=Push 1 further with each rank.;
+	tooltipIcons=<icon=noRanged>;
+	tooltipTopRight=<icon=PhysAtk_small><icon=melee_small>;
+	
+	XPCost=75;
+	XPCost=250;
+	XPCost=600;
+	
+	casterAnimation=shoulderbash;
+	casterAnimationDependsOnWeaponHand=true;
+	maxRank=3;
+	canExceedMaxRankBy=1;
+	requiredWeaponElement=melee;
+	FXOnTarget=woosh;
+	FXOnTarget=weaponFX;
+[ActionAoE]
+	ID=Wa_shove; shape=10; 
+[AvAffecter]
+	ID=Wa_shove; 
+	weaponAvAffecter=true;
+	magnitude=d:ari_bash_damage_formula1;
+	chance=w:chance + d:ari_bash_accuracy_formula0;
+	duration=-2;
+[AvAffecterAoE]
+	ID=Wa_shove;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Wa_shove;
+	fReq=is:2:c:ari_specialization * c:ari_Warrior_Wa_shove_A1ATTRIBUTE4;
+	actorValue=stun;
+	magnitude=1;
+	duration=c:ari_Warrior_Wa_shove_A1ATTRIBUTE4 * 2;
+	chance=25 + d:ari_bash_accuracy_formula0;
+	FXOnTile=delay_tiny;
+[AvAffecterAoE]
+	ID=Wa_shove;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Wa_shove;
+	fReq=is:2:c:ari_specialization * c:ari_Warrior_Wa_shove_A1ATTRIBUTE5;
+	actorValue=immob;
+	magnitude=1;
+	duration=c:ari_Warrior_Wa_shove_A1ATTRIBUTE5 * 3;
+	chance=w:chance + d:ari_bash_accuracy_formula0;
+	FXOnTile=delay_tiny;
+[AvAffecterAoE]
+	ID=Wa_shove;
+	cloneFrom=oneTile;
+
+[AvAffecter]
+	ID=Wa_shove; 
+	actorValue=push;
+	magnitude=c:rank;
+	duration=-2;
+	chance=w:chance + d:ari_bash_accuracy_formula0;
+	FXOnHit=largePing;
+	FXOnHit=click;
+[AvAffecterAoE]
+	ID=Wa_shove;
+	cloneFrom=oneTile;
+	
+	
+-----------------------Charge
+--1 point for 5% damage
+--2 points for momentum damage
+--1 point for 6 timer Guard
+--1 point for 5 immobilize
+--3 points for splash damage
+[FormulaGlobal] ID=ari_charge_damage_formula0;
+formula=w:magnitude * 0.9;
+[FormulaGlobal] ID=ari_charge_damage_scale1;
+formula=1 + 0.05 * c:ari_Warrior_Wa_charge_A2ATTRIBUTE1 * is:2:c:ari_specialization;
+[FormulaGlobal] ID=ari_charge_damage_formula1;
+formula=d:ari_charge_damage_formula0 * d:ari_charge_damage_scale1;
+[FormulaGlobal] ID=ari_charge_momentum_formula0;
+formula=c:ari_Warrior_Wa_charge_A2ATTRIBUTE2 * m:cDistanceMoved / 2;
+[FormulaGlobal] ID=ari_charge_momentum_formula1;
+formula=d:ari_charge_momentum_formula0 * d:ari_charge_damage_scale1;
+[FormulaGlobal] ID=ari_charge_splash_damage_formula0;
+formula=w:magnitude * 0.4;
+[FormulaGlobal] ID=ari_charge_splash_damage_scale0;
+formula=1 + 0.15 * c:ari_Warrior_Wa_charge_A2ATTRIBUTE5 * is:2:c:ari_specialization - 0.15;
+[FormulaGlobal] ID=ari_charge_splash_damage_formula1;
+formula=d:ari_charge_splash_damage_formula0 * d:ari_charge_splash_damage_scale0;
+
+
+[Action] ID=Wa_charge; 
+	name=Charge;
+	icon=icon_Wa_charge;
+	tooltip=Charge forward to strike a distant foe with your melee weapon for 90% <textIf= or more =is:2:c:ari_specialization * c:ari_Warrior_Wa_charge_A2ATTRIBUTE1>damage. <n=><textIf=Deals more damage the further you moved. =is:2:c:ari_specialization * c:ari_Warrior_Wa_charge_A2ATTRIBUTE2> <n=><textIf=Briefly grants Guard. =is:2:c:ari_specialization * c:ari_Warrior_Wa_charge_A2ATTRIBUTE3> <n=><textIf=Immobilizes the target. =is:2:c:ari_specialization * c:ari_Warrior_Wa_charge_A2ATTRIBUTE4> <n=><textIf=Deals damage in an area on impact. =is:2:c:ari_specialization * c:ari_Warrior_Wa_charge_A2ATTRIBUTE5>;
+	rankUpTooltip=Each rank increases charge distance by +1.;
+	tooltipIcons=<icon=noRanged>;
+	tooltipTopRight=<icon=PhysAtk_small><icon=melee_small>;
+	
+	XPCost=150;
+	XPCost=250;
+	XPCost=550;
+	XPCost=1200;
+	
+	casterAnimation=weapon;
+	maxRank=4;
+	canExceedMaxRankBy=1;
+	special=moveCasterNextToTarget;
+	requiredWeaponElement=melee;
+	FXOnTarget=weaponFX;
+	FXOnCaster=sidewardLines;
+	FXOnCasterColor=Red;
+	FXOnCaster=woosh;
+
+	queueAnotherAction=ari_charge_splash;
+[ActionAoE]
+	ID=Wa_charge; shape=2; 
+	needsLoS = false;
+	needsLoE = true;
+	minRange = 2;
+	maxRange = 1;
+	maxRangeBonus=c:rank;
+	airborne=false;
+	bypassAll=false;
+	occupyAll=true;
+	canSelectActors=true;
+	fReq=1 - m:actorInTheWayOfMoveToTarget;
+[AvAffecter]
+	ID=Wa_charge; 
+	fReq=is:2:c:ari_specialization * c:ari_Warrior_Wa_charge_A2ATTRIBUTE3;
+	visibleEvaluations=true;
+	actorValue=guard;
+	harmful=false;
+	magnitude= 1;
+	duration=6 * c:ari_Warrior_Wa_charge_A2ATTRIBUTE3;
+	chance=100;
+	FXOnTile=delay_tiny;
+[AvAffecterAoE]
+	ID=Wa_charge;
+	aoeCasterAsOrigin=true;
+	minRange=0;
+	maxRange=0;
+	maxRangeBonus = 0;
+	canSelectAllies=true;
+[AvAffecter]
+	ID=Wa_charge; 
+	weaponAvAffecter=true;
+	magnitude=d:ari_charge_damage_formula1;
+	chance=w:chance;
+	duration=-2;
+[AvAffecterAoE]
+	ID=Wa_charge;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Wa_charge; 
+	weaponAvAffecter=true;
+	magnitude=d:ari_charge_momentum_formula1;
+	chance=w:chance;
+	duration=-2;
+[AvAffecterAoE]
+	ID=Wa_charge;
+	fReq=is:2:c:ari_specialization * c:ari_Warrior_Wa_charge_A2ATTRIBUTE2;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Wa_charge; 
+	visibleEvaluations=true;
+	actorValue=immob;
+	magnitude=1;
+	duration=5 * c:ari_Warrior_Wa_charge_A2ATTRIBUTE4;
+	chance=w:chance;
+[AvAffecterAoE]
+	ID=Wa_charge;
+	fReq=is:2:c:ari_specialization * c:ari_Warrior_Wa_charge_A2ATTRIBUTE4;
+	cloneFrom=oneTile;
+
+[Action] ID=ari_charge_splash; 
+	name=Charging Fury;
+	icon=icon_Wa_charge;
+	mpCost=0;
+	tooltip=Charge slams into your target with such force that it deals area damage near your target.;
+	tooltipIcons=<icon=noRanged>;
+	tooltipTopRight=<icon=PhysAtk_small><icon=melee_small>;
+	requiredWeaponElement=melee;
+	casterAnimation=weapon;
+	casterAnimationSpeed=2.0;
+	FXOnTarget=weaponFX;
+	fReq=is:2:c:ari_specialization * c:ari_Warrior_Wa_charge_A2ATTRIBUTE5;
+
+[ActionAoE] 
+	ID=ari_charge_splash; cloneFrom=oneTile; 
+[AvAffecter]
+	ID=ari_charge_splash; 
+	weaponAvAffecter=true;
+	magnitude=d:ari_charge_splash_damage_formula1;
+	chance=w:chance;
+	duration=-2;
+[AvAffecterAoE]
+	ID=ari_charge_splash;
+	cloneFrom=adjacent+1;
+	arc=true;
+	airborne=true;
+	coneAngle=270;
+	canSelectAllies=false;
+
+
+
+
+-----------------------Brave
+--1 point for 10 duration timer
+--2 points for +1 Physical Defense to adjacent allies
+--1 point for 2 Bravery AV
+--2 points for ally 3 time to act
+--3 points for 2 second wind AV
+[FormulaGlobal] ID=ari_brave_duration_scale0;
+formula=is:2:c:ari_specialization * c:ari_Warrior_Wa_Brave_A3ATTRIBUTE1 * 10;
+[FormulaGlobal] ID=ari_brave_duration_formula0;
+formula=70 + 30 * c:rank;
+[FormulaGlobal] ID=ari_brave_duration_formula1;
+formula=d:ari_brave_duration_formula0 / 2 + d:ari_brave_duration_scale0 / 2;
+
+[Action] ID=Wa_Brave; 
+	name=Brave;
+	icon=icon_Wa_brave;
+	tooltip=Increase <icon=PhysAtk> by 4 for <icon=time><math=70 + 30 * c:rank + d:ari_brave_duration_scale0>.<n=><textIf=Grants Bravery. =is:2:c:ari_specialization * c:ari_Warrior_Wa_Brave_A3ATTRIBUTE3><n=><textIf=Grants a Physical Defense buff to adjacent allies for half of the normal duration. =is:2:c:ari_specialization * c:ari_Warrior_Wa_Brave_A3ATTRIBUTE2><n=><textIf=If cast on an ally, the ally acts faster. =is:2:c:ari_specialization * c:ari_Warrior_Wa_Brave_A3ATTRIBUTE4><n=><textIf=Grants Second Wind for half of the normal duration. =is:2:c:ari_specialization * c:ari_Warrior_Wa_Brave_A3ATTRIBUTE5>;
+	rankUpTooltip=Each rank increases duration by <icon=time>30.;
+	tooltipTopRight=;
+	harmful=false;
+	maxRank=5;
+	canExceedMaxRankBy=1;
+	
+	XPCost=120;
+	XPCost=200;
+	XPCost=275;
+	XPCost=350;
+	XPCost=600;
+	
+	AIRatingMult=0.75;
+	
+	casterAnimation=charge_alt;
+	FXOnCaster=casting;
+	FXOnCasterColor=Red;
+	FXOnCaster=chargeSpiralFast_big;
+	FXOnCasterColor=Red;
+	FXOnCaster=chargeSpiralFast;
+	FXOnCasterColor=Red;
+	FXOnTarget=sfx_powerup1;
+[ActionAoE]
+	ID=Wa_Brave; 
+	cloneFrom=adjacentAndSelf;
+	canSelectEnemies=false;
+[AvAffecter]
+	ID=Wa_Brave;
+	harmful=false;
+	actorValue=PhysAtk;
+	magnitude=4;
+	duration=70 + 30 * c:rank + d:ari_brave_duration_scale0;
+	chance=100;
+	FXOnTile=upwardLines;
+	FXOnTileColor=Red;
+[AvAffecterAoE]
+	ID=Wa_Brave;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Wa_Brave;
+	fReq=is:2:c:ari_specialization * c:ari_Warrior_Wa_Brave_A3ATTRIBUTE3;
+	harmful=false;
+	actorValue=ari_brave_av;
+	magnitude=2 * c:ari_Warrior_Wa_Brave_A3ATTRIBUTE3;
+	duration=70 + 30 * c:rank + d:ari_brave_duration_scale0;
+	chance=100;
+[AvAffecterAoE]
+	ID=Wa_Brave;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Wa_Brave;
+	fReq=is:2:c:ari_specialization * c:ari_Warrior_Wa_Brave_A3ATTRIBUTE5;
+	harmful=false;
+	actorValue=ari_second_wind_av;
+	magnitude=2 * c:ari_Warrior_Wa_Brave_A3ATTRIBUTE5;
+	duration=d:ari_brave_duration_formula1;
+	chance=100;
+[AvAffecterAoE]
+	ID=Wa_Brave;
+	cloneFrom=oneTile;
+[AvAffecter]
+	ID=Wa_Brave;
+	fReq=is:2:c:ari_specialization * c:ari_Warrior_Wa_Brave_A3ATTRIBUTE2;
+	harmful=false;
+	actorValue=PhysDef;
+	magnitude=c:ari_Warrior_Wa_Brave_A3ATTRIBUTE2;
+	duration=d:ari_brave_duration_formula1;
+	chance=100;
+[AvAffecterAoE]
+	ID=Wa_Brave;
+	cloneFrom=adjacent;
+	minRange=1;
+[AvAffecter]
+	ID=Wa_Brave;
+	fReq=is:2:c:ari_specialization * c:ari_Warrior_Wa_Brave_A3ATTRIBUTE4;
+	harmful=false;
+	actorValue=actTimer;
+	magnitude=3 * c:ari_Warrior_Wa_Brave_A3ATTRIBUTE4;
+	duration=-2;
+	chance=100 * m:casterIsntTarget;
+[AvAffecterAoE]
+	ID=Wa_Brave;
+	cloneFrom=adjacent;
+	minRange=1;
+
+
+
+
+-----------------------Bide
+--1 point for 5% damage
+--1 point to reduce charge time by 1
+--2 points for 2% maximum HP damage
+--1 point for 3 timer stun
+--5 points for initial strike plus 5 Exposed AV
+[FormulaGlobal] ID=ari_bide_damage_formula0;
+formula=w:magnitude * 1.2 + w:magnitude * 0.1 * c:Wa_Bide;
+[FormulaGlobal] ID=ari_bide_damage_scale1;
+formula=1 + 0.05 * c:ari_Warrior_Wa_Bide_A4ATTRIBUTE1 * is:2:c:ari_specialization;
+[FormulaGlobal] ID=ari_bide_damage_formula1;
+formula=d:ari_bide_damage_formula0 * d:ari_bide_damage_scale1;
+[FormulaGlobal] ID=ari_bide_delay_scale0;
+formula=15 - is:2:c:ari_specialization * c:ari_Warrior_Wa_Bide_A4ATTRIBUTE2;
+
+[Action] ID=Wa_Bide; 
+	name=Bide;
+	icon=icon_Wa_bide;
+	tooltip=Prepare a delayed, but extra strong attack that deals +<math=20 + 10 * c:rank>% damage<textIf= or more =is:2:c:ari_specialization * c:ari_Warrior_Wa_Bide_A4ATTRIBUTE1>. <n=><textIf=Swiftly strikes the target first, Exposing them. =is:2:c:ari_specialization * c:ari_Warrior_Wa_Bide_A4ATTRIBUTE5> <n=><textIf=Deals a percentage of the target's health as damage. =is:2:c:ari_specialization * c:ari_Warrior_Wa_Bide_A4ATTRIBUTE3> <n=><textIf=Briefly stuns the target. =is:2:c:ari_specialization * c:ari_Warrior_Wa_Bide_A4ATTRIBUTE4>;
+	rankUpTooltip=Each rank adds +10% damage.;
+	tooltipIcons=<icon=noMove>;
+	tooltipTopRight=<icon=PhysAtk_small><icon=melee_small>;
+	
+	maxRank=3;
+	canExceedMaxRankBy=1;
+	
+	XPCost=200;
+	XPCost=450;
+	XPCost=700;
+	
+	casterAnimation=weapon;
+	casterAnimationSpeed=2.0;
+	
+	requiredWeaponElement=weapon;
+
+	queueAnotherAction=Wa_Bide_hit;
+[ActionAoE]
+	ID=Wa_Bide; shape=10;
+[AvAffecter]
+	ID=Wa_Bide; 
+	fReq=is:2:c:ari_specialization * c:ari_Warrior_Wa_Bide_A4ATTRIBUTE5;
+	weaponAvAffecter=true;
+	magnitude=w:magnitude * 0.1;
+	chance=w:chance;
+	duration=-2;
+[AvAffecterAoE]
+	ID=Wa_Bide;
+	 shape=11;
+[AvAffecter]
+	ID=Wa_Bide; 
+	fReq=is:2:c:ari_specialization * c:ari_Warrior_Wa_Bide_A4ATTRIBUTE5;
+	actorValue=ari_exposed_av;
+	magnitude=5 * c:ari_Warrior_Wa_Bide_A4ATTRIBUTE5;
+	chance=w:chance;
+	duration=18;
+	
+[AvAffecterAoE]
+	ID=Wa_Bide;
+	 shape=11;
+[AvAffecter]	--Fake placeholder to view Wa_Bide_Hit when no points allocated
+	ID=Wa_Bide;
+	visibleMiss=false;
+	visibleEvaluations=true;
+	chance=w:chance;
+	FXOnHit=hitDustQuiet;
+[AvAffecterAoE]
+	ID=Wa_Bide;
+	 shape=11;
+
+
+[Action] ID=Wa_Bide_hit; 
+	name=Bide;
+	icon=icon_Wa_bide;
+	tooltip=Prepare a delayed, but extra strong attack that deals +<math=20 + 10 * c:rank>% damage.;
+	rankUpTooltip=Each rank adds +10% damage.;
+	tooltipIcons=<icon=noMove>;
+	tooltipTopRight=<icon=PhysAtk_small><icon=melee_small>;
+	
+	chargeTime=d:ari_bide_delay_scale0 * d:chargeTimeMult + d:chargeTimeMod;
+	
+	maxRank=3;
+	canExceedMaxRankBy=1;
+	
+	
+	XPCost=200;
+	XPCost=450;
+	XPCost=700;
+	
+	casterAnimation=weapon;
+	casterAnimationSpeed=0.7;
+	
+	requiredWeaponElement=weapon;
+	
+	special=requiresCharging;
+	special=cancelChargingOnMove;
+	
+	FXOnCaster=chargeBurst;
+	FXOnCasterColor=Gray;
+	FXOnCaster=sfx_risingSwish;
+	
+	FXOnTarget=weaponFX;
+[ActionAoE]
+	ID=Wa_Bide_hit; shape=10;
+[AvAffecter]
+	ID=Wa_Bide_hit; 
+	weaponAvAffecter=true;
+	magnitude=d:ari_bide_damage_formula1;
+	chance=w:chance;
+	duration=-2;
+	FXOnHit=hitDustQuiet;
+	FXOnHit=smallShakeHoriz;
+	FXOnHit=SLAM;
+[AvAffecterAoE]
+	ID=Wa_Bide_hit;
+	 shape=11;
+[AvAffecter]
+	ID=Wa_Bide_hit; 
+	actorValue=HP;
+	magnitude=t:TrueHPMax * -0.02 * c:ari_Warrior_Wa_Bide_A4ATTRIBUTE3;
+	chance=w:chance;
+	duration=-2;
+	element=HPbased;
+[AvAffecterAoE]
+	ID=Wa_Bide_hit;
+	fReq=is:2:c:ari_specialization * c:ari_Warrior_Wa_Bide_A4ATTRIBUTE3;
+	 shape=11;
+[AvAffecter]
+	ID=Wa_Bide_hit; 
+	fReq=is:2:c:ari_specialization * c:ari_Warrior_Wa_Bide_A4ATTRIBUTE4;
+	actorValue=stun;
+	magnitude=1;
+	chance=w:chance;
+	duration=3 * c:ari_Warrior_Wa_Bide_A4ATTRIBUTE4;
+[AvAffecterAoE]
+	ID=Wa_Bide_hit;
+	
+	 shape=11;
+
+
+
+
+-----------------------Battlecry
+--1 point for 10 timer
+--1 point for 8% accuracy
+--4 points for ally morale
+--2 points for 1 brave AV
+--2 points for 2 rally AV
+[FormulaGlobal] ID=ari_battlecry_duration_formula0;
+formula=is:2:c:ari_specialization * c:ari_Warrior_Wa_battlecry_A5ATTRIBUTE1 * 10;
+[FormulaGlobal] ID=ari_battlecry_duration_formula1;
+formula=91+c:MagAtk*3 + d:ari_battlecry_duration_formula0;
+[FormulaGlobal] ID=ari_battlecry_accuracy_formula0;
+formula=is:2:c:ari_specialization * c:ari_Warrior_Wa_battlecry_A5ATTRIBUTE2 * 8;
+
+[Action] ID=Wa_battlecry; 
+	name=Battlecry;
+	icon=icon_Wa_battlecry;
+	mpCost=2 * d:mpCostMult + d:mpCostMod;
+	tooltip=Demoralize enemies with your fierce battlecry for <icon=time><math=91+c:MagAtk*3 + d:ari_battlecry_duration_formula0>, reducing <icon=PhysAtk><icon=MagAtk> attack and <n=><icon=PhysDef><icon=MagDef> defense.<n=>Works best against enemies looking directly at you. <n=><textIf=Allies within the area will have raised morale. =is:2:c:ari_specialization * c:ari_Warrior_Wa_battlecry_A5ATTRIBUTE3> <n=><textIf=Grants Bravery to allies within the area. =is:2:c:ari_specialization * c:ari_Warrior_Wa_battlecry_A5ATTRIBUTE4> <n=><textIf=Grants Rally to allies within the area. =is:2:c:ari_specialization * c:ari_Warrior_Wa_battlecry_A5ATTRIBUTE5>;
+	rankUpTooltip=Each rank increases area of effect.;
+	tooltipTopRight=<icon=MagAtk_small>;
+	
+	XPCost=220;
+	XPCost=560;
+	XPCost=900;
+	XPCost=1400;
+	
+	FXOnCaster=magicCharge;
+	FXOnTarget=gustyBlast;
+	FXOnTarget=DramaticNyeaow;
+	
+	casterAnimation=handsup_angry;
+	maxRank=4;
+	canExceedMaxRankBy=1;
+[ActionAoE]
+	ID=Wa_battlecry; shape=0;
+	cloneFrom=adjacent;
+[AvAffecter]
+	ID=Wa_battlecry; 
+	actorValue=morale;
+	magnitude= -1;
+	duration=91+c:MagAtk*3 + d:ari_battlecry_duration_formula0;
+	chance=100 * m:evaFacing + 20 + d:ari_battlecry_accuracy_formula0;
+	FXOnHit=downwardLines;
+	FXOnHitColor=Purple;
+	FXOnHit=sfx_debuffMild;
+	FXOnMiss=chargeFast;
+	FXOnTile=wind;
+	FXOnTileColor=White;
+[AvAffecterAoE]
+	ID=Wa_battlecry;
+	aoeCasterAsOrigin=true;
+	needsLoS = true;
+	needsLoE = false;
+	airborne = true;
+	minRange = 1;
+	maxRange = 2.5;
+	maxRangeBonus = c:rank;
+	coneAngle= 60;
+	arc=true;
+	bypassAll=true;
+	occupyAll=true;
+	canSelectAllies=false;
+[AvAffecter]
+	ID=Wa_battlecry;
+	visibleEvaluations=true;
+	visibleMiss=false;
+	harmful=false;
+	actorValue=morale;
+	magnitude= 1 * c:ari_Warrior_Wa_battlecry_A5ATTRIBUTE3;
+	duration=d:ari_battlecry_duration_formula1 / 2;
+	chance=100 * m:evaFacing + 20 + d:ari_battlecry_accuracy_formula0;
+	FXOnHit=upwardLines;
+	FXOnHitColor=White;
+[AvAffecterAoE]
+	ID=Wa_battlecry;
+	fReq=is:2:c:ari_specialization * c:ari_Warrior_Wa_battlecry_A5ATTRIBUTE3;
+	aoeCasterAsOrigin=true;
+	needsLoS = true;
+	needsLoE = false;
+	airborne = true;
+	minRange = 1;
+	maxRange = 2.5;
+	maxRangeBonus = c:rank;
+	coneAngle= 60;
+	arc=true;
+	bypassAll=true;
+	occupyAll=true;
+	canSelectEnemies=false;
+	canSelectAllies=true;
+[AvAffecter]
+	ID=Wa_battlecry;
+	visibleEvaluations=true;
+	visibleMiss=false;
+	harmful=false;
+	actorValue=ari_brave_av;
+	magnitude= c:ari_Warrior_Wa_battlecry_A5ATTRIBUTE4;
+	duration=d:ari_battlecry_duration_formula1 / 2;
+	chance=100 * m:evaFacing + 20 + d:ari_battlecry_accuracy_formula0;
+	FXOnHit=upwardLines;
+	FXOnHitColor=White;
+[AvAffecterAoE]
+	ID=Wa_battlecry;
+	fReq=is:2:c:ari_specialization * c:ari_Warrior_Wa_battlecry_A5ATTRIBUTE4;
+	aoeCasterAsOrigin=true;
+	needsLoS = true;
+	needsLoE = false;
+	airborne = true;
+	minRange = 1;
+	maxRange = 2.5;
+	maxRangeBonus = c:rank;
+	coneAngle= 60;
+	arc=true;
+	bypassAll=true;
+	occupyAll=true;
+	canSelectEnemies=false;
+	canSelectAllies=true;
+[AvAffecter]
+	ID=Wa_battlecry;
+	visibleEvaluations=true;
+	visibleMiss=false;
+	harmful=false;
+	actorValue=ari_rally_av;
+	magnitude= 2 * c:ari_Warrior_Wa_battlecry_A5ATTRIBUTE5;
+	duration=d:ari_battlecry_duration_formula1 / 2;
+	chance=100 * m:evaFacing + 20 + d:ari_battlecry_accuracy_formula0;
+	FXOnHit=upwardLines;
+	FXOnHitColor=White;
+	FXOnTile=delay_tiny;
+[AvAffecterAoE]
+	ID=Wa_battlecry;
+	fReq=is:2:c:ari_specialization * c:ari_Warrior_Wa_battlecry_A5ATTRIBUTE5;
+	aoeCasterAsOrigin=true;
+	needsLoS = true;
+	needsLoE = false;
+	airborne = true;
+	minRange = 1;
+	maxRange = 2.5;
+	maxRangeBonus = c:rank;
+	coneAngle= 60;
+	arc=true;
+	bypassAll=true;
+	occupyAll=true;
+	canSelectEnemies=false;
+	canSelectAllies=true;
+[AvAffecter]
+	ID=Wa_battlecry;
+	visibleEvaluations=true;
+	visibleMiss=false;
+	harmful=false;
+	actorValue=HP;
+	magnitude=2 * c:ari_Warrior_Wa_battlecry_A5ATTRIBUTE5;
+	duration=-2;
+	chance=100 * m:evaFacing + 20 + d:ari_battlecry_accuracy_formula0;
+[AvAffecterAoE]
+	ID=Wa_battlecry;
+	fReq=is:2:c:ari_specialization * c:ari_Warrior_Wa_battlecry_A5ATTRIBUTE5;
+	aoeCasterAsOrigin=true;
+	needsLoS = true;
+	needsLoE = false;
+	airborne = true;
+	minRange = 1;
+	maxRange = 2.5;
+	maxRangeBonus = c:rank;
+	coneAngle= 60;
+	arc=true;
+	bypassAll=true;
+	occupyAll=true;
+	canSelectEnemies=false;
+	canSelectAllies=true;

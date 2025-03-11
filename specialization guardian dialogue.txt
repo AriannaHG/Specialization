@@ -1,0 +1,1834 @@
+------------------------------------------------------------------------------------------
+--        Replace the following phrases:
+------------------------------------------------------------------------------------------
+--        guardian                            			gets replaced with the actual class ID
+--        classIcon_guardian                  			gets replaced with the class Icon
+--        Gu_mightyBlock                           			gets replaced with the class's first ability
+--        icon_Gu_mightyBlock           			gets replaced with the first ability's Icon
+--				A1ATTRIBUTE1			                gets replaced with the first ability's first attribute
+--				A1ATTRIBUTE2			                gets replaced with the first ability's second attribute
+--				A1ATTRIBUTE3			                gets replaced with the first ability's third attribute
+--				A1ATTRIBUTE4			                gets replaced with the first ability's fourth attribute
+--				A1ATTRIBUTE5			                gets replaced with the first ability's fifth attribute
+--        Gu_impair                           			gets replaced with the class's second ability
+--        icon_Gu_impair           			gets replaced with the second ability's Icon
+--				A2ATTRIBUTE1			                gets replaced with the second ability's first attribute
+--				A2ATTRIBUTE2			                gets replaced with the second ability's second attribute
+--				A2ATTRIBUTE3			                gets replaced with the second ability's third attribute
+--				A2ATTRIBUTE4			                gets replaced with the second ability's fourth attribute
+--				A2ATTRIBUTE5			                gets replaced with the second ability's fifth attribute
+--        Gu_discipline                           			gets replaced with the class's third ability
+--        icon_Gu_discipline           			gets replaced with the third ability's Icon
+--				A3ATTRIBUTE1			                gets replaced with the third ability's first attribute
+--				A3ATTRIBUTE2			                gets replaced with the third ability's second attribute
+--				A3ATTRIBUTE3			                gets replaced with the third ability's third attribute
+--				A3ATTRIBUTE4			                gets replaced with the third ability's fourth attribute
+--				A3ATTRIBUTE5			                gets replaced with the third ability's fifth attribute
+--        Gu_rally                           			gets replaced with the class's fourth ability
+--        icon_Gu_rally           			gets replaced with the fourth ability's Icon
+--				A4ATTRIBUTE1			                gets replaced with the fourth ability's first attribute
+--				A4ATTRIBUTE2			                gets replaced with the fourth ability's second attribute
+--				A4ATTRIBUTE3			                gets replaced with the fourth ability's third attribute
+--				A4ATTRIBUTE4			                gets replaced with the fourth ability's fourth attribute
+--				A4ATTRIBUTE5			                gets replaced with the fourth ability's fifth attribute
+--        Gu_resuscitate                           			gets replaced with the class's fifth ability
+--        icon_Gu_resuscitate           			gets replaced with the fifth ability's Icon
+--				A5ATTRIBUTE1			                gets replaced with the fifth ability's first attribute
+--				A5ATTRIBUTE2			                gets replaced with the fifth ability's second attribute
+--				A5ATTRIBUTE3			                gets replaced with the fifth ability's third attribute
+--				A5ATTRIBUTE4			                gets replaced with the fifth ability's fourth attribute
+--				A5ATTRIBUTE5			                gets replaced with the fifth ability's fifth attribute
+------------------------------------------------------------------------------------------
+
+
+-----------------------------guardian Skill point setup
+[ActorValue]
+ID=ari_guardian_total;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[ActorValue]
+ID=ari_guardian_current;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+removedByNegativeMagnitude=false;
+
+
+
+-----------------------------guardian formula setup
+[FormulaGlobal] ID=ari_guardian_current_check_formula;
+formula=t:ari_guardian_current;
+[FormulaGlobal] ID=ari_guardian_total_check_formula;
+formula=t:ari_guardian_total;
+[FormulaGlobal] ID=ari_guardian_current_xp_check_formula;
+formula=t:guardian_XP;
+
+[FormulaGlobal] ID=ari_guardian_skillpoint_exp0;
+formula=1 + g:ari_total_points0;
+
+[FormulaGlobal] ID=ari_guardian_skillpoint_exp1;
+formula=d:ari_guardian_skillpoint_exp0 * 1000;
+
+[FormulaGlobal] ID=ari_guardian_skillpoint_exp_req0;
+formula=d:ari_guardian_skillpoint_exp1 - 1;
+
+[FormulaGlobal] ID=ari_guardian_skillpoint_exp_req1;
+formula=g:ari_current_guardian_exp0 - d:ari_guardian_skillpoint_exp_req0;
+
+
+
+[Action] ID=ari_set_specialization_guardian; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_set_specialization_guardian;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_set_specialization_guardian;
+	--harmful=false;
+	actorValue=ari_specialization;
+    magnitude=5;----------------------------------------------------------CHANGE THIS TO THE INDEXED CLASS'S SPECIALIZATION ID
+	duration=-1;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_set_specialization_guardian; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+	
+[GlobalTrigger] aliasID=ari_set_specialization_guardian_trigger;
+[GlobalTriggerEffect] ID=ari_set_specialization_guardian_trigger; effectID=actionOnPartyNumActor; sValue=ari_set_specialization_guardian; sValue2=; bValue1=False; bValue2=False; fValue=0; delay=0; xValue=-1; yValue=-1;	
+	
+
+
+
+[Action] ID=ari_specialization_guardian_skillpoint_check; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_specialization_guardian_skillpoint_check;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_specialization_guardian_skillpoint_check;
+	harmful=false;
+	actorValue=task;
+    magnitude=setGlobalVar_math,ari_total_points0,d:ari_guardian_total_check_formula;
+	duration=-1;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_specialization_guardian_skillpoint_check; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_specialization_guardian_skillpoint_check;
+	harmful=false;
+	actorValue=task;
+    magnitude=setGlobalVar_math,ari_current_points0,d:ari_guardian_current_check_formula;
+	duration=-1;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_specialization_guardian_skillpoint_check; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_specialization_guardian_skillpoint_check;
+	harmful=false;
+	actorValue=task;
+    magnitude=setGlobalVar_math,ari_current_guardian_exp0,d:ari_guardian_current_xp_check_formula;
+	duration=-1;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_specialization_guardian_skillpoint_check; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+
+[GlobalTrigger] aliasID=ari_specialization_guardian_skillpoint_check_trigger;
+[GlobalTriggerEffect] ID=ari_specialization_guardian_skillpoint_check_trigger; effectID=actionOnPartyNumActor; sValue=ari_specialization_guardian_skillpoint_check; sValue2=; bValue1=False; bValue2=False; fValue=0; delay=0; xValue=-1; yValue=-1;	
+
+
+
+
+[Action] ID=ari_guardian_skillpoint; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_skillpoint;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_skillpoint;
+	harmful=false;
+	actorValue=guardian_XP;
+	magnitude=d:ari_guardian_skillpoint_exp1 * -1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_guardian_skillpoint; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_skillpoint;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_skillpoint; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_skillpoint;
+	harmful=false;
+	actorValue=ari_guardian_total;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_skillpoint; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+	
+
+
+-----------------------------guardian dialogue begin
+-----------------------------Set up specialization
+[DialogOption] ID=class_guardian1; text=I'm looking for additional training as a guardian<iconBig=classIcon_guardian>;
+formulaReq=is:1:g:class_guardian;
+specialEffect=ari_specialization_check_trigger;
+newLineOfOptions=true;
+nodeToConnectTo=ari_guardian_specialization_training;
+
+
+
+[DialogNode] ID=ari_guardian_specialization_training;
+animations=;
+statements=And what kind of training are you looking for?;
+
+[DialogOption] text=<portraitBig=0><partyActorName=0><n=>I want to specialize in being a guardian<iconBig=classIcon_guardian>;
+formulaReq=isNot:1:g:ari_specialized_ever;
+nodeToConnectTo=ari_guardian_specialization;
+
+[DialogOption] text=<portraitBig=0><partyActorName=0><n=>I want to specialize in being a guardian<iconBig=classIcon_guardian> 2;
+formulaReq=is:1:g:ari_specialized_ever * isNot:5:g:ari_specialization_check0;		----------------------------------------------------------CHANGE THIS TO THE INDEXED CLASS'S SPECIALIZATION ID
+newLineOfOptions=false;
+nodeToConnectTo=ari_guardian_specialization_different;
+
+[DialogOption] text=<portraitBig=0><partyActorName=0><n=>I want to specialize my guardian<iconBig=classIcon_guardian> abilities;
+formulaReq=is:5:g:ari_specialization_check0;		------------------------------------------------------------------------------------------CHANGE THIS TO THE INDEXED CLASS'S SPECIALIZATION ID
+newLineOfOptions=true;
+nodeToConnectTo=ari_guardian_specialize_skills;
+
+[DialogOption] text=Nevermind;
+newLineOfOptions=true;
+bottomOption=true;
+nodeToConnectTo=;
+
+
+
+[DialogNode] ID=ari_guardian_specialization_different;
+animations=;
+statements=You can only be specialized in one class at once and you're currently not specialized as guardian. <n=>Do you really want to specialize as a guardian?;
+
+[DialogOption] text=<portraitBig=0><partyActorName=0><n=>Yes, I want to specialize in being a guardian<iconBig=classIcon_guardian>;
+nodeToConnectTo=ari_guardian_specialization;
+
+[DialogOption] text=Nevermind;
+newLineOfOptions=true;
+bottomOption=true;
+nodeToConnectTo=;
+
+
+-----------------------------Specialization set, skill training begin
+[DialogNode] ID=ari_guardian_specialization;
+animations=;
+statements=Good choice. <n=>You can convert your guardian experience into skill points.;
+statements=Anything else I can do for you?;
+specialEffect=setGlobalVar,ari_specialized_ever,1;
+specialEffect=ari_set_specialization_guardian_trigger;
+specialEffect=ari_specialization_guardian_skillpoint_check_trigger;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=I'd like to train in a skill point;
+nodeToConnectTo=ari_guardian_specialization_skillpoint;
+
+[DialogOption] text=I'd like to train <Mighty Block><iconBig=icon_Gu_mightyBlock>;
+nodeToConnectTo=ari_guardian_Gu_mightyBlock_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Impair><iconBig=icon_Gu_impair>;
+nodeToConnectTo=ari_guardian_Gu_impair_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Discipline><iconBig=icon_Gu_discipline>;
+nodeToConnectTo=ari_guardian_Gu_discipline_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Rally><iconBig=icon_Gu_rally>;
+nodeToConnectTo=ari_guardian_Gu_rally_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Resuscitate><iconBig=icon_Gu_resuscitate>;
+nodeToConnectTo=ari_guardian_Gu_resuscitate_train;
+newLineOfOptions=true;
+
+[DialogOption] text=That's all, thanks;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+
+
+[DialogNode] ID=ari_guardian_specialize_skills;
+animations=;
+statements=As long as you have the exeperience. <n=>Which ability are you looking to improve?;
+specialEffect=ari_specialization_guardian_skillpoint_check_trigger;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=I'd like to train in a skill point;
+nodeToConnectTo=ari_guardian_specialization_skillpoint;
+
+[DialogOption] text=I'd like to train <Mighty Block><iconBig=icon_Gu_mightyBlock>;
+nodeToConnectTo=ari_guardian_Gu_mightyBlock_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Impair><iconBig=icon_Gu_impair>;
+nodeToConnectTo=ari_guardian_Gu_impair_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Discipline><iconBig=icon_Gu_discipline>;
+nodeToConnectTo=ari_guardian_Gu_discipline_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Rally><iconBig=icon_Gu_rally>;
+nodeToConnectTo=ari_guardian_Gu_rally_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Resuscitate><iconBig=icon_Gu_resuscitate>;
+nodeToConnectTo=ari_guardian_Gu_resuscitate_train;
+newLineOfOptions=true;
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+[DialogNode] ID=ari_guardian_specialize_skills_extra;
+animations=;
+statements=Is there anything else I can do for you?;
+specialEffect=ari_specialization_guardian_skillpoint_check_trigger;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=I'd like to train in a skill point;
+nodeToConnectTo=ari_guardian_specialization_skillpoint;
+
+[DialogOption] text=I'd like to train <Mighty Block><iconBig=icon_Gu_mightyBlock>;
+nodeToConnectTo=ari_guardian_Gu_mightyBlock_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Impair><iconBig=icon_Gu_impair>;
+nodeToConnectTo=ari_guardian_Gu_impair_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Discipline><iconBig=icon_Gu_discipline>;
+nodeToConnectTo=ari_guardian_Gu_discipline_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Rally><iconBig=icon_Gu_rally>;
+nodeToConnectTo=ari_guardian_Gu_rally_train;
+newLineOfOptions=true;
+[DialogOption] text=I'd like to train <Resuscitate><iconBig=icon_Gu_resuscitate>;
+nodeToConnectTo=ari_guardian_Gu_resuscitate_train;
+newLineOfOptions=true;
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+-----------------------------Buying skill points
+[DialogNode] ID=ari_guardian_specialization_skillpoint;
+animations=;
+statements=A skill point will cost you <math=d:ari_guardian_skillpoint_exp1> experience. <n=>Have you trained enough for that?;
+specialEffect=setPCDialogWindowSizeY;
+
+[DialogOption] text=Yes, I'd like to train in a skill point;
+formulaReq=moreThan:0:d:ari_guardian_skillpoint_exp_req1;
+specialEffect=actionOnPartyNumActor,ari_guardian_skillpoint,0;
+nodeToConnectTo=ari_guardian_specialization_skillpoint_purchase;
+
+[DialogOption] text=<color=SlateGray>Yes, I'd like to train in a skill point;
+formulaReq=lessThan:1:d:ari_guardian_skillpoint_exp_req1;
+nodeToConnectTo=ari_guardian_specialization_skillpoint_purchase_cant;
+
+[DialogOption] text=Go back;
+newLineOfOptions=true;
+nodeToConnectTo=ari_guardian_specialize_skills_extra;
+
+[DialogOption] text=Nevermind;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+
+
+[DialogNode] ID=ari_guardian_specialization_skillpoint_purchase;
+animations=;
+statements=Well done. That skill point will help you train your abilities.;
+specialEffect=actionOnPartyNumActor,ari_specialization_check,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+
+
+[DialogNode] ID=ari_guardian_specialization_skillpoint_purchase_cant;
+animations=;
+statements=It looks like you don't have enough experience for that.;
+statements=You should come back once you've accrued more experience.;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+
+
+[DialogNode] ID=ari_guardian_insufficient_skillpts;
+animations=stern;
+statements=You don't have enough skill points for that.;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+
+
+
+-----------------------------Gu_mightyBlock actorValue begin
+[ActorValue]
+ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE1;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE1_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE1_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE1;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE2;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE2_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE2_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE2;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE3;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE3_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE3_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE3;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE4;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE4_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE4_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE4;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE5;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE5_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE5_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE5;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+	
+-----------------------------Gu_mightyBlock
+[DialogNode] ID=ari_guardian_Gu_mightyBlock_train;
+animations=;
+statements=How would you like to improve <Mighty Block><iconBig=icon_Gu_mightyBlock>?;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=Increase A1ATTRIBUTE1. (1);
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE1_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A1ATTRIBUTE1. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_insufficient_skillpts;
+
+[DialogOption] text=Increase A1ATTRIBUTE2. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE2_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A1ATTRIBUTE2. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_insufficient_skillpts;
+
+[DialogOption] text=Increase A1ATTRIBUTE3. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE3_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A1ATTRIBUTE3. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_insufficient_skillpts;
+
+[DialogOption] text=Increase A1ATTRIBUTE4. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE4_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A1ATTRIBUTE4. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_insufficient_skillpts;
+
+[DialogOption] text=Increase A1ATTRIBUTE5. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE5_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A1ATTRIBUTE5. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_insufficient_skillpts;
+
+[DialogOption] text=Go back;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=ari_guardian_specialize_skills_extra;
+
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+--A1ATTRIBUTE1
+[DialogNode] ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE1_dialogue;
+animations=;
+statements=Good choice. A1ATTRIBUTE1 was increased.;
+specialEffect=actionOnPartyNumActor,ari_guardian_Gu_mightyBlock_A1ATTRIBUTE1_point,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+--A1ATTRIBUTE2
+[DialogNode] ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE2_dialogue;
+animations=;
+statements=Good choice. A1ATTRIBUTE2 was increased.;
+specialEffect=actionOnPartyNumActor,ari_guardian_Gu_mightyBlock_A1ATTRIBUTE2_point,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+--A1ATTRIBUTE3
+[DialogNode] ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE3_dialogue;
+animations=;
+statements=Good choice. A1ATTRIBUTE3 was increased.;
+specialEffect=actionOnPartyNumActor,ari_guardian_Gu_mightyBlock_A1ATTRIBUTE3_point,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+--A1ATTRIBUTE4
+[DialogNode] ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE4_dialogue;
+animations=;
+statements=Good choice. A1ATTRIBUTE4 was increased.;
+specialEffect=actionOnPartyNumActor,ari_guardian_Gu_mightyBlock_A1ATTRIBUTE4_point,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+--A1ATTRIBUTE5
+[DialogNode] ID=ari_guardian_Gu_mightyBlock_A1ATTRIBUTE5_dialogue;
+animations=;
+statements=Good choice. A1ATTRIBUTE5 was increased.;
+specialEffect=actionOnPartyNumActor,ari_guardian_Gu_mightyBlock_A1ATTRIBUTE5_point,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+
+
+
+-----------------------------Gu_impair
+-----------------------------Gu_impair actorValue begin
+[ActorValue]
+ID=ari_guardian_Gu_impair_A2ATTRIBUTE1;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_guardian_Gu_impair_A2ATTRIBUTE1_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_Gu_impair_A2ATTRIBUTE1_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_Gu_impair_A2ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_guardian_Gu_impair_A2ATTRIBUTE1;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_impair_A2ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_Gu_impair_A2ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_impair_A2ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_guardian_Gu_impair_A2ATTRIBUTE2;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_guardian_Gu_impair_A2ATTRIBUTE2_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_Gu_impair_A2ATTRIBUTE2_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_Gu_impair_A2ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_guardian_Gu_impair_A2ATTRIBUTE2;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_impair_A2ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_Gu_impair_A2ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_impair_A2ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_guardian_Gu_impair_A2ATTRIBUTE3;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_guardian_Gu_impair_A2ATTRIBUTE3_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_Gu_impair_A2ATTRIBUTE3_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_Gu_impair_A2ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_guardian_Gu_impair_A2ATTRIBUTE3;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_impair_A2ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_Gu_impair_A2ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_impair_A2ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_guardian_Gu_impair_A2ATTRIBUTE4;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_guardian_Gu_impair_A2ATTRIBUTE4_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_Gu_impair_A2ATTRIBUTE4_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_Gu_impair_A2ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_guardian_Gu_impair_A2ATTRIBUTE4;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+	FXOnTile=delay_tiny;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_impair_A2ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_Gu_impair_A2ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_impair_A2ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_guardian_Gu_impair_A2ATTRIBUTE5;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_guardian_Gu_impair_A2ATTRIBUTE5_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_Gu_impair_A2ATTRIBUTE5_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_Gu_impair_A2ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_guardian_Gu_impair_A2ATTRIBUTE5;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_impair_A2ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_Gu_impair_A2ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_impair_A2ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+	
+-----------------------------Gu_impair
+[DialogNode] ID=ari_guardian_Gu_impair_train;
+animations=;
+statements=How would you like to improve <Impair><iconBig=icon_Gu_impair>?;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=Increase A2ATTRIBUTE1. (1);
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_Gu_impair_A2ATTRIBUTE1_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A2ATTRIBUTE1. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_insufficient_skillpts;
+
+[DialogOption] text=Increase A2ATTRIBUTE2. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_Gu_impair_A2ATTRIBUTE2_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A2ATTRIBUTE2. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_insufficient_skillpts;
+
+[DialogOption] text=Increase A2ATTRIBUTE3. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_Gu_impair_A2ATTRIBUTE3_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A2ATTRIBUTE3. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_insufficient_skillpts;
+
+[DialogOption] text=Increase A2ATTRIBUTE4. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_Gu_impair_A2ATTRIBUTE4_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A2ATTRIBUTE4. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_insufficient_skillpts;
+
+[DialogOption] text=Increase A2ATTRIBUTE5. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_Gu_impair_A2ATTRIBUTE5_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A2ATTRIBUTE5. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_insufficient_skillpts;
+
+[DialogOption] text=Go back;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=ari_guardian_specialize_skills_extra;
+
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+--A2ATTRIBUTE1
+[DialogNode] ID=ari_guardian_Gu_impair_A2ATTRIBUTE1_dialogue;
+animations=;
+statements=Good choice. A2ATTRIBUTE1 was increased.;
+specialEffect=actionOnPartyNumActor,ari_guardian_Gu_impair_A2ATTRIBUTE1_point,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+--A2ATTRIBUTE2
+[DialogNode] ID=ari_guardian_Gu_impair_A2ATTRIBUTE2_dialogue;
+animations=;
+statements=Good choice. A2ATTRIBUTE2 was increased.;
+specialEffect=actionOnPartyNumActor,ari_guardian_Gu_impair_A2ATTRIBUTE2_point,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+--A2ATTRIBUTE3
+[DialogNode] ID=ari_guardian_Gu_impair_A2ATTRIBUTE3_dialogue;
+animations=;
+statements=Good choice. A2ATTRIBUTE3 was increased.;
+specialEffect=actionOnPartyNumActor,ari_guardian_Gu_impair_A2ATTRIBUTE3_point,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+--A2ATTRIBUTE4
+[DialogNode] ID=ari_guardian_Gu_impair_A2ATTRIBUTE4_dialogue;
+animations=;
+statements=Good choice. A2ATTRIBUTE4 was increased.;
+specialEffect=actionOnPartyNumActor,ari_guardian_Gu_impair_A2ATTRIBUTE4_point,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+--A2ATTRIBUTE5
+[DialogNode] ID=ari_guardian_Gu_impair_A2ATTRIBUTE5_dialogue;
+animations=;
+statements=Good choice. A2ATTRIBUTE5 was increased.;
+specialEffect=actionOnPartyNumActor,ari_guardian_Gu_impair_A2ATTRIBUTE5_point,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+
+
+
+
+-----------------------------Gu_discipline
+-----------------------------Gu_discipline actorValue begin
+[ActorValue]
+ID=ari_guardian_Gu_discipline_A3ATTRIBUTE1;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_guardian_Gu_discipline_A3ATTRIBUTE1_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_Gu_discipline_A3ATTRIBUTE1_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_Gu_discipline_A3ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_guardian_Gu_discipline_A3ATTRIBUTE1;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_discipline_A3ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_Gu_discipline_A3ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_discipline_A3ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_guardian_Gu_discipline_A3ATTRIBUTE2;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_guardian_Gu_discipline_A3ATTRIBUTE2_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_Gu_discipline_A3ATTRIBUTE2_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_Gu_discipline_A3ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_guardian_Gu_discipline_A3ATTRIBUTE2;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_discipline_A3ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_Gu_discipline_A3ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_discipline_A3ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_guardian_Gu_discipline_A3ATTRIBUTE3;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_guardian_Gu_discipline_A3ATTRIBUTE3_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_Gu_discipline_A3ATTRIBUTE3_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_Gu_discipline_A3ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_guardian_Gu_discipline_A3ATTRIBUTE3;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_discipline_A3ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_Gu_discipline_A3ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_discipline_A3ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_guardian_Gu_discipline_A3ATTRIBUTE4;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_guardian_Gu_discipline_A3ATTRIBUTE4_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_Gu_discipline_A3ATTRIBUTE4_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_Gu_discipline_A3ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_guardian_Gu_discipline_A3ATTRIBUTE4;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+	FXOnTile=delay_tiny;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_discipline_A3ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_Gu_discipline_A3ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_discipline_A3ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_guardian_Gu_discipline_A3ATTRIBUTE5;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_guardian_Gu_discipline_A3ATTRIBUTE5_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_Gu_discipline_A3ATTRIBUTE5_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_Gu_discipline_A3ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_guardian_Gu_discipline_A3ATTRIBUTE5;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_discipline_A3ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_Gu_discipline_A3ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_discipline_A3ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+	
+-----------------------------Gu_discipline
+[DialogNode] ID=ari_guardian_Gu_discipline_train;
+animations=;
+statements=How would you like to improve <Discipline><iconBig=icon_Gu_discipline>?;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=Increase A3ATTRIBUTE1. (1);
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_Gu_discipline_A3ATTRIBUTE1_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A3ATTRIBUTE1. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_insufficient_skillpts;
+
+[DialogOption] text=Increase A3ATTRIBUTE2. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_Gu_discipline_A3ATTRIBUTE2_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A3ATTRIBUTE2. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_insufficient_skillpts;
+
+[DialogOption] text=Increase A3ATTRIBUTE3. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_Gu_discipline_A3ATTRIBUTE3_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A3ATTRIBUTE3. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_insufficient_skillpts;
+
+[DialogOption] text=Increase A3ATTRIBUTE4. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_Gu_discipline_A3ATTRIBUTE4_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A3ATTRIBUTE4. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_insufficient_skillpts;
+
+[DialogOption] text=Increase A3ATTRIBUTE5. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_Gu_discipline_A3ATTRIBUTE5_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A3ATTRIBUTE5. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_insufficient_skillpts;
+
+[DialogOption] text=Go back;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=ari_guardian_specialize_skills_extra;
+
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+--A3ATTRIBUTE1
+[DialogNode] ID=ari_guardian_Gu_discipline_A3ATTRIBUTE1_dialogue;
+animations=;
+statements=Good choice. A3ATTRIBUTE1 was increased.;
+specialEffect=actionOnPartyNumActor,ari_guardian_Gu_discipline_A3ATTRIBUTE1_point,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+--A3ATTRIBUTE2
+[DialogNode] ID=ari_guardian_Gu_discipline_A3ATTRIBUTE2_dialogue;
+animations=;
+statements=Good choice. A3ATTRIBUTE2 was increased.;
+specialEffect=actionOnPartyNumActor,ari_guardian_Gu_discipline_A3ATTRIBUTE2_point,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+--A3ATTRIBUTE3
+[DialogNode] ID=ari_guardian_Gu_discipline_A3ATTRIBUTE3_dialogue;
+animations=;
+statements=Good choice. A3ATTRIBUTE3 was increased.;
+specialEffect=actionOnPartyNumActor,ari_guardian_Gu_discipline_A3ATTRIBUTE3_point,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+--A3ATTRIBUTE4
+[DialogNode] ID=ari_guardian_Gu_discipline_A3ATTRIBUTE4_dialogue;
+animations=;
+statements=Good choice. A3ATTRIBUTE4 was increased.;
+specialEffect=actionOnPartyNumActor,ari_guardian_Gu_discipline_A3ATTRIBUTE4_point,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+--A3ATTRIBUTE5
+[DialogNode] ID=ari_guardian_Gu_discipline_A3ATTRIBUTE5_dialogue;
+animations=;
+statements=Good choice. A3ATTRIBUTE5 was increased.;
+specialEffect=actionOnPartyNumActor,ari_guardian_Gu_discipline_A3ATTRIBUTE5_point,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+
+
+
+-----------------------------Gu_rally
+-----------------------------Gu_rally actorValue begin
+[ActorValue]
+ID=ari_guardian_Gu_rally_A4ATTRIBUTE1;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_guardian_Gu_rally_A4ATTRIBUTE1_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_Gu_rally_A4ATTRIBUTE1_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_Gu_rally_A4ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_guardian_Gu_rally_A4ATTRIBUTE1;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_rally_A4ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_Gu_rally_A4ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_rally_A4ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_guardian_Gu_rally_A4ATTRIBUTE2;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_guardian_Gu_rally_A4ATTRIBUTE2_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_Gu_rally_A4ATTRIBUTE2_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_Gu_rally_A4ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_guardian_Gu_rally_A4ATTRIBUTE2;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_rally_A4ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_Gu_rally_A4ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_rally_A4ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_guardian_Gu_rally_A4ATTRIBUTE3;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_guardian_Gu_rally_A4ATTRIBUTE3_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_Gu_rally_A4ATTRIBUTE3_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_Gu_rally_A4ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_guardian_Gu_rally_A4ATTRIBUTE3;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_rally_A4ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_Gu_rally_A4ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_rally_A4ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_guardian_Gu_rally_A4ATTRIBUTE4;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_guardian_Gu_rally_A4ATTRIBUTE4_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_Gu_rally_A4ATTRIBUTE4_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_Gu_rally_A4ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_guardian_Gu_rally_A4ATTRIBUTE4;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+	FXOnTile=delay_tiny;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_rally_A4ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_Gu_rally_A4ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_rally_A4ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_guardian_Gu_rally_A4ATTRIBUTE5;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_guardian_Gu_rally_A4ATTRIBUTE5_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_Gu_rally_A4ATTRIBUTE5_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_Gu_rally_A4ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_guardian_Gu_rally_A4ATTRIBUTE5;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_rally_A4ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_Gu_rally_A4ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_rally_A4ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+	
+-----------------------------Gu_rally
+[DialogNode] ID=ari_guardian_Gu_rally_train;
+animations=;
+statements=How would you like to improve <Rally><iconBig=icon_Gu_rally>?;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=Increase A4ATTRIBUTE1. (1);
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_Gu_rally_A4ATTRIBUTE1_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A4ATTRIBUTE1. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_insufficient_skillpts;
+
+[DialogOption] text=Increase A4ATTRIBUTE2. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_Gu_rally_A4ATTRIBUTE2_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A4ATTRIBUTE2. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_insufficient_skillpts;
+
+[DialogOption] text=Increase A4ATTRIBUTE3. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_Gu_rally_A4ATTRIBUTE3_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A4ATTRIBUTE3. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_insufficient_skillpts;
+
+[DialogOption] text=Increase A4ATTRIBUTE4. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_Gu_rally_A4ATTRIBUTE4_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A4ATTRIBUTE4. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_insufficient_skillpts;
+
+[DialogOption] text=Increase A4ATTRIBUTE5. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_Gu_rally_A4ATTRIBUTE5_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A4ATTRIBUTE5. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_insufficient_skillpts;
+
+[DialogOption] text=Go back;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=ari_guardian_specialize_skills_extra;
+
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+--A4ATTRIBUTE1
+[DialogNode] ID=ari_guardian_Gu_rally_A4ATTRIBUTE1_dialogue;
+animations=;
+statements=Good choice. A4ATTRIBUTE1 was increased.;
+specialEffect=actionOnPartyNumActor,ari_guardian_Gu_rally_A4ATTRIBUTE1_point,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+--A4ATTRIBUTE2
+[DialogNode] ID=ari_guardian_Gu_rally_A4ATTRIBUTE2_dialogue;
+animations=;
+statements=Good choice. A4ATTRIBUTE2 was increased.;
+specialEffect=actionOnPartyNumActor,ari_guardian_Gu_rally_A4ATTRIBUTE2_point,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+--A4ATTRIBUTE3
+[DialogNode] ID=ari_guardian_Gu_rally_A4ATTRIBUTE3_dialogue;
+animations=;
+statements=Good choice. A4ATTRIBUTE3 was increased.;
+specialEffect=actionOnPartyNumActor,ari_guardian_Gu_rally_A4ATTRIBUTE3_point,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+--A4ATTRIBUTE4
+[DialogNode] ID=ari_guardian_Gu_rally_A4ATTRIBUTE4_dialogue;
+animations=;
+statements=Good choice. A4ATTRIBUTE4 was increased.;
+specialEffect=actionOnPartyNumActor,ari_guardian_Gu_rally_A4ATTRIBUTE4_point,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+--A4ATTRIBUTE5
+[DialogNode] ID=ari_guardian_Gu_rally_A4ATTRIBUTE5_dialogue;
+animations=;
+statements=Good choice. A4ATTRIBUTE5 was increased.;
+specialEffect=actionOnPartyNumActor,ari_guardian_Gu_rally_A4ATTRIBUTE5_point,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+
+
+
+-----------------------------Gu_resuscitate
+-----------------------------Gu_resuscitate actorValue begin
+[ActorValue]
+ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE1;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE1_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE1_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_guardian_Gu_resuscitate_A5ATTRIBUTE1;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE1_point;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE1_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE2;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE2_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE2_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_guardian_Gu_resuscitate_A5ATTRIBUTE2;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE2_point;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE2_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE3;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE3_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE3_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_guardian_Gu_resuscitate_A5ATTRIBUTE3;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE3_point;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE3_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE4;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE4_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE4_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_guardian_Gu_resuscitate_A5ATTRIBUTE4;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+	FXOnTile=delay_tiny;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE4_point;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE4_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+
+
+[ActorValue]
+ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE5;
+maximum=99;
+canBeRemovedByNonspecificAVEffectRemoval = false;
+
+[Action] ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE5_point; 
+	harmful=false;
+[ActionAoE] 
+	ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE5_point;
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+[AvAffecter]
+	ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_guardian_Gu_resuscitate_A5ATTRIBUTE5;
+	magnitude=1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+	FXOnTile=upwardLines_quick;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	ignoreCannotTarget=true;
+[AvAffecter]
+	ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE5_point;
+	harmful=false;
+	actorValue=ari_guardian_current;
+	magnitude=-1;
+	duration=-2;
+	chance=100 - 100 * m:moreThanOneActorAt;
+[AvAffecterAoE]
+	ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE5_point; 
+	cloneFrom=oneTile;
+	canSelectStackedActors=false;
+	ignoreCannotTarget=true;
+	
+-----------------------------Gu_resuscitate
+[DialogNode] ID=ari_guardian_Gu_resuscitate_train;
+animations=;
+statements=How would you like to improve <Resuscitate><iconBig=icon_Gu_resuscitate>?;
+specialEffect=setPCDialogWindowSizeY,256;
+
+[DialogOption] text=Increase A5ATTRIBUTE1. (1);
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_Gu_resuscitate_A5ATTRIBUTE1_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A5ATTRIBUTE1. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_insufficient_skillpts;
+
+[DialogOption] text=Increase A5ATTRIBUTE2. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_Gu_resuscitate_A5ATTRIBUTE2_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A5ATTRIBUTE2. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_insufficient_skillpts;
+
+[DialogOption] text=Increase A5ATTRIBUTE3. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_Gu_resuscitate_A5ATTRIBUTE3_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A5ATTRIBUTE3. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_insufficient_skillpts;
+
+[DialogOption] text=Increase A5ATTRIBUTE4. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_Gu_resuscitate_A5ATTRIBUTE4_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A5ATTRIBUTE4. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_insufficient_skillpts;
+
+[DialogOption] text=Increase A5ATTRIBUTE5. (1);
+newLineOfOptions=true;
+formulaReq=moreThan:0:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_Gu_resuscitate_A5ATTRIBUTE5_dialogue;
+
+[DialogOption] text=<color=SlateGray>Increase A5ATTRIBUTE5. (1);
+newLineOfOptions=false;
+formulaReq=lessThan:1:g:ari_current_points0;
+nodeToConnectTo=ari_guardian_insufficient_skillpts;
+
+[DialogOption] text=Go back;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=ari_guardian_specialize_skills_extra;
+
+[DialogOption] text=Nevermind;
+specialEffect=setPCDialogWindowSizeY;
+newLineOfOptions=true;
+nodeToConnectTo=;
+
+--A5ATTRIBUTE1
+[DialogNode] ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE1_dialogue;
+animations=;
+statements=Good choice. A5ATTRIBUTE1 was increased.;
+specialEffect=actionOnPartyNumActor,ari_guardian_Gu_resuscitate_A5ATTRIBUTE1_point,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+--A5ATTRIBUTE2
+[DialogNode] ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE2_dialogue;
+animations=;
+statements=Good choice. A5ATTRIBUTE2 was increased.;
+specialEffect=actionOnPartyNumActor,ari_guardian_Gu_resuscitate_A5ATTRIBUTE2_point,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+--A5ATTRIBUTE3
+[DialogNode] ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE3_dialogue;
+animations=;
+statements=Good choice. A5ATTRIBUTE3 was increased.;
+specialEffect=actionOnPartyNumActor,ari_guardian_Gu_resuscitate_A5ATTRIBUTE3_point,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+--A5ATTRIBUTE4
+[DialogNode] ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE4_dialogue;
+animations=;
+statements=Good choice. A5ATTRIBUTE4 was increased.;
+specialEffect=actionOnPartyNumActor,ari_guardian_Gu_resuscitate_A5ATTRIBUTE4_point,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
+
+--A5ATTRIBUTE5
+[DialogNode] ID=ari_guardian_Gu_resuscitate_A5ATTRIBUTE5_dialogue;
+animations=;
+statements=Good choice. A5ATTRIBUTE5 was increased.;
+specialEffect=actionOnPartyNumActor,ari_guardian_Gu_resuscitate_A5ATTRIBUTE5_point,0;
+nextNodeID=ari_guardian_specialize_skills_extra;
