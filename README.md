@@ -19,6 +19,9 @@ Then why not specialize?
 *Exchange your hard-won class experience for "skill points", and then exchange those "skill points" for powerful skill customization.*
 
 ### Berserker:
+
+<details><summary><b>Abilities</b></summary>
+
 - <details><summary><b>Frenzy</b></summary>
 
   - Increased damage  
@@ -69,7 +72,12 @@ Then why not specialize?
 
   </details>
 
+</details>
+
 ### Guardian
+
+<details><summary><b>Abilities</b></summary>
+
 - <details><summary><b>Mighty Block</b></summary>
 
   - Added Bulwark buff to target  
@@ -116,6 +124,8 @@ Then why not specialize?
   - Increased Time to Act on target  
 
   </details>
+
+</details>
 
 
 **While you can swap between specializations at a Class Trainer (Or Class NPC) at any time, an Actor can only be specialized in one class at once, and skill points are not shared between Actors, nor are they shared between specializations.*
