@@ -83,7 +83,7 @@
 	harmful=false;
 	visibleMiss=false;
 	visibleEvaluations=false;
-	element=40001;
+	element=40002;
 	magnitude=1;
 	duration=-2;
 	chance=15 * c:ari_guardian_Gu_mightyBlock_A1ATTRIBUTE2;
@@ -280,7 +280,7 @@
 	harmful=false;
 	visibleMiss=false;
 	visibleEvaluations=false;
-	element=40001;
+	element=40002;
 	magnitude=1;
 	duration=-2;
 	chance=15 * c:ari_guardian_Gu_mightyBlock_A1ATTRIBUTE2 * c:ari_guardian_Gu_resuscitate_A5ATTRIBUTE3 * thisPreviousAVHit:Gu_resuscitate;
